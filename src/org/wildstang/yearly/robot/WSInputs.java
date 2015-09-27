@@ -55,10 +55,8 @@ public enum WSInputs implements Inputs
    MAN_BUTTON_12("Manipulator button 12", WSInputType.JS_BUTTON, 1, 11, true),
    
    HALL_EFFECT("Lift hall effect sensors", WSInputType.HALL_EFFECT, Port.kMXP, 0x10, true),
-   START_POSITION_SELECTOR("Start position selector", WSInputType.POT, 18, true),
-   AUTO_PROGRAM_SELECTOR("Auto program selector", WSInputType.POT, 17, true),
-   LOCK_IN_SWITCH("OI Lock in switch", WSInputType.SWITCH, 1, true, true),
-   LIFT_POT("Lift Pot", WSInputType.POT, 0, true);
+   LIMIT_SWITCH("Limit switch", WSInputType.SWITCH, 0, true),
+   POT("Pot", WSInputType.POT, 0, true);
    
 
    private final String m_name;
