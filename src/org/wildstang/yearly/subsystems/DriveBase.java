@@ -264,7 +264,6 @@ public class DriveBase implements Subsystem
          // TODO: These need to be moved to inputUpdate
          throttleValue = ((AnalogInput) Core.getInputManager().getInput(WSInputs.DRV_THROTTLE.getName())).getValue();
          headingValue = ((AnalogInput) Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).getValue();
-         strafeValue = ((AnalogInput) Core.getInputManager().getInput(WSInputs.DRV_STRAFE.getName())).getValue();
 
          SmartDashboard.putNumber("Throttle Joystick Value", throttleValue);
          SmartDashboard.putNumber("Heading Joystick Value", headingValue);
