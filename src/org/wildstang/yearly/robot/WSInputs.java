@@ -78,33 +78,6 @@ public enum WSInputs implements Inputs
       m_trackingState = p_trackingState;
    }
    
-   WSInputs(String p_name, InputType p_type, int p_port, boolean p_trackingState, boolean p_pullup)
-   {
-      m_name = p_name;
-      m_type = p_type;
-      m_port = p_port;
-      m_trackingState = p_trackingState;
-      m_pullup = p_pullup;
-   }
-   
-   WSInputs(String p_name, InputType p_type, int p_port, boolean p_default, boolean p_trackingState, boolean p_pullup)
-   {
-      m_name = p_name;
-      m_type = p_type;
-      m_port = p_port;
-      m_default = p_default;
-      m_trackingState = p_trackingState;
-      m_pullup = p_pullup;
-   }
-   
-   WSInputs(String p_name, InputType p_type, int p_port, double p_default, boolean p_trackingState)
-   {
-      m_name = p_name;
-      m_type = p_type;
-      m_port = p_port;
-      m_default = p_default;
-      m_trackingState = p_trackingState;
-   }
    
    WSInputs(String p_name, InputType p_type, int p_port, boolean p_trackingState)
    {
