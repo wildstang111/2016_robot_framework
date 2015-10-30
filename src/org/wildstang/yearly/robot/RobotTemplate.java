@@ -21,6 +21,8 @@ import com.ni.vision.NIVision.Image;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 import java.io.*;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -73,18 +75,56 @@ public class RobotTemplate extends IterativeRobot
       Core.getStateTracker().addIOInfo("Auto", "Monitor", "Input", "");
       Core.getStateTracker().addIOInfo("Memory in use", "Monitor", "Input", "");
 
+      
+      Writer outputWriter = null;
+      
+      outputWriter = getFileWriter();
+//      outputWriter = getNetworkWriter("10.1.11.12", 17654);
+
+      m_stateLogger.setWriter(outputWriter);
+      m_stateLogger.start();
+      Thread t = new Thread(m_stateLogger);
+      t.start();
+   }
+
+   private Writer getNetworkWriter(String ipAddress, int port)
+   {
+      BufferedWriter output = null;
+      
       try
       {
-         m_stateLogger.setWriter(new FileWriter(new File("log.txt")));
+         Socket socket = new Socket(ipAddress, port);
+         output = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+      }
+      catch (UnknownHostException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
       }
       catch (IOException e)
       {
          // TODO Auto-generated catch block
          e.printStackTrace();
       }
-      m_stateLogger.start();
-      Thread t = new Thread(m_stateLogger);
-      t.start();
+      
+      return output;
+   }
+   
+   private FileWriter getFileWriter()
+   {
+      FileWriter output = null;
+      
+      try
+      {
+         output = new FileWriter(new File("log.txt"));
+      }
+      catch (IOException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
+
+      return output;
    }
 
    /**
