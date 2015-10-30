@@ -4,8 +4,8 @@
  */
 package org.wildstang.yearly.auto.testprograms;
 
-import org.wildstang.fw.auto.AutoProgram;
-import org.wildstang.fw.auto.steps.control.AutoStepDelay;
+import org.wildstang.framework.auto.AutoProgram;
+import org.wildstang.framework.auto.steps.control.AutoStepDelay;
 import org.wildstang.yearly.auto.steps.drivebase.StepDriveManual;
 
 /**

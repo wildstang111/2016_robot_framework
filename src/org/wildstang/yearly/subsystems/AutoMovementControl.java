@@ -3,9 +3,9 @@ package org.wildstang.yearly.subsystems;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.wildstang.framework.auto.AutoMovement;
 import org.wildstang.framework.io.Input;
 import org.wildstang.framework.subsystems.Subsystem;
-import org.wildstang.fw.auto.AutoMovement;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 

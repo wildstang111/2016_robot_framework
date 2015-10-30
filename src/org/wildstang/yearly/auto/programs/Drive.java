@@ -1,8 +1,8 @@
 package org.wildstang.yearly.auto.programs;
 
+import org.wildstang.framework.auto.AutoProgram;
+import org.wildstang.framework.auto.steps.AutoSerialStepGroup;
 import org.wildstang.framework.core.Core;
-import org.wildstang.fw.auto.AutoProgram;
-import org.wildstang.fw.auto.steps.AutoSerialStepGroup;
 import org.wildstang.yearly.auto.steps.drivebase.StepStartDriveUsingMotionProfile;
 import org.wildstang.yearly.auto.steps.drivebase.StepStopDriveUsingMotionProfile;
 import org.wildstang.yearly.auto.steps.drivebase.StepWaitForDriveMotionProfile;

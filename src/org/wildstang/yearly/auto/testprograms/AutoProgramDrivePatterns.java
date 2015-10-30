@@ -4,9 +4,9 @@
  */
 package org.wildstang.yearly.auto.testprograms;
 
+import org.wildstang.framework.auto.AutoManager;
+import org.wildstang.framework.auto.AutoProgram;
 import org.wildstang.framework.core.Core;
-import org.wildstang.fw.auto.AutoManager;
-import org.wildstang.fw.auto.AutoProgram;
 import org.wildstang.yearly.auto.steps.drivebase.StepQuickTurn;
 import org.wildstang.yearly.auto.steps.drivebase.StepStartDriveUsingMotionProfile;
 import org.wildstang.yearly.auto.steps.drivebase.StepStopDriveUsingMotionProfile;

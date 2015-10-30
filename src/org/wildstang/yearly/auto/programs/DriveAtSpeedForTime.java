@@ -1,7 +1,7 @@
 package org.wildstang.yearly.auto.programs;
 
+import org.wildstang.framework.auto.AutoProgram;
 import org.wildstang.framework.core.Core;
-import org.wildstang.fw.auto.AutoProgram;
 import org.wildstang.yearly.auto.steps.drivebase.StepDriveDistanceAtSpeed;
 import org.wildstang.yearly.auto.steps.drivebase.StepSetShifter;
 

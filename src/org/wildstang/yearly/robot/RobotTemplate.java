@@ -6,11 +6,11 @@
 /*----------------------------------------------------------------------------*/
 package org.wildstang.yearly.robot;
 
+import org.wildstang.framework.auto.AutoManager;
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.logger.StateLogger;
 import org.wildstang.framework.subsystems.Subsystem;
-import org.wildstang.fw.auto.AutoManager;
-import org.wildstang.fw.profiling.ProfilingTimer;
+import org.wildstang.framework.timer.ProfilingTimer;
 import org.wildstang.hardware.crio.RoboRIOInputFactory;
 import org.wildstang.hardware.crio.RoboRIOOutputFactory;
 import org.wildstang.yearly.subsystems.Monitor;
@@ -98,6 +98,7 @@ public class RobotTemplate extends IterativeRobot
       m_core = new Core(RoboRIOInputFactory.class, RoboRIOOutputFactory.class);
       m_stateLogger = new StateLogger(Core.getStateTracker());
       startloggingState();
+
       // TODO: Need to start and stop the logger writing to a file
 
       // Load the config
@@ -121,14 +122,6 @@ public class RobotTemplate extends IterativeRobot
       // 2. Add Auto programs
 
       // OLD CODE
-      // Instantiate all the singletons.
-      // LogManager.getInstance();
-      // InputManager.getInstance();
-      // OutputManager.getInstance();
-      // SubsystemManager.getInstance().init();
-      // SubsystemManager.getInstance().setManagers(InputManager.getInstance(),
-      // OutputManager.getInstance());
-      // Logger.getLogger().readConfig();
       // AutoManager.getInstance();
 
       // sets up the USB camera for streaming to the smartdashboard
@@ -212,7 +205,8 @@ public class RobotTemplate extends IterativeRobot
    public void autonomousInit()
    {
       Core.getSubsystemManager().init();
-
+      
+      m_core.setAutoManager(AutoManager.getInstance());
       AutoManager.getInstance().startCurrentProgram();
    }
 
@@ -222,15 +216,10 @@ public class RobotTemplate extends IterativeRobot
    public void autonomousPeriodic()
    {
       // Update all inputs, outputs and subsystems
+      
+      // TODO: Need to get the Core to run autonomous
       m_core.executeUpdate();
 
-      // InputManager.getInstance().updateOiDataAutonomous();
-      // InputManager.getInstance().updateSensorData();
-      // AutoManager.getInstance().update();
-      // SubsystemManager.getInstance().update();
-      // OutputManager.getInstance().update();
-      // LogManager.getInstance().queueCurrentLogsForSending();
-      // Watchdog.getInstance().feed();
    }
 
    /**
@@ -238,6 +227,9 @@ public class RobotTemplate extends IterativeRobot
     */
    public void teleopInit()
    {
+      // Remove the AutoManager from the Core
+      m_core.setAutoManager(null);
+      
       Core.getSubsystemManager().init();
 
       periodTimer.startTimingSection();
@@ -246,8 +238,7 @@ public class RobotTemplate extends IterativeRobot
    public void teleopPeriodic()
    {
       long cycleStartTime = System.currentTimeMillis();
-      System.out.println("Cycle separation time: "
-            + (cycleStartTime - lastCycleTime));
+      System.out.println("Cycle separation time: " + (cycleStartTime - lastCycleTime));
 
       // Update all inputs, outputs and subsystems
       m_core.executeUpdate();

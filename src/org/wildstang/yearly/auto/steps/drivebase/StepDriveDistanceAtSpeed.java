@@ -1,7 +1,7 @@
 package org.wildstang.yearly.auto.steps.drivebase;
 
+import org.wildstang.framework.auto.steps.AutoStep;
 import org.wildstang.framework.core.Core;
-import org.wildstang.fw.auto.steps.AutoStep;
 import org.wildstang.yearly.subsystems.DriveBase;
 import org.wildstang.yearly.subsystems.WSSubsystems;
 
