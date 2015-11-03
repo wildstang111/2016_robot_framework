@@ -19,7 +19,7 @@ public class StepStrafe extends AutoStep
    @Override
    public void initialize()
    {
-      ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).overrideStrafeValue(strafe);
+//      ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).overrideStrafeValue(strafe);
       finished = true;
    }
 

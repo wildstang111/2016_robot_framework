@@ -20,17 +20,17 @@ public class StepWaitForDriveDistance extends AutoStep
    @Override
    public void update()
    {
-      double distanceRemaining = ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getDistanceRemaining();
-      double velocity = ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getVelocity();
-      if ((distanceRemaining < 0.01) && (distanceRemaining > -0.01))
-      {
-         finished = true;
-      }
-      if ((distanceRemaining < 12.0) && (distanceRemaining > -12.0)
-            && (velocity < 0.10) && (velocity > -0.10))
-      {
-         finished = true;
-      }
+//      double distanceRemaining = ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getDistanceRemaining();
+//      double velocity = ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getVelocity();
+//      if ((distanceRemaining < 0.01) && (distanceRemaining > -0.01))
+//      {
+//         finished = true;
+//      }
+//      if ((distanceRemaining < 12.0) && (distanceRemaining > -12.0)
+//            && (velocity < 0.10) && (velocity > -0.10))
+//      {
+//         finished = true;
+//      }
    }
 
    @Override

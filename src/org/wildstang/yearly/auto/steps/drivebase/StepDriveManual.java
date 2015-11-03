@@ -28,8 +28,8 @@ public class StepDriveManual extends AutoStep
    @Override
    public void initialize()
    {
-      ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).overrideThrottleValue(throttle);
-      ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).overrideHeadingValue(heading);
+//      ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).overrideThrottleValue(throttle);
+//      ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).overrideHeadingValue(heading);
       finished = true;
    }
 

@@ -17,11 +17,11 @@ public class HardwareTest implements Subsystem
    @Override
    public void inputUpdate(Input source)
    {
-      if (source.getName().equals(WSInputs.LIMIT_SWITCH.getName()))
-      {
-         m_limitSwitch = ((DigitalInput)source).getValue();
-      }
-      else if (source.getName().equals(WSInputs.DRV_BUTTON_1.getName()))
+//      if (source.getName().equals(WSInputs.LIMIT_SWITCH.getName()))
+//      {
+//         m_limitSwitch = ((DigitalInput)source).getValue();
+//      }
+    /*  else */if (source.getName().equals(WSInputs.DRV_BUTTON_1.getName()))
       {
          printButtonState(source, 1);
       }
@@ -85,12 +85,12 @@ public class HardwareTest implements Subsystem
       {
          printJoystickState(source);
       }
-      else if (source.getName().equals(WSInputs.DRV_DPAD_X.getName()))
-      {
-      }
-      else if (source.getName().equals(WSInputs.DRV_DPAD_Y.getName()))
-      {
-      }
+//      else if (source.getName().equals(WSInputs.DRV_DPAD_X.getName()))
+//      {
+//      }
+//      else if (source.getName().equals(WSInputs.DRV_DPAD_Y.getName()))
+//      {
+//      }
    }
 
    private void printButtonState(Input source, int button)
@@ -113,7 +113,7 @@ public class HardwareTest implements Subsystem
    @Override
    public void init()
    {
-      Core.getInputManager().getInput(WSInputs.LIMIT_SWITCH.getName()).addInputListener(this);
+  //    Core.getInputManager().getInput(WSInputs.LIMIT_SWITCH.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_1.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_2.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_3.getName()).addInputListener(this);
@@ -130,8 +130,8 @@ public class HardwareTest implements Subsystem
       Core.getInputManager().getInput(WSInputs.DRV_THROTTLE.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.DRV_LEFT_X.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.DRV_RIGHT_Y.getName()).addInputListener(this);
-      Core.getInputManager().getInput(WSInputs.DRV_DPAD_X.getName()).addInputListener(this);
-      Core.getInputManager().getInput(WSInputs.DRV_DPAD_Y.getName()).addInputListener(this);
+//      Core.getInputManager().getInput(WSInputs.DRV_DPAD_X.getName()).addInputListener(this);
+//      Core.getInputManager().getInput(WSInputs.DRV_DPAD_Y.getName()).addInputListener(this);
       
    }
 

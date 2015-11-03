@@ -22,8 +22,8 @@ public enum WSInputs implements Inputs
    DRV_HEADING("Driver heading", WSInputType.JS_JOYSTICK, 0, JoystickConstants.RIGHT_JOYSTICK_X, true),
    DRV_LEFT_X("Driver left X", WSInputType.JS_JOYSTICK, 0, JoystickConstants.LEFT_JOYSTICK_X, true),
    DRV_RIGHT_Y("Driver right Y", WSInputType.JS_JOYSTICK, 0, JoystickConstants.RIGHT_JOYSTICK_Y, true),
-   DRV_DPAD_Y("Driver DPad Y", WSInputType.JS_DPAD, 0, JoystickConstants.DPAD_Y, true),
-   DRV_DPAD_X("Driver DPad X", WSInputType.JS_DPAD, 0, JoystickConstants.DPAD_X, true),
+//   DRV_DPAD_Y("Driver DPad Y", WSInputType.JS_DPAD, 0, JoystickConstants.DPAD_Y, true),
+//   DRV_DPAD_X("Driver DPad X", WSInputType.JS_DPAD, 0, JoystickConstants.DPAD_X, true),
    DRV_BUTTON_1("Driver button 1", WSInputType.JS_BUTTON, 0, 0, true),
    DRV_BUTTON_2("Driver button 2", WSInputType.JS_BUTTON, 0, 1, true),
    DRV_BUTTON_3("Driver button 3", WSInputType.JS_BUTTON, 0, 2, true),
@@ -41,8 +41,8 @@ public enum WSInputs implements Inputs
    MAN_RIGHT_JOYSTICK_Y("MANIPULATOR_BACK_ARM_CONTROL", WSInputType.JS_JOYSTICK, 1, JoystickConstants.RIGHT_JOYSTICK_Y, true),
    MAN_RIGHT_JOYSTICK_X("MANIPULATOR_RIGHT_JOYSTICK_X", WSInputType.JS_JOYSTICK, 1, JoystickConstants.RIGHT_JOYSTICK_X, true),
    MAN_LEFT_JOYSTICK_X("MANIPULATOR_LEFT_JOYSTICK_X", WSInputType.JS_JOYSTICK, 1, JoystickConstants.LEFT_JOYSTICK_X, true),
-   MAN_DPAD_Y("Manipulator DPad Y", WSInputType.JS_DPAD, 1, JoystickConstants.DPAD_Y, true),
-   MAN_DPAD_X("Manipulator DPad X", WSInputType.JS_DPAD, 1, JoystickConstants.DPAD_X, true),
+//   MAN_DPAD_Y("Manipulator DPad Y", WSInputType.JS_DPAD, 1, JoystickConstants.DPAD_Y, true),
+//   MAN_DPAD_X("Manipulator DPad X", WSInputType.JS_DPAD, 1, JoystickConstants.DPAD_X, true),
    MAN_BUTTON_1("Manipulator button 1", WSInputType.JS_BUTTON, 1, 0, true),
    MAN_BUTTON_2("Manipulator button 2", WSInputType.JS_BUTTON, 1, 1, true),
    MAN_BUTTON_3("Manipulator button 3", WSInputType.JS_BUTTON, 1, 2, true),
@@ -56,9 +56,9 @@ public enum WSInputs implements Inputs
    MAN_BUTTON_11("Manipulator button 11", WSInputType.JS_BUTTON, 1, 10, true),
    MAN_BUTTON_12("Manipulator button 12", WSInputType.JS_BUTTON, 1, 11, true),
    
-   HALL_EFFECT("Lift hall effect sensors", WSInputType.HALL_EFFECT, Port.kMXP, 0x10, true),
-   LIMIT_SWITCH("Limit switch", WSInputType.SWITCH, 0, true),
-   POT("Pot", WSInputType.POT, 0, true);
+   HALL_EFFECT("Lift hall effect sensors", WSInputType.HALL_EFFECT, Port.kMXP, 0x10, true);
+//   LIMIT_SWITCH("Limit switch", WSInputType.SWITCH, 0, true),
+//   POT("Pot", WSInputType.POT, 0, true);
    
 
    private final String m_name;

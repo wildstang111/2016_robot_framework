@@ -28,7 +28,7 @@ public class StepStopDriveUsingMotionProfile extends AutoStep
    @Override
    public void update()
    {
-      ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).stopStraightMoveWithMotionProfile();
+//      ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).stopStraightMoveWithMotionProfile();
       finished = true;
    }
 
