@@ -66,9 +66,7 @@ public enum WSInputs implements Inputs
 
    private InputConfig m_config = null;
    
-   private Object m_default;
    private boolean m_trackingState;
-   private boolean m_pullup;
    
    WSInputs(String p_name, InputType p_type, InputConfig p_config, boolean p_trackingState)
    {
