@@ -97,11 +97,6 @@ public enum WSInputs implements Inputs
       return m_config;
    }
 
-   public boolean getPullup()
-   {
-      return m_pullup;
-   }
-
    public boolean isTrackingState()
    {
       return m_trackingState;
