@@ -31,7 +31,7 @@ public class StepStartDriveUsingMotionProfileAndHeading extends AutoStep
    @Override
    public void initialize()
    {
-      ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).startMoveWithHeadingAndMotionProfile(distance, goal_velocity, heading);
+//      ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).startMoveWithHeadingAndMotionProfile(distance, goal_velocity, heading);
       finished = true;
    }
 
