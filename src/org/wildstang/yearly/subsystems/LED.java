@@ -76,11 +76,11 @@ public class LED implements Subsystem
       t.start();
 
       // Kicker
-      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_6.getName()).addInputListener(this);
+//      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_6.getName()).addInputListener(this);
       // Intake
-      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_5.getName()).addInputListener(this);
+//      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_5.getName()).addInputListener(this);
       // Climb
-      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_2.getName()).addInputListener(this);
+//      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_2.getName()).addInputListener(this);
    }
 
    @Override
@@ -156,20 +156,20 @@ public class LED implements Subsystem
    @Override
    public void inputUpdate(Input source)
    {
-      if (((DigitalInput) source).getName().equals(WSInputs.MAN_BUTTON_6.getName()))
-      {
-         if (((DigitalInput) source).getValue())
-         {
-            sendData(shootCmd);
-         }
-      }
-      else if (((DigitalInput) source).getName().equals(WSInputs.DRV_BUTTON_2.getName()))
-      {
-         if (((DigitalInput) source).getValue())
-         {
-            sendData(climbCmd);
-         }
-      }
+//      if (((DigitalInput) source).getName().equals(WSInputs.MAN_BUTTON_6.getName()))
+//      {
+//         if (((DigitalInput) source).getValue())
+//         {
+//            sendData(shootCmd);
+//         }
+//      }
+//      else if (((DigitalInput) source).getName().equals(WSInputs.DRV_BUTTON_2.getName()))
+//      {
+//         if (((DigitalInput) source).getValue())
+//         {
+//            sendData(climbCmd);
+//         }
+//      }
    }
 
    @Override

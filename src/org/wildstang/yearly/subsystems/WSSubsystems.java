@@ -3,6 +3,7 @@ package org.wildstang.yearly.subsystems;
 public enum WSSubsystems
 {
    DRIVE_BASE("Drive base"),
+   HARDWARE_TEST("Hardware test"),
    LED("LED"),
    MONITOR("Monitor");
 

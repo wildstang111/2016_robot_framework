@@ -13,11 +13,13 @@ import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.framework.timer.ProfilingTimer;
 import org.wildstang.hardware.crio.RoboRIOInputFactory;
 import org.wildstang.hardware.crio.RoboRIOOutputFactory;
+import org.wildstang.yearly.subsystems.HardwareTest;
 import org.wildstang.yearly.subsystems.Monitor;
 import org.wildstang.yearly.subsystems.WSSubsystems;
 
 import com.ni.vision.NIVision.Image;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 import java.io.*;
@@ -116,11 +118,19 @@ public class RobotTemplate extends IterativeRobot
       
       try
       {
-         output = new FileWriter(new File("log.txt"));
+         File outputFile = new File("/home/lvuser/log.txt");
+         if (outputFile.exists())
+         {
+            outputFile.delete();
+         }
+         DriverStation.reportError(outputFile.getCanonicalPath(), false);
+         outputFile.createNewFile();
+         output = new FileWriter(outputFile);
       }
       catch (IOException e)
       {
          // TODO Auto-generated catch block
+         DriverStation.reportError(e.toString(), true);
          e.printStackTrace();
       }
 
@@ -154,6 +164,11 @@ public class RobotTemplate extends IterativeRobot
 //      Core.getSubsystemManager().addSubsystem(s);
       
       Subsystem s = new Monitor(WSSubsystems.MONITOR.getName());
+      s.init();
+      Core.getSubsystemManager().addSubsystem(s);
+      
+      s = new HardwareTest(WSSubsystems.HARDWARE_TEST.getName());
+      s.init();
       Core.getSubsystemManager().addSubsystem(s);
       
 //      s = new LED(WSSubsystems.LED.getName());

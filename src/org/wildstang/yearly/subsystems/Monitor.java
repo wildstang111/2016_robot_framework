@@ -18,6 +18,7 @@ public class Monitor implements Subsystem
    public Monitor(String name)
    {
       m_name = name;
+      init();
    }
 
    @Override
