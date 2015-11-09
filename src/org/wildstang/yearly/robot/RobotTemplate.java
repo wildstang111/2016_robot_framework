@@ -48,6 +48,8 @@ public class RobotTemplate extends IterativeRobot
    private Core m_core = null;
    private static Logger s_log = Logger.getLogger(RobotTemplate.class.getName());
 
+   static boolean teleopPerodicCalled = false;
+
    private void startloggingState()
    {
       // Add the monitored inputs
@@ -123,14 +125,12 @@ public class RobotTemplate extends IterativeRobot
          {
             outputFile.delete();
          }
-         DriverStation.reportError(outputFile.getCanonicalPath(), false);
          outputFile.createNewFile();
          output = new FileWriter(outputFile);
       }
       catch (IOException e)
       {
          // TODO Auto-generated catch block
-         DriverStation.reportError(e.toString(), true);
          e.printStackTrace();
       }
 
@@ -148,8 +148,6 @@ public class RobotTemplate extends IterativeRobot
       m_core = new Core(RoboRIOInputFactory.class, RoboRIOOutputFactory.class);
       m_stateLogger = new StateLogger(Core.getStateTracker());
       startloggingState();
-
-      // TODO: Need to start and stop the logger writing to a file
 
       // Load the config
       loadConfig();
@@ -253,8 +251,11 @@ public class RobotTemplate extends IterativeRobot
 
    public void disabledPeriodic()
    {
-//      InputManager.getInstance().updateOiData();
-//      LogManager.getInstance().queueCurrentLogsForSending();
+      // If we are finished with teleop, finish and close the log file
+      if (teleopPerodicCalled)
+      {
+         m_stateLogger.stop();
+      }
    }
 
    public void autonomousInit()
@@ -271,8 +272,6 @@ public class RobotTemplate extends IterativeRobot
    public void autonomousPeriodic()
    {
       // Update all inputs, outputs and subsystems
-      
-      // TODO: Need to get the Core to run autonomous
       m_core.executeUpdate();
 
    }
@@ -292,8 +291,10 @@ public class RobotTemplate extends IterativeRobot
 
    public void teleopPeriodic()
    {
+      teleopPerodicCalled = true;
+
       long cycleStartTime = System.currentTimeMillis();
-      System.out.println("Cycle separation time: " + (cycleStartTime - lastCycleTime));
+//      System.out.println("Cycle separation time: " + (cycleStartTime - lastCycleTime));
 
       // Update all inputs, outputs and subsystems
       m_core.executeUpdate();
@@ -305,7 +306,7 @@ public class RobotTemplate extends IterativeRobot
 
       long cycleEndTime = System.currentTimeMillis();
       long cycleLength = cycleEndTime - cycleStartTime;
-      System.out.println("Cycle time: " + cycleLength);
+//      System.out.println("Cycle time: " + cycleLength);
       lastCycleTime = cycleEndTime;
       // Watchdog.getInstance().feed();
    }
