@@ -227,10 +227,10 @@ public class HardwareTest implements Subsystem
       double spOutput = (2.5 - potVal) / 2.5;
 
 //      ((WsVictor)Core.getOutputManager().getOutput(WSOutputs.VICTOR.getName())).setValue(m_throttle);
-//      ((WsVictor)Core.getOutputManager().getOutput(WSOutputs.VICTOR_SP.getName())).setValue(spOutput);
+      ((WsVictor)Core.getOutputManager().getOutput(WSOutputs.VICTOR_SP.getName())).setValue(spOutput);
 
     ((WsVictor)Core.getOutputManager().getOutput(WSOutputs.VICTOR.getName())).setValue(b2 ? 1.0 : -1.0);
-    ((WsVictor)Core.getOutputManager().getOutput(WSOutputs.VICTOR_SP.getName())).setValue(b3 ? 1.0 : -1.0);
+//    ((WsVictor)Core.getOutputManager().getOutput(WSOutputs.VICTOR_SP.getName())).setValue(b3 ? 1.0 : -1.0);
     ((WsTalon)Core.getOutputManager().getOutput(WSOutputs.TALON.getName())).setValue(b4 ? 1.0 : -1.0);
       
 //      if (m_limitSwitch)

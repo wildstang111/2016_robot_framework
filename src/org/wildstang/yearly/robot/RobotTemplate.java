@@ -15,7 +15,6 @@ import org.wildstang.hardware.crio.RoboRIOInputFactory;
 import org.wildstang.hardware.crio.RoboRIOOutputFactory;
 import org.wildstang.yearly.subsystems.HardwareTest;
 import org.wildstang.yearly.subsystems.Monitor;
-import org.wildstang.yearly.subsystems.WSSubsystems;
 
 import com.ni.vision.NIVision.Image;
 
@@ -158,19 +157,7 @@ public class RobotTemplate extends IterativeRobot
 
       // TODO
       // 1. Add subsystems
-//      Subsystem s = new DriveBase(WSSubsystems.DRIVE_BASE.getName());
-//      Core.getSubsystemManager().addSubsystem(s);
-      
-      Subsystem s = new Monitor(WSSubsystems.MONITOR.getName());
-      s.init();
-      Core.getSubsystemManager().addSubsystem(s);
-      
-      s = new HardwareTest(WSSubsystems.HARDWARE_TEST.getName());
-      s.init();
-      Core.getSubsystemManager().addSubsystem(s);
-      
-//      s = new LED(WSSubsystems.LED.getName());
-//      Core.getSubsystemManager().addSubsystem(s);
+      m_core.createSubsystems(WSSubsystems.values());
 
       // 2. Add Auto programs
 
