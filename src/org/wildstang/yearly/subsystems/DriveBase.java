@@ -6,7 +6,7 @@ import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.io.outputs.AnalogOutput;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.yearly.robot.WSInputs;
-import org.wildstang.yearly.robot.WSOutputs;
+import org.wildstang.yearly.robot.TestOutputs;
 
 public class DriveBase implements Subsystem
 {
@@ -49,7 +49,7 @@ public class DriveBase implements Subsystem
    @Override
    public void update()
    {
-      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.VICTOR.getName())).setValue(throttle);
+      ((AnalogOutput) Core.getOutputManager().getOutput(TestOutputs.VICTOR.getName())).setValue(throttle);
 
    }
 
