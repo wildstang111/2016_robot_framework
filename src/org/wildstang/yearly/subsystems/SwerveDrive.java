@@ -9,15 +9,13 @@ import org.wildstang.hardware.crio.outputs.WsVictor;
 import org.wildstang.yearly.robot.SwerveInputs;
 import org.wildstang.yearly.robot.WSOutputs;
 import org.wildstang.yearly.robot.WSSubsystems;
+import org.wildstang.yearly.subsystems.swerve.CrabDrive;
+import org.wildstang.yearly.subsystems.swerve.SwerveBaseState;
 
 public class SwerveDrive implements Subsystem
 {
    private static final int CRAB = 0;
    
-   private final double c = -0.0802884041;
-   private final double b = 60.81576;
-   private final double a = -15.574181;
-
    private double m_joystickRotation = 0.0;
    private double m_headingX = 0.0;
    private double m_headingY = 0.0;
@@ -32,6 +30,10 @@ public class SwerveDrive implements Subsystem
    private WsVictor m_rearLeft = null;
    private WsVictor m_rearRight = null;
 
+   private CrabDrive m_crabDriveMode = new CrabDrive();
+   private SwerveBaseState m_prevState = null;
+   
+   
    @Override
    public void inputUpdate(Input p_source)
    {
@@ -133,6 +135,8 @@ public class SwerveDrive implements Subsystem
    @Override
    public void update()
    {
+      SwerveBaseState currentState = null;
+      
       if (m_recalcMode)
       {
          recalculateDriveMode();
@@ -141,14 +145,29 @@ public class SwerveDrive implements Subsystem
       switch (m_mode)
       {
          case CRAB:
-            crabDrive();
+            currentState = m_crabDriveMode.calculateNewState(m_prevState, m_headingX, m_headingY);
             break;
          // TODO: Add any more modes here
          default:
-            crabDrive();
+            currentState = m_crabDriveMode.calculateNewState(m_prevState, m_headingX, m_headingY);
             break;
       }
       
+      updateModuleStates(currentState);
+      
+      m_prevState = currentState;
+   }
+
+   private void updateModuleStates(SwerveBaseState state)
+   {
+      // Rotate wheels to heading
+      // TODO - Set angle for rotation PID
+
+      // Set motor speed
+      m_frontLeft.setValue(state.getFrontLeft().getSpeed());
+      m_frontRight.setValue(state.getFrontRight().getSpeed());
+      m_rearLeft.setValue(state.getRearLeft().getSpeed());
+      m_rearRight.setValue(state.getRearRight().getSpeed());
    }
 
    private void recalculateDriveMode()
@@ -158,86 +177,6 @@ public class SwerveDrive implements Subsystem
       // for more values
    }
    
-   private void crabDrive()
-   {
-      // Crab drive is field oriented and does not allow the robot to rotate
-      int currentHeadingAngle = (int)cartesianToDegrees(m_headingX, m_headingY);
-
-      // Rotate wheels to heading
-      // TODO - Set angle for rotation PID
-
-      
-      // Calculate the speed based on joystick position
-      // TODO - use polar coordinate transformation, not just sqrt
-      // For now, use sqrt / 1.42  (divide to scale to a max of 1.0)
-      double motorSpeed = Math.sqrt((m_headingX * m_headingX) + (m_headingY * m_headingY)) / 1.42;
-      
-      // Set motor speed
-      m_frontLeft.setValue(motorSpeed);
-      m_frontRight.setValue(motorSpeed);
-      m_rearLeft.setValue(motorSpeed);
-      m_rearRight.setValue(motorSpeed);
-   }
-   
-   double cartesianToDegrees(double x, double y)
-   {
-      double result = 0.0;
-      
-      if (x >= 0)
-      {
-         if (y >= 0)
-         {
-            if (y > x)
-            {
-               result =  f(x / y);
-            }
-            else if (x == 0)
-            {
-               result =  0;
-            }
-            else
-            {
-               result =  90 - f(y / x);
-            }
-         }
-         else if (-y <= x)
-         {
-            result =  90 + f(-y / x);
-         }
-         else
-         {
-            result =  180 - f(-x / y);
-         }
-      }
-      else if (y <= 0)
-      {
-         if (y <= x)
-         {
-            result =  180 + f(x / y);
-         }
-         else
-         {
-            result =  270 - f(y / x);
-         }
-      }
-      else if (y <= -x)
-      {
-         result =  270 + f(-y / x);
-      }
-
-      else
-      {
-         result =  360 - f(-x / y);
-      }
-      
-      return result;
-   }
-
-   double f(double t)
-   {
-      return t * (a * t + b) + c;
-   }
-
    @Override
    public void selfTest()
    {
