@@ -1,6 +1,6 @@
 package org.wildstang.yearly.subsystems.swerve;
 
-public class CrabDrive implements SwerveMode
+public class CrabDriveMode implements SwerveMode
 {
    private final double c = -0.0802884041;
    private final double b = 60.81576;

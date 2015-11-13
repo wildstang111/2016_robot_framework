@@ -9,12 +9,14 @@ import org.wildstang.hardware.crio.outputs.WsVictor;
 import org.wildstang.yearly.robot.SwerveInputs;
 import org.wildstang.yearly.robot.WSOutputs;
 import org.wildstang.yearly.robot.WSSubsystems;
-import org.wildstang.yearly.subsystems.swerve.CrabDrive;
+import org.wildstang.yearly.subsystems.swerve.CrabDriveMode;
 import org.wildstang.yearly.subsystems.swerve.SwerveBaseState;
+import org.wildstang.yearly.subsystems.swerve.SwerveDriveMode;
 
 public class SwerveDrive implements Subsystem
 {
    private static final int CRAB = 0;
+   private static final int SWERVE = 1;
    
    private double m_joystickRotation = 0.0;
    private double m_headingX = 0.0;
@@ -30,7 +32,8 @@ public class SwerveDrive implements Subsystem
    private WsVictor m_rearLeft = null;
    private WsVictor m_rearRight = null;
 
-   private CrabDrive m_crabDriveMode = new CrabDrive();
+   private CrabDriveMode m_crabDriveMode = new CrabDriveMode();
+   private SwerveDriveMode m_swerveDriveMode = new SwerveDriveMode();
    private SwerveBaseState m_prevState = null;
    
    
@@ -146,6 +149,9 @@ public class SwerveDrive implements Subsystem
       {
          case CRAB:
             currentState = m_crabDriveMode.calculateNewState(m_prevState, m_headingX, m_headingY);
+            break;
+         case SWERVE:
+            currentState = m_swerveDriveMode.calculateNewState(m_prevState, m_headingX, m_headingY, m_joystickRotation);
             break;
          // TODO: Add any more modes here
          default:
