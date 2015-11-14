@@ -23,9 +23,9 @@ public class AutoMovementControl implements Subsystem
 
    private String m_name;
 
-   public AutoMovementControl(String name)
+   public AutoMovementControl()
    {
-      m_name = name;
+      m_name = "AutoMovementControl";
    }
 
    @Override
