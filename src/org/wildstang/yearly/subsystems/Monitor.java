@@ -15,9 +15,9 @@ public class Monitor implements Subsystem
    PowerDistributionPanel pdp;
    String m_name;
 
-   public Monitor(String name)
+   public Monitor()
    {
-      m_name = name;
+      m_name = "Monitor";
       init();
    }
 
