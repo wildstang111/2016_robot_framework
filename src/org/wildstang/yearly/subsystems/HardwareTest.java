@@ -27,10 +27,10 @@ public class HardwareTest implements Subsystem
    boolean b2, b3, b4;
    
    private int m_cycleCount = 0;
-   
-   public HardwareTest(String p_name)
+   /* Constructor should not take args to insure that it can be instantiated via reflection. */
+   public HardwareTest()
    {
-      m_name = p_name;
+      m_name = "Hardware_Test";
    }
    
    @Override
