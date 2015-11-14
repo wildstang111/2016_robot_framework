@@ -66,9 +66,9 @@ public class LED implements Subsystem
    LedCmd climbCmd = new LedCmd(0x06, 0x11, 0x12);
    LedCmd intakeCmd = new LedCmd(0x07, 0x11, 0x12);
 
-   public LED(String name)
+   public LED()
    {
-      m_name = name;
+      m_name = "LED";
       // Fire up the message sender thread.
       Thread t = new Thread(messageSender = new MessageHandler());
       // This is safe because there is only one instance of the subsystem in
