@@ -14,7 +14,7 @@ import org.wildstang.hardware.crio.outputs.WsSolenoid;
 import org.wildstang.hardware.crio.outputs.WsTalon;
 import org.wildstang.hardware.crio.outputs.WsVictor;
 import org.wildstang.yearly.robot.WSInputs;
-import org.wildstang.yearly.robot.WSOutputs;
+import org.wildstang.yearly.robot.TestOutputs;
 
 import edu.wpi.first.wpilibj.DriverStation;
 
@@ -190,35 +190,35 @@ public class HardwareTest implements Subsystem
 //      switch (m_cycleCount / 50)
 //      {
 //         case 0:
-//            ((WsVictor)Core.getOutputManager().getOutput(WSOutputs.VICTOR.getName())).setValue(-1.0);
+//            ((WsVictor)Core.getOutputManager().getOutput(TestOutputs.VICTOR.getName())).setValue(-1.0);
 //            DriverStation.reportError("Victor reverse\n", false);
 //            break;
 //         case 1:
-//            ((WsVictor)Core.getOutputManager().getOutput(WSOutputs.VICTOR.getName())).setValue(1.0);
+//            ((WsVictor)Core.getOutputManager().getOutput(TestOutputs.VICTOR.getName())).setValue(1.0);
 //            DriverStation.reportError("Victor forward\n", false);
 //            break;
 //         case 2:
-//            ((WsVictor)Core.getOutputManager().getOutput(WSOutputs.VICTOR_SP.getName())).setValue(-1.0);
+//            ((WsVictor)Core.getOutputManager().getOutput(TestOutputs.VICTOR_SP.getName())).setValue(-1.0);
 //            DriverStation.reportError("Victor SP reverse\n", false);
 //            break;
 //         case 3:
-//            ((WsVictor)Core.getOutputManager().getOutput(WSOutputs.VICTOR_SP.getName())).setValue(1.0);
+//            ((WsVictor)Core.getOutputManager().getOutput(TestOutputs.VICTOR_SP.getName())).setValue(1.0);
 //            DriverStation.reportError("Victor SP forward\n", false);
 //            break;
 //         case 4:
-//            ((WsRelay)Core.getOutputManager().getOutput(WSOutputs.SPIKE.getName())).setValue(WsRelay.RELAY_FORWARD);
+//            ((WsRelay)Core.getOutputManager().getOutput(TestOutputs.SPIKE.getName())).setValue(WsRelay.RELAY_FORWARD);
 //            DriverStation.reportError("Relay forward\n", false);
 //            break;
 //         case 5:
-//            ((WsRelay)Core.getOutputManager().getOutput(WSOutputs.SPIKE.getName())).setValue(WsRelay.RELAY_REVERSE);
+//            ((WsRelay)Core.getOutputManager().getOutput(TestOutputs.SPIKE.getName())).setValue(WsRelay.RELAY_REVERSE);
 //            DriverStation.reportError("Relay reverse\n", false);
 //            break;
 //         case 6:
-//            ((WsTalon)Core.getOutputManager().getOutput(WSOutputs.TALON.getName())).setValue(-1.0);
+//            ((WsTalon)Core.getOutputManager().getOutput(TestOutputs.TALON.getName())).setValue(-1.0);
 //            DriverStation.reportError("Talon reverse\n", false);
 //            break;
 //         case 7:
-//            ((WsTalon)Core.getOutputManager().getOutput(WSOutputs.TALON.getName())).setValue(1.0);
+//            ((WsTalon)Core.getOutputManager().getOutput(TestOutputs.TALON.getName())).setValue(1.0);
 //            DriverStation.reportError("Talon forward\n", false);
 //            break;
 //      }
@@ -226,26 +226,26 @@ public class HardwareTest implements Subsystem
       
       double spOutput = (2.5 - potVal) / 2.5;
 
-//      ((WsVictor)Core.getOutputManager().getOutput(WSOutputs.VICTOR.getName())).setValue(m_throttle);
-      ((WsVictor)Core.getOutputManager().getOutput(WSOutputs.VICTOR_SP.getName())).setValue(spOutput);
+//      ((WsVictor)Core.getOutputManager().getOutput(TestOutputs.VICTOR.getName())).setValue(m_throttle);
+      ((WsVictor)Core.getOutputManager().getOutput(TestOutputs.VICTOR_SP.getName())).setValue(spOutput);
 
-    ((WsVictor)Core.getOutputManager().getOutput(WSOutputs.VICTOR.getName())).setValue(b2 ? 1.0 : -1.0);
-//    ((WsVictor)Core.getOutputManager().getOutput(WSOutputs.VICTOR_SP.getName())).setValue(b3 ? 1.0 : -1.0);
-    ((WsTalon)Core.getOutputManager().getOutput(WSOutputs.TALON.getName())).setValue(b4 ? 1.0 : -1.0);
+    ((WsVictor)Core.getOutputManager().getOutput(TestOutputs.VICTOR.getName())).setValue(b2 ? 1.0 : -1.0);
+//    ((WsVictor)Core.getOutputManager().getOutput(TestOutputs.VICTOR_SP.getName())).setValue(b3 ? 1.0 : -1.0);
+    ((WsTalon)Core.getOutputManager().getOutput(TestOutputs.TALON.getName())).setValue(b4 ? 1.0 : -1.0);
       
 //      if (m_limitSwitch)
 //      {
-//         ((WsSolenoid)Core.getOutputManager().getOutput(WSOutputs.SINGLE.getName())).setValue(true);
-//         ((WsDoubleSolenoid)Core.getOutputManager().getOutput(WSOutputs.DOUBLE.getName())).setValue(WsDoubleSolenoidState.FORWARD.ordinal());
-//         ((WsRelay)Core.getOutputManager().getOutput(WSOutputs.SPIKE.getName())).setValue(WsRelayState.RELAY_FORWARD.ordinal());
-//         ((WsTalon)Core.getOutputManager().getOutput(WSOutputs.TALON.getName())).setValue(1.0);
+//         ((WsSolenoid)Core.getOutputManager().getOutput(TestOutputs.SINGLE.getName())).setValue(true);
+//         ((WsDoubleSolenoid)Core.getOutputManager().getOutput(TestOutputs.DOUBLE.getName())).setValue(WsDoubleSolenoidState.FORWARD.ordinal());
+//         ((WsRelay)Core.getOutputManager().getOutput(TestOutputs.SPIKE.getName())).setValue(WsRelayState.RELAY_FORWARD.ordinal());
+//         ((WsTalon)Core.getOutputManager().getOutput(TestOutputs.TALON.getName())).setValue(1.0);
 //      }
 //      else
 //      {
-//         ((WsSolenoid)Core.getOutputManager().getOutput(WSOutputs.SINGLE.getName())).setValue(false);
-//         ((WsDoubleSolenoid)Core.getOutputManager().getOutput(WSOutputs.DOUBLE.getName())).setValue(WsDoubleSolenoidState.REVERSE.ordinal());
-//         ((WsRelay)Core.getOutputManager().getOutput(WSOutputs.SPIKE.getName())).setValue(WsRelayState.RELAY_REVERSE.ordinal());
-//         ((WsTalon)Core.getOutputManager().getOutput(WSOutputs.TALON.getName())).setValue(-1.0);
+//         ((WsSolenoid)Core.getOutputManager().getOutput(TestOutputs.SINGLE.getName())).setValue(false);
+//         ((WsDoubleSolenoid)Core.getOutputManager().getOutput(TestOutputs.DOUBLE.getName())).setValue(WsDoubleSolenoidState.REVERSE.ordinal());
+//         ((WsRelay)Core.getOutputManager().getOutput(TestOutputs.SPIKE.getName())).setValue(WsRelayState.RELAY_REVERSE.ordinal());
+//         ((WsTalon)Core.getOutputManager().getOutput(TestOutputs.TALON.getName())).setValue(-1.0);
 //      }
    }
 

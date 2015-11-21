@@ -5,10 +5,12 @@ import org.wildstang.yearly.subsystems.DriveBase;
 import org.wildstang.yearly.subsystems.HardwareTest;
 import org.wildstang.yearly.subsystems.LED;
 import org.wildstang.yearly.subsystems.Monitor;
+import org.wildstang.yearly.subsystems.SwerveDrive;
 
 public enum WSSubsystems implements Subsystems
 {
    DRIVE_BASE("Drive base", DriveBase.class),
+   SWERVE_BASE("Swerve base", SwerveDrive.class),
    HARDWARE_TEST("Hardware test", HardwareTest.class),
    LED("LED", LED.class),
    MONITOR("Monitor", Monitor.class);
