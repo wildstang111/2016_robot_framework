@@ -36,6 +36,9 @@ public class SwerveDrive implements Subsystem
    private SwerveDriveMode m_swerveDriveMode = new SwerveDriveMode();
    private SwerveBaseState m_prevState = null;
    
+   public SwerveDrive()
+   {
+   }
    
    @Override
    public void inputUpdate(Input p_source)

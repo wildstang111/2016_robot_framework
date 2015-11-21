@@ -14,7 +14,7 @@ public class DriveBase implements Subsystem
    // WsVictor victor2; NO - new framework doesn't require this
    double throttle;
 
-   public DriveBase(String name)
+   public DriveBase()
    {
 
    }
@@ -49,7 +49,7 @@ public class DriveBase implements Subsystem
    @Override
    public void update()
    {
-      ((AnalogOutput) Core.getOutputManager().getOutput(TestOutputs.VICTOR.getName())).setValue(throttle);
+//      ((AnalogOutput) Core.getOutputManager().getOutput(TestOutputs.VICTOR.getName())).setValue(throttle);
 
    }
 
