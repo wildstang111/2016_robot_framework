@@ -36,10 +36,15 @@ public class SwerveDrive implements Subsystem
    private boolean m_recalcMode = false;
 
    // Drive motor outputs
-   private WsVictor m_frontLeft = null;
-   private WsVictor m_frontRight = null;
-   private WsVictor m_rearLeft = null;
-   private WsVictor m_rearRight = null;
+   private WsVictor m_frontLeftDrive = null;
+   private WsVictor m_frontRightDrive = null;
+   private WsVictor m_rearLeftDrive = null;
+   private WsVictor m_rearRightDrive = null;
+
+   private WsVictor m_frontLeftRotate = null;
+   private WsVictor m_frontRightRotate = null;
+   private WsVictor m_rearLeftRotate = null;
+   private WsVictor m_rearRightRotate = null;
 
    private CrabDriveMode m_crabDriveMode = new CrabDriveMode();
    private SwerveDriveMode m_swerveDriveMode = new SwerveDriveMode();
@@ -157,10 +162,14 @@ public class SwerveDrive implements Subsystem
 //      Core.getInputManager().getInput(SwerveInputs.POT.getName()).addInputListener(this);
       
       // Retrieve the drive motor outputs
-      m_frontLeft = (WsVictor)(Core.getOutputManager().getOutput(WSOutputs.FRONT_LEFT.getName()));
-      m_frontRight = (WsVictor)(Core.getOutputManager().getOutput(WSOutputs.FRONT_RIGHT.getName()));
-      m_rearLeft = (WsVictor)(Core.getOutputManager().getOutput(WSOutputs.REAR_LEFT.getName()));
-      m_rearRight = (WsVictor)(Core.getOutputManager().getOutput(WSOutputs.REAR_RIGHT.getName()));
+      m_frontLeftDrive = (WsVictor)(Core.getOutputManager().getOutput(WSOutputs.FRONT_LEFT.getName()));
+      m_frontRightDrive = (WsVictor)(Core.getOutputManager().getOutput(WSOutputs.FRONT_RIGHT.getName()));
+      m_rearLeftDrive = (WsVictor)(Core.getOutputManager().getOutput(WSOutputs.REAR_LEFT.getName()));
+      m_rearRightDrive = (WsVictor)(Core.getOutputManager().getOutput(WSOutputs.REAR_RIGHT.getName()));
+      m_frontLeftRotate = (WsVictor)(Core.getOutputManager().getOutput(WSOutputs.FRONT_LEFT_ROT.getName()));
+      m_frontRightRotate = (WsVictor)(Core.getOutputManager().getOutput(WSOutputs.FRONT_RIGHT_ROT.getName()));
+      m_rearLeftRotate = (WsVictor)(Core.getOutputManager().getOutput(WSOutputs.REAR_LEFT_ROT.getName()));
+      m_rearRightRotate = (WsVictor)(Core.getOutputManager().getOutput(WSOutputs.REAR_RIGHT_ROT.getName()));
    }
 
    @Override
@@ -207,13 +216,65 @@ public class SwerveDrive implements Subsystem
    private void updateModuleStates(SwerveBaseState state)
    {
       // Rotate wheels to heading
+      m_frontLeftRotate.setValue(calculateRotationSpeed(m_prevState.getFrontLeft().getRotationAngle(), state.getFrontLeft().getRotationAngle()));
+      m_frontRightRotate.setValue(calculateRotationSpeed(m_prevState.getFrontRight().getRotationAngle(), state.getFrontRight().getRotationAngle()));
+      m_rearLeftRotate.setValue(calculateRotationSpeed(m_prevState.getRearLeft().getRotationAngle(), state.getRearLeft().getRotationAngle()));
+      m_rearRightRotate.setValue(calculateRotationSpeed(m_prevState.getRearRight().getRotationAngle(), state.getRearRight().getRotationAngle()));
+
       // TODO - Set angle for rotation PID
 
       // Set motor speed
-      m_frontLeft.setValue(state.getFrontLeft().getSpeed());
-      m_frontRight.setValue(state.getFrontRight().getSpeed());
-      m_rearLeft.setValue(state.getRearLeft().getSpeed());
-      m_rearRight.setValue(state.getRearRight().getSpeed());
+      m_frontLeftDrive.setValue(state.getFrontLeft().getSpeed());
+      m_frontRightDrive.setValue(state.getFrontRight().getSpeed());
+      m_rearLeftDrive.setValue(state.getRearLeft().getSpeed());
+      m_rearRightDrive.setValue(state.getRearRight().getSpeed());
+   }
+   
+   private double calculateRotationSpeed(int p_prev, int p_target)
+   {
+      double result = 0.0;
+      
+      // Usually the angle changes will be small.  For large changes (> 180 difference)
+      // follow the shortest path to the new position
+      // Smooth the output so that it slows near the target position
+      // Limit the minimum output to some percentage (20%?) to prevent stalling
+      
+      int distanceToTarget = Math.abs(p_target - p_prev);
+      
+      boolean invertDirection = false;
+      
+      if (distanceToTarget > 180)
+      {
+         invertDirection = true;
+         distanceToTarget = 360 - distanceToTarget;
+      }
+      else if (p_target < p_prev)
+      {
+         invertDirection = true;
+      }
+
+      // Determine the speed of the motor
+      // Scale based on proportion of distance to travel of 180 degrees
+      // - 180 degrees away results in full speed
+      // - closer is slower
+      // - limit minimum output to 15%
+      result = distanceToTarget / 180;
+      if (distanceToTarget < 1)
+      {
+         result = 0.0;
+      }
+      else if (result < 0.15)
+      {
+         result = 0.15;
+      }
+
+      // Flip the output direction if we determined we should
+      if (invertDirection)
+      {
+         result *= -1;
+      }
+      
+      return result;
    }
 
    private void recalculateDriveMode()
