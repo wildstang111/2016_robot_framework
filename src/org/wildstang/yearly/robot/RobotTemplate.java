@@ -146,18 +146,19 @@ public class RobotTemplate extends IterativeRobot
 
       m_core = new Core(RoboRIOInputFactory.class, RoboRIOOutputFactory.class);
       m_stateLogger = new StateLogger(Core.getStateTracker());
-      startloggingState();
 
       // Load the config
       loadConfig();
 
       // Create application systems
-      m_core.createInputs(WSInputs.values());
+      m_core.createInputs(SwerveInputs.values());
       m_core.createOutputs(WSOutputs.values());
 
       // TODO
       // 1. Add subsystems
       m_core.createSubsystems(WSSubsystems.values());
+
+      startloggingState();
 
       // 2. Add Auto programs
 

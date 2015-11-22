@@ -18,7 +18,6 @@ public class Monitor implements Subsystem
    public Monitor()
    {
       m_name = "Monitor";
-      init();
    }
 
    @Override

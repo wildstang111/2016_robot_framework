@@ -13,7 +13,8 @@ public class DriveBase implements Subsystem
    // WsVictor victor1;
    // WsVictor victor2; NO - new framework doesn't require this
    double throttle;
-  /* Constructor should not take args to insure that it can be instantiated via reflection. */
+
+
    public DriveBase()
    {
 
@@ -49,7 +50,7 @@ public class DriveBase implements Subsystem
    @Override
    public void update()
    {
-      ((AnalogOutput) Core.getOutputManager().getOutput(TestOutputs.VICTOR.getName())).setValue(throttle);
+//      ((AnalogOutput) Core.getOutputManager().getOutput(TestOutputs.VICTOR.getName())).setValue(throttle);
 
    }
 
