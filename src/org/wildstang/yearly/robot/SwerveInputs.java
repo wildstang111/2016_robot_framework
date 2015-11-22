@@ -56,7 +56,10 @@ public enum SwerveInputs implements Inputs
 //    MAN_BUTTON_12("Manipulator button 12", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 11), true),
     
    TEST_HALL_EFFECT("Test Hall Effect", WSInputType.SWITCH, new WsDigitalInputConfig(0, true), true),
-   TEST_ABSOLUTE_ENCODER("Abs Encoder", WSInputType.ABSOLUTE_ENCODER, new WsAbsoluteEncoderConfig(0, 5), true),
+   FRONT_LEFT_ROT_ENCODER("Front left rotation encoder", WSInputType.ABSOLUTE_ENCODER, new WsAbsoluteEncoderConfig(0, 5), true),
+   FRONT_RIGHT_ROT_ENCODER("Front right rotation encoder", WSInputType.ABSOLUTE_ENCODER, new WsAbsoluteEncoderConfig(1, 5), true),
+   REAR_LEFT_ROT_ENCODER("Rear left rotation encoder", WSInputType.ABSOLUTE_ENCODER, new WsAbsoluteEncoderConfig(2, 5), true),
+   REAR_RIGHT_ROT_ENCODER("Rear right rotation encoder", WSInputType.ABSOLUTE_ENCODER, new WsAbsoluteEncoderConfig(3, 5), true),
    HALL_EFFECT("Lift hall effect sensors", WSInputType.HALL_EFFECT, new WsI2CInputConfig(Port.kMXP, 0x10), true);
 //   LIMIT_SWITCH("Limit switch", WSInputType.SWITCH, 0, true),
 //   POT("Pot", WSInputType.POT, new WsAnalogInputConfig(0), true);
