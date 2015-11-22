@@ -1,7 +1,11 @@
 package org.wildstang.yearly.subsystems;
 
+import java.text.DecimalFormat;
+import java.util.logging.Logger;
+
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.Input;
+import org.wildstang.framework.io.InputManager;
 import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.framework.subsystems.Subsystem;
@@ -13,6 +17,8 @@ import org.wildstang.yearly.subsystems.swerve.CrabDriveMode;
 import org.wildstang.yearly.subsystems.swerve.SwerveBaseState;
 import org.wildstang.yearly.subsystems.swerve.SwerveDriveMode;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 public class SwerveDrive implements Subsystem
 {
    private static final int CRAB = 0;
@@ -21,6 +27,9 @@ public class SwerveDrive implements Subsystem
    private double m_joystickRotation = 0.0;
    private double m_headingX = 0.0;
    private double m_headingY = 0.0;
+
+   private boolean m_hallEffect = false;
+   private double m_currentEncoder = 0.0;
    
    private int m_prevHeadingAngle = 0;
    private int m_mode = CRAB;
@@ -36,6 +45,11 @@ public class SwerveDrive implements Subsystem
    private SwerveDriveMode m_swerveDriveMode = new SwerveDriveMode();
    private SwerveBaseState m_prevState = null;
    
+   private static final DecimalFormat s_format = new DecimalFormat("#.##");
+   
+   private static Logger s_log = Logger.getLogger(SwerveDrive.class.getName());
+   private static final String s_className = "SwerveDrive";
+
    public SwerveDrive()
    {
    }
@@ -93,11 +107,19 @@ public class SwerveDrive implements Subsystem
       {
          m_joystickRotation = ((AnalogInput) p_source).getValue();
       }
-      else if (p_source.getName().equals(SwerveInputs.POT.getName()))
+      else if (p_source.getName().equals(SwerveInputs.TEST_HALL_EFFECT.getName()))
       {
+         m_hallEffect = ((DigitalInput) p_source).getValue();
       }
+//      else if (p_source.getName().equals(SwerveInputs.POT.getName()))
+//      {
+//      }
       else if (p_source.getName().equals(SwerveInputs.DRV_RIGHT_Y.getName()))
       {
+      }
+      else if (p_source.getName().equals(SwerveInputs.TEST_ABSOLUTE_ENCODER.getName()))
+      {
+         m_currentEncoder = ((AnalogInput) p_source).getValue();
       }
       // else if (p_source.getName().equals(SwerveInputs.DRV_DPAD_X.getName()))
       // {
@@ -129,7 +151,10 @@ public class SwerveDrive implements Subsystem
       // Core.getInputManager().getInput(SwerveInputs.DRV_DPAD_X.getName()).addInputListener(this);
       // Core.getInputManager().getInput(SwerveInputs.DRV_DPAD_Y.getName()).addInputListener(this);
 
-      Core.getInputManager().getInput(SwerveInputs.POT.getName()).addInputListener(this);
+      Core.getInputManager().getInput(SwerveInputs.TEST_HALL_EFFECT.getName()).addInputListener(this);
+      Core.getInputManager().getInput(SwerveInputs.TEST_ABSOLUTE_ENCODER.getName()).addInputListener(this);
+      
+//      Core.getInputManager().getInput(SwerveInputs.POT.getName()).addInputListener(this);
       
       // Retrieve the drive motor outputs
       m_frontLeft = (WsVictor)(Core.getOutputManager().getOutput(WSOutputs.FRONT_LEFT.getName()));
@@ -142,6 +167,18 @@ public class SwerveDrive implements Subsystem
    public void update()
    {
       SwerveBaseState currentState = null;
+      
+      if (m_hallEffect)
+      {
+         DriverStation.reportError("Switch on\n", false);
+      }
+      else
+      {
+         DriverStation.reportError("Switch off\n", false);
+      }
+      
+      s_log.fine("Encoder: " + s_format.format(m_currentEncoder) + "\n");
+      
       
       if (m_recalcMode)
       {

@@ -5,7 +5,9 @@ import org.wildstang.framework.hardware.InputConfig;
 import org.wildstang.framework.io.inputs.InputType;
 import org.wildstang.hardware.JoystickConstants;
 import org.wildstang.hardware.crio.inputs.WSInputType;
+import org.wildstang.hardware.crio.inputs.config.WsAbsoluteEncoderConfig;
 import org.wildstang.hardware.crio.inputs.config.WsAnalogInputConfig;
+import org.wildstang.hardware.crio.inputs.config.WsDigitalInputConfig;
 import org.wildstang.hardware.crio.inputs.config.WsI2CInputConfig;
 import org.wildstang.hardware.crio.inputs.config.WsJSButtonInputConfig;
 import org.wildstang.hardware.crio.inputs.config.WsJSJoystickInputConfig;
@@ -53,9 +55,11 @@ public enum SwerveInputs implements Inputs
 //    MAN_BUTTON_11("Manipulator button 11", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 10), true),
 //    MAN_BUTTON_12("Manipulator button 12", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 11), true),
     
-   HALL_EFFECT("Lift hall effect sensors", WSInputType.HALL_EFFECT, new WsI2CInputConfig(Port.kMXP, 0x10), true),
+   TEST_HALL_EFFECT("Test Hall Effect", WSInputType.SWITCH, new WsDigitalInputConfig(0, true), true),
+   TEST_ABSOLUTE_ENCODER("Abs Encoder", WSInputType.ABSOLUTE_ENCODER, new WsAbsoluteEncoderConfig(0, 5), true),
+   HALL_EFFECT("Lift hall effect sensors", WSInputType.HALL_EFFECT, new WsI2CInputConfig(Port.kMXP, 0x10), true);
 //   LIMIT_SWITCH("Limit switch", WSInputType.SWITCH, 0, true),
-   POT("Pot", WSInputType.POT, new WsAnalogInputConfig(0), true);
+//   POT("Pot", WSInputType.POT, new WsAnalogInputConfig(0), true);
 
    private final String m_name;
    private final InputType m_type;
