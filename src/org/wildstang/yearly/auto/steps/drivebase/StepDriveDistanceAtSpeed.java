@@ -37,7 +37,7 @@ public class StepDriveDistanceAtSpeed extends AutoStep
    @Override
    public void initialize()
    {
-      driveBase = ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName()));
+//      driveBase = ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName()));
 //      driveBase.resetLeftEncoder();
 //      driveBase.resetRightEncoder();
       if (distance < 0)

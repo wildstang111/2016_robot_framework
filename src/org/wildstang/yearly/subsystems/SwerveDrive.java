@@ -58,6 +58,14 @@ public class SwerveDrive implements Subsystem
    
    private static Logger s_log = Logger.getLogger(SwerveDrive.class.getName());
    private static final String s_className = "SwerveDrive";
+   
+   
+   // TODO: These constants should be configurable via the config file
+   // Minimum output for rotation motor controllers
+   private static final double MIN_ROTATION_OUTPUT = 0.05;
+   
+   // The angle distance (degrees) between the target and current angle before stopping output to the rotation motors
+   private static final int ROTATION_TARGET_TOLERANCE = 2;
 
    public SwerveDrive()
    {
@@ -296,13 +304,13 @@ public class SwerveDrive implements Subsystem
       // - closer is slower
       // - limit minimum output to 15%
       result = (double)distanceToTarget / 180;
-      if (distanceToTarget <= 1)
+      if (distanceToTarget <= ROTATION_TARGET_TOLERANCE)
       {
          result = 0.0;
       }
-      else if (result < 0.15)
+      else if (result < MIN_ROTATION_OUTPUT)
       {
-         result = 0.15;
+         result = MIN_ROTATION_OUTPUT;
       }
 
       // Set the correct direction
