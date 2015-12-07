@@ -19,25 +19,43 @@ public class CrabDriveMode implements SwerveMode
       WheelModuleState newRearLeft = new WheelModuleState();
       WheelModuleState newRearRight = new WheelModuleState();
 
-      // Crab drive is field oriented and does not allow the robot to rotate
-      int currentHeadingAngle = (int) cartesianToDegrees(headingX, headingY);
+      // Deadband check
+//      if (headingX <= -0.05 && headingX >= 0.05 &&
+//            headingY <= -0.05 && headingY >= 0.05)
+//      {
+         // Crab drive is field oriented and does not allow the robot to rotate
+         int currentHeadingAngle = (int) cartesianToDegrees(headingX, headingY);
+   
+         newFrontLeft.setRotationAngle(currentHeadingAngle);
+         newFrontRight.setRotationAngle(currentHeadingAngle);
+         newRearLeft.setRotationAngle(currentHeadingAngle);
+         newRearRight.setRotationAngle(currentHeadingAngle);
+   
+         // Calculate the speed based on joystick position
+         // TODO - use polar coordinate transformation, not just sqrt
+         // For now, use sqrt / 1.42 (divide to scale to a max of 1.0)
+         double motorSpeed = Math.sqrt((headingX * headingX) + (headingY * headingY)) / 1.42;
+   
+         newFrontLeft.setSpeed(motorSpeed);
+         newFrontRight.setSpeed(motorSpeed);
+         newRearLeft.setSpeed(motorSpeed);
+         newRearRight.setSpeed(motorSpeed);
+         
+         
+//      }
+//      else
+//      {
+//         newFrontLeft.setRotationAngle(p_prevState.getFrontLeft().getRotationAngle());
+//         newFrontRight.setRotationAngle(p_prevState.getFrontRight().getRotationAngle());
+//         newRearLeft.setRotationAngle(p_prevState.getRearLeft().getRotationAngle());
+//         newRearRight.setRotationAngle(p_prevState.getRearRight().getRotationAngle());
+//   
+//         newFrontLeft.setSpeed(0.0);
+//         newFrontRight.setSpeed(0.0);
+//         newRearLeft.setSpeed(0.0);
+//         newRearRight.setSpeed(0.0);
+//      }
 
-      newFrontLeft.setRotationAngle(currentHeadingAngle);
-      newFrontRight.setRotationAngle(currentHeadingAngle);
-      newRearLeft.setRotationAngle(currentHeadingAngle);
-      newRearRight.setRotationAngle(currentHeadingAngle);
-
-      // Calculate the speed based on joystick position
-      // TODO - use polar coordinate transformation, not just sqrt
-      // For now, use sqrt / 1.42 (divide to scale to a max of 1.0)
-      double motorSpeed = Math.sqrt((headingX * headingX) + (headingY * headingY)) / 1.42;
-
-      newFrontLeft.setSpeed(motorSpeed);
-      newFrontRight.setSpeed(motorSpeed);
-      newRearLeft.setSpeed(motorSpeed);
-      newRearRight.setSpeed(motorSpeed);
-      
-      
       return new SwerveBaseState(newFrontLeft, newFrontRight, newRearLeft, newRearRight);
    }
 
