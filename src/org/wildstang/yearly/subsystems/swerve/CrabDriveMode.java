@@ -6,6 +6,8 @@ public class CrabDriveMode implements SwerveMode
    private final double b = 60.81576;
    private final double a = -15.574181;
 
+   private static final double SPEED_LIMIT = 1.0;
+   private static final double DEADBAND_SPEED = 0.02;
    
    @Override
    public SwerveBaseState calculateNewState(SwerveBaseState p_prevState, double... args)
@@ -14,15 +16,33 @@ public class CrabDriveMode implements SwerveMode
       double headingX = args[0];
       double headingY = args[1];
       
-      WheelModuleState newFrontLeft = new WheelModuleState();
-      WheelModuleState newFrontRight = new WheelModuleState();
-      WheelModuleState newRearLeft = new WheelModuleState();
-      WheelModuleState newRearRight = new WheelModuleState();
+      SwerveBaseState newState = SwerveUtils.createBaseState();
+
+      WheelModuleState newFrontLeft = newState.getFrontLeft();
+      WheelModuleState newFrontRight = newState.getFrontRight();
+      WheelModuleState newRearLeft = newState.getRearLeft();
+      WheelModuleState newRearRight = newState.getRearRight();
+
+      // Calculate the speed based on joystick position
+      double motorSpeed = calculateSpeed(headingX, headingY);
 
       // Deadband check
-//      if (headingX <= -0.05 && headingX >= 0.05 &&
-//            headingY <= -0.05 && headingY >= 0.05)
-//      {
+      if (motorSpeed < DEADBAND_SPEED && motorSpeed > -DEADBAND_SPEED)
+      {
+         // If the calculated new speed is very low, leave the wheels at their current angle, and set the 
+         // motor output to 0
+         newFrontLeft.setRotationAngle(p_prevState.getFrontLeft().getRotationAngle());
+         newFrontRight.setRotationAngle(p_prevState.getFrontRight().getRotationAngle());
+         newRearLeft.setRotationAngle(p_prevState.getRearLeft().getRotationAngle());
+         newRearRight.setRotationAngle(p_prevState.getRearRight().getRotationAngle());
+ 
+         newFrontLeft.setSpeed(0.0);
+         newFrontRight.setSpeed(0.0);
+         newRearLeft.setSpeed(0.0);
+         newRearRight.setSpeed(0.0);
+      }
+      else
+      {
          // Crab drive is field oriented and does not allow the robot to rotate
          int currentHeadingAngle = (int) cartesianToDegrees(headingX, headingY);
    
@@ -31,34 +51,35 @@ public class CrabDriveMode implements SwerveMode
          newRearLeft.setRotationAngle(currentHeadingAngle);
          newRearRight.setRotationAngle(currentHeadingAngle);
    
-         // Calculate the speed based on joystick position
-         // TODO - use polar coordinate transformation, not just sqrt
-         // For now, use sqrt / 1.42 (divide to scale to a max of 1.0)
-         double motorSpeed = Math.sqrt((headingX * headingX) + (headingY * headingY)) / 1.42;
    
          newFrontLeft.setSpeed(motorSpeed);
          newFrontRight.setSpeed(motorSpeed);
          newRearLeft.setSpeed(motorSpeed);
          newRearRight.setSpeed(motorSpeed);
-         
-         
-//      }
-//      else
-//      {
-//         newFrontLeft.setRotationAngle(p_prevState.getFrontLeft().getRotationAngle());
-//         newFrontRight.setRotationAngle(p_prevState.getFrontRight().getRotationAngle());
-//         newRearLeft.setRotationAngle(p_prevState.getRearLeft().getRotationAngle());
-//         newRearRight.setRotationAngle(p_prevState.getRearRight().getRotationAngle());
-//   
-//         newFrontLeft.setSpeed(0.0);
-//         newFrontRight.setSpeed(0.0);
-//         newRearLeft.setSpeed(0.0);
-//         newRearRight.setSpeed(0.0);
-//      }
+      }
 
-      return new SwerveBaseState(newFrontLeft, newFrontRight, newRearLeft, newRearRight);
+      return newState;
    }
 
+   
+   private double calculateSpeed(double headingX, double headingY)
+   {
+      double value;
+      
+      value = Math.sqrt((headingX * headingX) + (headingY * headingY));
+      
+      if (value < -SPEED_LIMIT)
+      {
+         value = -SPEED_LIMIT;
+      }
+      if (value > SPEED_LIMIT)
+      {
+         value = SPEED_LIMIT;
+      }
+      
+      return value;
+   }
+   
    double cartesianToDegrees(double x, double y)
    {
       double result = 0.0;

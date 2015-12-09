@@ -17,10 +17,12 @@ public class SwerveDriveMode implements SwerveMode
       double fwd = args[1];
       double rotation = args[2];
       
-      WheelModuleState newFrontLeft = new WheelModuleState();
-      WheelModuleState newFrontRight = new WheelModuleState();
-      WheelModuleState newRearLeft = new WheelModuleState();
-      WheelModuleState newRearRight = new WheelModuleState();
+      SwerveBaseState newState = SwerveUtils.createBaseState();
+
+      WheelModuleState newFrontLeft = newState.getFrontLeft();
+      WheelModuleState newFrontRight = newState.getFrontRight();
+      WheelModuleState newRearLeft = newState.getRearLeft();
+      WheelModuleState newRearRight = newState.getRearRight();
 
       double A = strafe - rotation * LRscaleFactor;
       double B = strafe + rotation * LRscaleFactor;
@@ -108,7 +110,7 @@ public class SwerveDriveMode implements SwerveMode
       newRearRight.setSpeed(rrSpeed);
       
       
-      return new SwerveBaseState(newFrontLeft, newFrontRight, newRearLeft, newRearRight);
+      return newState;
    }
 
 }

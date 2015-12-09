@@ -16,6 +16,7 @@ import org.wildstang.yearly.robot.WSSubsystems;
 import org.wildstang.yearly.subsystems.swerve.CrabDriveMode;
 import org.wildstang.yearly.subsystems.swerve.SwerveBaseState;
 import org.wildstang.yearly.subsystems.swerve.SwerveDriveMode;
+import org.wildstang.yearly.subsystems.swerve.SwerveUtils;
 import org.wildstang.yearly.subsystems.swerve.WheelModuleState;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -50,6 +51,21 @@ public class SwerveDrive implements Subsystem
    private WsVictor m_rearLeftRotate = null;
    private WsVictor m_rearRightRotate = null;
 
+   // Home position variables - state of the home switch, and calculated encoder offset
+   private double m_frontLeftEncOffset = 0.0;
+   private double m_frontRightEncOffset = 0.0;
+   private double m_rearLeftEncOffset = 0.0;
+   private double m_rearRightEncOffset = 0.0;
+   
+   private boolean m_flHome;
+   private boolean m_frHome;
+   private boolean m_rlHome;
+   private boolean m_rrHome;
+   
+   
+   private boolean m_homeButton1 = false;
+   private boolean m_homeButton2 = false;
+   
    private CrabDriveMode m_crabDriveMode = new CrabDriveMode();
    private SwerveDriveMode m_swerveDriveMode = new SwerveDriveMode();
    private SwerveBaseState m_prevState = new SwerveBaseState(new WheelModuleState(), new WheelModuleState(), new WheelModuleState(), new WheelModuleState());
@@ -100,11 +116,13 @@ public class SwerveDrive implements Subsystem
       else if (p_source.getName().equals(SwerveInputs.DRV_BUTTON_8.getName()))
       {
       }
-      else if (p_source.getName().equals(SwerveInputs.DRV_BUTTON_9.getName()))
+      else if (p_source.getName().equals(SwerveInputs.HOME_BUTTON_1.getName()))
       {
+         m_homeButton1 = ((DigitalInput)p_source).getValue();
       }
-      else if (p_source.getName().equals(SwerveInputs.DRV_BUTTON_10.getName()))
+      else if (p_source.getName().equals(SwerveInputs.HOME_BUTTON_2.getName()))
       {
+         m_homeButton2 = ((DigitalInput)p_source).getValue();
       }
       else if (p_source.getName().equals(SwerveInputs.DRV_BUTTON_11.getName()))
       {
@@ -124,9 +142,21 @@ public class SwerveDrive implements Subsystem
       {
          m_joystickRotation = ((AnalogInput) p_source).getValue();
       }
-      else if (p_source.getName().equals(SwerveInputs.TEST_HALL_EFFECT.getName()))
+      else if (p_source.getName().equals(SwerveInputs.FRONT_LEFT_HOME.getName()))
       {
-         m_hallEffect = ((DigitalInput) p_source).getValue();
+         m_flHome = ((DigitalInput) p_source).getValue();
+      }
+      else if (p_source.getName().equals(SwerveInputs.FRONT_RIGHT_HOME.getName()))
+      {
+         m_frHome = ((DigitalInput) p_source).getValue();
+      }
+      else if (p_source.getName().equals(SwerveInputs.REAR_LEFT_HOME.getName()))
+      {
+         m_rlHome = ((DigitalInput) p_source).getValue();
+      }
+      else if (p_source.getName().equals(SwerveInputs.REAR_RIGHT_HOME.getName()))
+      {
+         m_rrHome = ((DigitalInput) p_source).getValue();
       }
 //      else if (p_source.getName().equals(SwerveInputs.POT.getName()))
 //      {
@@ -169,8 +199,8 @@ public class SwerveDrive implements Subsystem
       Core.getInputManager().getInput(SwerveInputs.DRV_BUTTON_6.getName()).addInputListener(this);
       Core.getInputManager().getInput(SwerveInputs.DRV_BUTTON_7.getName()).addInputListener(this);
       Core.getInputManager().getInput(SwerveInputs.DRV_BUTTON_8.getName()).addInputListener(this);
-      Core.getInputManager().getInput(SwerveInputs.DRV_BUTTON_9.getName()).addInputListener(this);
-      Core.getInputManager().getInput(SwerveInputs.DRV_BUTTON_10.getName()).addInputListener(this);
+      Core.getInputManager().getInput(SwerveInputs.HOME_BUTTON_1.getName()).addInputListener(this);
+      Core.getInputManager().getInput(SwerveInputs.HOME_BUTTON_2.getName()).addInputListener(this);
       Core.getInputManager().getInput(SwerveInputs.DRV_BUTTON_11.getName()).addInputListener(this);
       Core.getInputManager().getInput(SwerveInputs.DRV_BUTTON_12.getName()).addInputListener(this);
       Core.getInputManager().getInput(SwerveInputs.DRV_ROTATION.getName()).addInputListener(this);
@@ -180,7 +210,10 @@ public class SwerveDrive implements Subsystem
       // Core.getInputManager().getInput(SwerveInputs.DRV_DPAD_X.getName()).addInputListener(this);
       // Core.getInputManager().getInput(SwerveInputs.DRV_DPAD_Y.getName()).addInputListener(this);
 
-      Core.getInputManager().getInput(SwerveInputs.TEST_HALL_EFFECT.getName()).addInputListener(this);
+      Core.getInputManager().getInput(SwerveInputs.FRONT_LEFT_HOME.getName()).addInputListener(this);
+      Core.getInputManager().getInput(SwerveInputs.FRONT_RIGHT_HOME.getName()).addInputListener(this);
+      Core.getInputManager().getInput(SwerveInputs.REAR_LEFT_HOME.getName()).addInputListener(this);
+      Core.getInputManager().getInput(SwerveInputs.REAR_RIGHT_HOME.getName()).addInputListener(this);
       Core.getInputManager().getInput(SwerveInputs.FRONT_LEFT_ROT_ENCODER.getName()).addInputListener(this);
       Core.getInputManager().getInput(SwerveInputs.FRONT_RIGHT_ROT_ENCODER.getName()).addInputListener(this);
       Core.getInputManager().getInput(SwerveInputs.REAR_LEFT_ROT_ENCODER.getName()).addInputListener(this);
@@ -197,6 +230,12 @@ public class SwerveDrive implements Subsystem
       m_frontRightRotate = (WsVictor)(Core.getOutputManager().getOutput(WSOutputs.FRONT_RIGHT_ROT.getName()));
       m_rearLeftRotate = (WsVictor)(Core.getOutputManager().getOutput(WSOutputs.REAR_LEFT_ROT.getName()));
       m_rearRightRotate = (WsVictor)(Core.getOutputManager().getOutput(WSOutputs.REAR_RIGHT_ROT.getName()));
+      
+      // Get the encoder offset for each wheel - this assumes they have been set to the home position
+      m_frontLeftEncOffset = ((AnalogInput)Core.getInputManager().getInput(SwerveInputs.FRONT_LEFT_ROT_ENCODER.getName())).getValue();
+      m_frontRightEncOffset = ((AnalogInput)Core.getInputManager().getInput(SwerveInputs.FRONT_RIGHT_ROT_ENCODER.getName())).getValue();
+      m_rearLeftEncOffset = ((AnalogInput)Core.getInputManager().getInput(SwerveInputs.REAR_LEFT_ROT_ENCODER.getName())).getValue();
+      m_rearRightEncOffset = ((AnalogInput)Core.getInputManager().getInput(SwerveInputs.REAR_RIGHT_ROT_ENCODER.getName())).getValue();
    }
 
    @Override
@@ -206,29 +245,86 @@ public class SwerveDrive implements Subsystem
 
       SwerveBaseState currentState = null;
 
-      if (m_recalcMode)
+      if (m_homeButton1 && m_homeButton2)
       {
-         recalculateDriveMode();
+         // If both 'home' buttons are pressed (select and start), move to the home position
+         currentState = SwerveUtils.createBaseState();
+
+         // Rotate each wheel 1 degree more clockwise until they hit their home position
+         if (!m_flHome)
+         {
+            currentState.getFrontLeft().setRotationAngle((int)m_flEncoder + 1);
+         }
+         else
+         {
+            m_frontLeftEncOffset = m_flEncoder;
+         }
+
+         if (!m_frHome)
+         {
+            currentState.getFrontRight().setRotationAngle((int)m_frEncoder + 1);
+         }
+         else
+         {
+            m_frontRightEncOffset = m_frEncoder;
+         }
+
+         if (!m_rlHome)
+         {
+            currentState.getRearLeft().setRotationAngle((int)m_rlEncoder + 1);
+         }
+         else
+         {
+            m_rearLeftEncOffset = m_rlEncoder;
+         }
+
+         if (!m_rrHome)
+         {
+            currentState.getRearRight().setRotationAngle((int)m_rrEncoder + 1);
+         }
+         else
+         {
+            m_rearRightEncOffset = m_rrEncoder;
+         }
+
+         // Note: Don't adjust the target angle for the offset, since that's what we're trying to calculate here!
+         
+         currentState.getFrontLeft().setSpeed(0.0);
+         currentState.getFrontRight().setSpeed(0.0);
+         currentState.getRearLeft().setSpeed(0.0);
+         currentState.getRearRight().setSpeed(0.0);
       }
-      
-      switch (m_mode)
+      else
       {
-         case CRAB:
-            currentState = m_crabDriveMode.calculateNewState(m_prevState, m_headingX, m_headingY);
-            break;
-         case SWERVE:
-            currentState = m_swerveDriveMode.calculateNewState(m_prevState, m_headingX, m_headingY, m_joystickRotation);
-            break;
-         // TODO: Add any more modes here
-         default:
-            currentState = m_crabDriveMode.calculateNewState(m_prevState, m_headingX, m_headingY);
-            break;
+   
+         if (m_recalcMode)
+         {
+            recalculateDriveMode();
+         }
+         
+         switch (m_mode)
+         {
+            case CRAB:
+               currentState = m_crabDriveMode.calculateNewState(m_prevState, m_headingX, m_headingY);
+               break;
+            case SWERVE:
+               currentState = m_swerveDriveMode.calculateNewState(m_prevState, m_headingX, m_headingY, m_joystickRotation);
+               break;
+            // TODO: Add any more modes here
+            default:
+               currentState = m_crabDriveMode.calculateNewState(m_prevState, m_headingX, m_headingY);
+               break;
+         }
+         
+         adjustRotationTargetForOffset(currentState);
+
       }
-      
-      updateModuleStates(currentState);
       
       m_prevState = currentState;
       
+      // Set values on the outputs for update
+      updateModuleStates(currentState);
+
       long end = System.nanoTime();
       s_log.fine("Swerve update time: " + (end - start) / 1000000 + "ms");
 
@@ -242,14 +338,28 @@ public class SwerveDrive implements Subsystem
       m_rearLeftRotate.setValue(calculateRotationSpeed((int)m_rlEncoder, state.getRearLeft().getRotationAngle()));
       m_rearRightRotate.setValue(calculateRotationSpeed((int)m_rrEncoder, state.getRearRight().getRotationAngle()));
 
-      // TODO - Set angle for rotation PID
-
       // Set motor speed
       m_frontLeftDrive.setValue(state.getFrontLeft().getSpeed());
       m_frontRightDrive.setValue(state.getFrontRight().getSpeed());
       m_rearLeftDrive.setValue(state.getRearLeft().getSpeed());
       m_rearRightDrive.setValue(state.getRearRight().getSpeed());
    }
+
+   
+   private void adjustRotationTargetForOffset(SwerveBaseState state)
+   {
+      state.getFrontLeft().setRotationAngle(calculateEncoderTargetPos(state.getFrontLeft().getRotationAngle(), (int)m_frontLeftEncOffset));
+      state.getFrontRight().setRotationAngle(calculateEncoderTargetPos(state.getFrontRight().getRotationAngle(), (int)m_frontRightEncOffset));
+      state.getRearLeft().setRotationAngle(calculateEncoderTargetPos(state.getRearLeft().getRotationAngle(), (int)m_rearLeftEncOffset));
+      state.getRearRight().setRotationAngle(calculateEncoderTargetPos(state.getRearRight().getRotationAngle(), (int)m_rearRightEncOffset));
+   }
+
+   
+   private int calculateEncoderTargetPos(int p_currentEncoder, int p_offset)
+   {
+      return (p_currentEncoder + p_offset) % 360;
+   }
+   
    
    private double calculateRotationSpeed(int p_prev, int p_target)
    {
