@@ -66,6 +66,14 @@ public class SwerveDrive implements Subsystem
    private boolean m_homeButton1 = false;
    private boolean m_homeButton2 = false;
    
+   // Speed output related variables
+   private static final double DEFAULT_SCALE_FACTOR = 0.75;
+   private static final double ANTI_TURBO_SCALE_FACTOR = 0.5;
+   private static final double TURBO_SCALE_SCALE_FACTOR = 1.0;
+   private boolean m_antiTurbo = false;
+   private boolean m_turbo = false;
+   private double m_scaleFactor = DEFAULT_SCALE_FACTOR;
+   
    private CrabDriveMode m_crabDriveMode = new CrabDriveMode();
    private SwerveDriveMode m_swerveDriveMode = new SwerveDriveMode();
    private SwerveBaseState m_prevState = new SwerveBaseState(new WheelModuleState(), new WheelModuleState(), new WheelModuleState(), new WheelModuleState());
@@ -110,11 +118,13 @@ public class SwerveDrive implements Subsystem
       else if (p_source.getName().equals(SwerveInputs.DRV_BUTTON_6.getName()))
       {
       }
-      else if (p_source.getName().equals(SwerveInputs.DRV_BUTTON_7.getName()))
+      else if (p_source.getName().equals(SwerveInputs.TURBO.getName()))
       {
+         m_turbo = ((DigitalInput)p_source).getValue();
       }
-      else if (p_source.getName().equals(SwerveInputs.DRV_BUTTON_8.getName()))
+      else if (p_source.getName().equals(SwerveInputs.ANTI_TURBO.getName()))
       {
+         m_antiTurbo = ((DigitalInput)p_source).getValue();
       }
       else if (p_source.getName().equals(SwerveInputs.HOME_BUTTON_1.getName()))
       {
@@ -197,8 +207,8 @@ public class SwerveDrive implements Subsystem
       Core.getInputManager().getInput(SwerveInputs.DRV_BUTTON_4.getName()).addInputListener(this);
       Core.getInputManager().getInput(SwerveInputs.DRV_BUTTON_5.getName()).addInputListener(this);
       Core.getInputManager().getInput(SwerveInputs.DRV_BUTTON_6.getName()).addInputListener(this);
-      Core.getInputManager().getInput(SwerveInputs.DRV_BUTTON_7.getName()).addInputListener(this);
-      Core.getInputManager().getInput(SwerveInputs.DRV_BUTTON_8.getName()).addInputListener(this);
+      Core.getInputManager().getInput(SwerveInputs.TURBO.getName()).addInputListener(this);
+      Core.getInputManager().getInput(SwerveInputs.ANTI_TURBO.getName()).addInputListener(this);
       Core.getInputManager().getInput(SwerveInputs.HOME_BUTTON_1.getName()).addInputListener(this);
       Core.getInputManager().getInput(SwerveInputs.HOME_BUTTON_2.getName()).addInputListener(this);
       Core.getInputManager().getInput(SwerveInputs.DRV_BUTTON_11.getName()).addInputListener(this);
@@ -243,6 +253,8 @@ public class SwerveDrive implements Subsystem
    {
       long start = System.nanoTime();
 
+      calculateSpeedScaleFactor();
+      
       SwerveBaseState currentState = null;
 
       if (m_homeButton1 && m_homeButton2)
@@ -330,6 +342,22 @@ public class SwerveDrive implements Subsystem
 
    }
 
+   private void calculateSpeedScaleFactor()
+   {
+      if (m_antiTurbo)
+      {
+         m_scaleFactor = ANTI_TURBO_SCALE_FACTOR;
+      }
+      else if (m_turbo)
+      {
+         m_scaleFactor = TURBO_SCALE_SCALE_FACTOR;
+      }
+      else
+      {
+         m_scaleFactor = DEFAULT_SCALE_FACTOR;
+      }
+   }
+   
    private void updateModuleStates(SwerveBaseState state)
    {
       // Rotate wheels to heading
@@ -339,10 +367,10 @@ public class SwerveDrive implements Subsystem
       m_rearRightRotate.setValue(calculateRotationSpeed((int)m_rrEncoder, state.getRearRight().getRotationAngle()));
 
       // Set motor speed
-      m_frontLeftDrive.setValue(state.getFrontLeft().getSpeed());
-      m_frontRightDrive.setValue(state.getFrontRight().getSpeed());
-      m_rearLeftDrive.setValue(state.getRearLeft().getSpeed());
-      m_rearRightDrive.setValue(state.getRearRight().getSpeed());
+      m_frontLeftDrive.setValue(state.getFrontLeft().getSpeed() * m_scaleFactor);
+      m_frontRightDrive.setValue(state.getFrontRight().getSpeed() * m_scaleFactor);
+      m_rearLeftDrive.setValue(state.getRearLeft().getSpeed() * m_scaleFactor);
+      m_rearRightDrive.setValue(state.getRearRight().getSpeed() * m_scaleFactor);
    }
 
    
