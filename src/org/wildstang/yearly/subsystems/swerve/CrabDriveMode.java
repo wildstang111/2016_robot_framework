@@ -64,20 +64,20 @@ public class CrabDriveMode implements SwerveMode
    
    private double calculateSpeed(double headingX, double headingY)
    {
-      double value;
+      double speed;
       
-      value = Math.sqrt((headingX * headingX) + (headingY * headingY));
+      speed = Math.sqrt((headingX * headingX) + (headingY * headingY));
       
-      if (value < -SPEED_LIMIT)
+      if (speed < -SPEED_LIMIT)
       {
-         value = -SPEED_LIMIT;
+         speed = -SPEED_LIMIT;
       }
-      if (value > SPEED_LIMIT)
+      if (speed > SPEED_LIMIT)
       {
-         value = SPEED_LIMIT;
+         speed = SPEED_LIMIT;
       }
       
-      return value;
+      return speed;
    }
    
    double cartesianToDegrees(double x, double y)

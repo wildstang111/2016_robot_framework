@@ -2,9 +2,10 @@ package org.wildstang.yearly.subsystems;
 
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.Input;
-import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.framework.subsystems.Subsystem;
-import org.wildstang.yearly.robot.WSInputs;
+import org.wildstang.hardware.crio.outputs.WsI2COutput;
+import org.wildstang.yearly.robot.SwerveInputs;
+import org.wildstang.yearly.robot.WSOutputs;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
@@ -12,18 +13,18 @@ import edu.wpi.first.wpilibj.I2C.Port;
 
 /**
  *
- * @author John
  */
 public class LED implements Subsystem
 {
 
-   MessageHandler messageSender;
    // Sent states
    boolean autoDataSent = false;
    boolean disableDataSent = false;
    boolean sendData = false;
 
    private String m_name;
+   
+   WsI2COutput m_ledOutput;
 
    public static class LedCmd
    {
@@ -36,8 +37,9 @@ public class LED implements Subsystem
          dataBytes[0] = (byte) command;
          dataBytes[1] = (byte) payloadByteOne;
          dataBytes[2] = (byte) payloadByteTwo;
-         dataBytes[3] = 0;
-         dataBytes[4] = 0;
+         // Extremely fast and cheap data confirmation algorithm
+         dataBytes[3] = (byte) (~dataBytes[1]);
+         dataBytes[4] = (byte) (~dataBytes[2]);
       }
 
       byte[] getBytes()
@@ -52,7 +54,7 @@ public class LED implements Subsystem
     * 0x13 | 0x14 | | Climb | 0x06 | 0x11 | 0x12 | | Autonomous | 0x02 | 0x11 |
     * 0x12 | | Red Alliance | 0x04 | 0x52 | 0x01 | | Blue Alliance | 0x04 | 0x47
     * | 0x01 |
-    *
+    * 
     * Send sequence once, no spamming the Arduino.
     */
 
@@ -69,27 +71,20 @@ public class LED implements Subsystem
    public LED()
    {
       m_name = "LED";
-      // Fire up the message sender thread.
-      Thread t = new Thread(messageSender = new MessageHandler());
-      // This is safe because there is only one instance of the subsystem in
-      // the subsystem container.
-      t.start();
-
-      // Kicker
-//      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_6.getName()).addInputListener(this);
-      // Intake
-//      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_5.getName()).addInputListener(this);
-      // Climb
-//      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_2.getName()).addInputListener(this);
    }
 
    @Override
    public void init()
    {
-      // Nothing to do anymore, I'm bored.
       autoDataSent = false;
       disableDataSent = false;
       sendData = false;
+
+      Core.getInputManager().getInput(SwerveInputs.ANTI_TURBO.getName()).addInputListener(this);
+      Core.getInputManager().getInput(SwerveInputs.TURBO.getName()).addInputListener(this);
+      Core.getInputManager().getInput(SwerveInputs.DRV_BUTTON_2.getName()).addInputListener(this);
+      
+      m_ledOutput = (WsI2COutput)Core.getOutputManager().getOutput(WSOutputs.LED.getName());
    }
 
    @Override
@@ -116,7 +111,8 @@ public class LED implements Subsystem
             // Don't take time in auto sending LED cmds.
             if (!autoDataSent)
             {
-               autoDataSent = sendData(autoCmd);
+               m_ledOutput.setValue(autoCmd.getBytes());
+               autoDataSent = true;
             }
          }
       }
@@ -131,24 +127,26 @@ public class LED implements Subsystem
             {
                if (!disableDataSent)
                {
-                  disableDataSent = sendData(redCmd);
+                  m_ledOutput.setValue(redCmd.getBytes());
+                  disableDataSent = true;
                }
             }
-            break;
+               break;
 
             case Blue:
             {
                if (!disableDataSent)
                {
-                  disableDataSent = sendData(blueCmd);
+                  m_ledOutput.setValue(blueCmd.getBytes());
+                  disableDataSent = true;
                }
             }
-            break;
+               break;
             default:
             {
                disableDataSent = false;
             }
-            break;
+               break;
          }
       }
    }
@@ -156,20 +154,22 @@ public class LED implements Subsystem
    @Override
    public void inputUpdate(Input source)
    {
-//      if (((DigitalInput) source).getName().equals(WSInputs.MAN_BUTTON_6.getName()))
-//      {
-//         if (((DigitalInput) source).getValue())
-//         {
-//            sendData(shootCmd);
-//         }
-//      }
-//      else if (((DigitalInput) source).getName().equals(WSInputs.DRV_BUTTON_2.getName()))
-//      {
-//         if (((DigitalInput) source).getValue())
-//         {
-//            sendData(climbCmd);
-//         }
-//      }
+      // if (((DigitalInput)
+      // source).getName().equals(WSInputs.MAN_BUTTON_6.getName()))
+      // {
+      // if (((DigitalInput) source).getValue())
+      // {
+      // sendData(shootCmd);
+      // }
+      // }
+      // else if (((DigitalInput)
+      // source).getName().equals(WSInputs.DRV_BUTTON_2.getName()))
+      // {
+      // if (((DigitalInput) source).getValue())
+      // {
+      // sendData(climbCmd);
+      // }
+      // }
    }
 
    @Override
@@ -183,83 +183,4 @@ public class LED implements Subsystem
       return m_name;
    }
 
-   private boolean sendData(LedCmd ledCmd)
-   {
-      byte[] dataBytes = ledCmd.getBytes();
-
-      synchronized (messageSender)
-      {
-         messageSender.setSendData(dataBytes, dataBytes.length);
-         messageSender.notify();
-      }
-
-      return true;
-   }
-
-   private static class MessageHandler implements Runnable
-   {
-      // Designed to only have one single threaded controller. (LED)
-      // Offload to a thread avoid blocking main thread with LED sends.
-
-      static byte[] rcvBytes;
-      byte[] sendData;
-      int sendSize = 0;
-      I2C i2c;
-      boolean running = true;
-      boolean dataToSend = false;
-
-      public MessageHandler()
-      {
-         // Get ourselves an i2c instance to send out some data.
-         i2c = new I2C(Port.kOnboard, 0x52 << 1);
-      }
-
-      @Override
-      public void run()
-      {
-         while (running)
-         {
-            synchronized (this)
-            {
-               try
-               {
-                  // blocking sleep until someone calls notify.
-                  this.wait();
-                  // Need at least 5 bytes and someone has to have called
-                  // setSendData.
-                  if (sendSize >= 5 && dataToSend)
-                  {
-                     // Extremely fast and cheap data confirmation
-                     // algorithm
-                     sendData[3] = (byte) (~sendData[1]);
-                     sendData[4] = (byte) (~sendData[2]);
-                     // byte[] dataToSend, int sendSize, byte[]
-                     // dataReceived, int receiveSize
-                     // set receive size to 0 to avoid sending an i2c
-                     // read request.
-                     // System.out.println("Cmd: " +
-                     // Integer.toHexString(sendData[0]));
-                     i2c.transaction(sendData, sendSize, rcvBytes, 0);
-                     dataToSend = false;
-                  }
-               }
-               catch (InterruptedException e)
-               {
-               }
-            }
-         }
-      }
-
-      public void setSendData(byte[] data, int size)
-      {
-         sendData = data;
-         sendSize = size;
-         dataToSend = true;
-      }
-
-      public void stop()
-      {
-         running = false;
-      }
-   }
 }
