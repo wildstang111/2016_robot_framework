@@ -15,6 +15,7 @@ public class CrabDriveMode implements SwerveMode
       
       double headingX = args[0];
       double headingY = args[1];
+      double rotation = args[2];
       
       SwerveBaseState newState = SwerveUtils.createBaseState();
 
@@ -51,11 +52,24 @@ public class CrabDriveMode implements SwerveMode
          newRearLeft.setRotationAngle(currentHeadingAngle);
          newRearRight.setRotationAngle(currentHeadingAngle);
    
+         double leftMotorSpeed = motorSpeed;
+         double rightMotorSpeed = motorSpeed;
+         // Allow rotation while crabbing
+         if (rotation < -DEADBAND_SPEED)
+         {
+            // Turning left
+            leftMotorSpeed = leftMotorSpeed + (2 * rotation * leftMotorSpeed);
+         }
+         else if (rotation > DEADBAND_SPEED)
+         {
+            // Turning right
+            rightMotorSpeed = rightMotorSpeed - (2 * rotation * rightMotorSpeed);
+         }
    
-         newFrontLeft.setSpeed(motorSpeed);
-         newFrontRight.setSpeed(motorSpeed);
-         newRearLeft.setSpeed(motorSpeed);
-         newRearRight.setSpeed(motorSpeed);
+         newFrontLeft.setSpeed(limitSpeed(leftMotorSpeed));
+         newFrontRight.setSpeed(limitSpeed(rightMotorSpeed));
+         newRearLeft.setSpeed(limitSpeed(leftMotorSpeed));
+         newRearRight.setSpeed(limitSpeed(rightMotorSpeed));
       }
 
       return newState;
@@ -68,16 +82,24 @@ public class CrabDriveMode implements SwerveMode
       
       speed = Math.sqrt((headingX * headingX) + (headingY * headingY));
       
+      return speed;
+   }
+
+
+   private double limitSpeed(double speed)
+   {
+      double result = speed;
+      
       if (speed < -SPEED_LIMIT)
       {
-         speed = -SPEED_LIMIT;
+         result = -SPEED_LIMIT;
       }
       if (speed > SPEED_LIMIT)
       {
-         speed = SPEED_LIMIT;
+         result = SPEED_LIMIT;
       }
       
-      return speed;
+      return result;
    }
    
    double cartesianToDegrees(double x, double y)
