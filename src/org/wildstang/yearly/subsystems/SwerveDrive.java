@@ -87,7 +87,7 @@ public class SwerveDrive implements Subsystem
    
    // TODO: These constants should be configurable via the config file
    // Minimum output for rotation motor controllers
-   private static final double MIN_ROTATION_OUTPUT = 0.05;
+   private static final double MIN_ROTATION_OUTPUT = 0.1;
    
    // The angle distance (degrees) between the target and current angle before stopping output to the rotation motors
    private static final int ROTATION_TARGET_TOLERANCE = 2;
@@ -101,8 +101,6 @@ public class SwerveDrive implements Subsystem
    {
       if (p_source.getName().equals(SwerveInputs.DRV_BUTTON_1.getName()))
       {
-         // TODO: Assume button 1 changes drive mode
-         m_recalcMode = true;
       }
       else if (p_source.getName().equals(SwerveInputs.DRV_BUTTON_2.getName()))
       {
@@ -115,6 +113,8 @@ public class SwerveDrive implements Subsystem
       }
       else if (p_source.getName().equals(SwerveInputs.DRV_BUTTON_5.getName()))
       {
+         // TODO: Assume button 1 changes drive mode
+         m_recalcMode = true;
       }
       else if (p_source.getName().equals(SwerveInputs.DRV_BUTTON_6.getName()))
       {
@@ -339,7 +339,6 @@ public class SwerveDrive implements Subsystem
                break;
          }
          
-//         adjustRotationTargetForOffset(currentState);
          adjustForOffset = true;
          tolerance = ROTATION_TARGET_TOLERANCE;
       }
@@ -400,25 +399,9 @@ public class SwerveDrive implements Subsystem
    }
 
    
-//   private void adjustRotationTargetForOffset(SwerveBaseState state)
-//   {
-//      state.getFrontLeft().setRotationAngle();
-//      state.getFrontRight().setRotationAngle();
-//      state.getRearLeft().setRotationAngle();
-//      state.getRearRight().setRotationAngle();
-//   }
-
-   
    private int calculateEncoderTargetPos(int p_target, int p_offset)
    {
-      Core.getStateTracker().addState("FL Rot Target", "Swerve", p_target);
-      Core.getStateTracker().addState("FL Enc Offset", "Swerve", p_offset);
-
-//      int result = ((p_target - p_offset) + 360) % 360;
-      int result = (p_target + p_offset) % 360;
-      Core.getStateTracker().addState("FL Rot New", "Swerve", result);
-      
-      return result;
+      return (p_target + p_offset) % 360;
    }
    
    
@@ -497,6 +480,16 @@ public class SwerveDrive implements Subsystem
       // Set m_mode based on which button is pressed for different drive modes, if any
       // We can set it directly in inputUpdate(), or use this for more modes by combining buttons
       // for more values
+      if (((DigitalInput)Core.getInputManager().getInput(SwerveInputs.DRV_BUTTON_5.getName())).getValue())
+      {
+         m_mode = SWERVE;
+      }
+      else
+      {
+         m_mode = CRAB;
+      }
+      
+      m_recalcMode = false;
    }
    
    @Override

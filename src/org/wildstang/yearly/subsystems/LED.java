@@ -27,6 +27,8 @@ public class LED implements Subsystem
    WsI2COutput m_ledOutput;
 
    boolean m_antiTurbo;
+   boolean m_turbo;
+   boolean m_normal;
 
    /*
     * | Function | Cmd | PL 1 | PL 2 |
@@ -44,9 +46,9 @@ public class LED implements Subsystem
    LedCmd blueCmd = new LedCmd(0x04, 0x47, 0x01);
 
    // New commands each year
-   LedCmd shootCmd = new LedCmd(0x05, 0x13, 0x14);
-   LedCmd climbCmd = new LedCmd(0x06, 0x11, 0x12);
-   LedCmd intakeCmd = new LedCmd(0x07, 0x11, 0x12);
+   LedCmd turboCmd = new LedCmd(0x05, 0x13, 0x14);
+   LedCmd antiturboCmd = new LedCmd(0x06, 0x11, 0x12);
+   LedCmd normalCmd = new LedCmd(0x07, 0x11, 0x12);
 
    public LED()
    {
@@ -76,67 +78,76 @@ public class LED implements Subsystem
       boolean isRobotAuton = DriverStation.getInstance().isAutonomous();
       DriverStation.Alliance alliance = DriverStation.getInstance().getAlliance();
 
-      if (isRobotEnabled)
-      {
-         if (isRobotTeleop)
-         {
+      m_normal = !(m_antiTurbo || m_turbo);
+      
+//      if (isRobotEnabled)
+//      {
+//         if (isRobotTeleop)
+//         {
             if (m_newDataAvailable)
             {
                if (m_antiTurbo)
                {
-                  m_ledOutput.setValue(climbCmd.getBytes());
+                  m_ledOutput.setValue(antiturboCmd.getBytes());
                }
-               
+               else if (m_turbo)
+               {
+                  m_ledOutput.setValue(turboCmd.getBytes());
+               }
+               else if (m_normal)
+               {
+                  m_ledOutput.setValue(normalCmd.getBytes());
+               }
                m_newDataAvailable = false;
             }
-         }
-         else if (isRobotAuton)
-         {
-            // --------------------------------------------------------------
-            // Handle Autonomous signalling here
-            // --------------------------------------------------------------
-            // One send and one send only.
-            // Don't take time in auto sending LED cmds.
-            if (!autoDataSent)
-            {
-               m_ledOutput.setValue(autoCmd.getBytes());
-               autoDataSent = true;
-            }
-         }
-      }
-      else
-      {
-         // ------------------------------------------------------------------
-         // Handle Disabled signalling here
-         // ------------------------------------------------------------------
-         switch (alliance)
-         {
-            case Red:
-            {
-               if (!disableDataSent)
-               {
-                  m_ledOutput.setValue(redCmd.getBytes());
-                  disableDataSent = true;
-               }
-            }
-               break;
-
-            case Blue:
-            {
-               if (!disableDataSent)
-               {
-                  m_ledOutput.setValue(blueCmd.getBytes());
-                  disableDataSent = true;
-               }
-            }
-               break;
-            default:
-            {
-               disableDataSent = false;
-            }
-               break;
-         }
-      }
+//         }
+//         else if (isRobotAuton)
+//         {
+//            // --------------------------------------------------------------
+//            // Handle Autonomous signalling here
+//            // --------------------------------------------------------------
+//            // One send and one send only.
+//            // Don't take time in auto sending LED cmds.
+//            if (!autoDataSent)
+//            {
+//               m_ledOutput.setValue(autoCmd.getBytes());
+//               autoDataSent = true;
+//            }
+//         }
+//      }
+//      else
+//      {
+//         // ------------------------------------------------------------------
+//         // Handle Disabled signalling here
+//         // ------------------------------------------------------------------
+//         switch (alliance)
+//         {
+//            case Red:
+//            {
+//               if (!disableDataSent)
+//               {
+//                  m_ledOutput.setValue(redCmd.getBytes());
+//                  disableDataSent = true;
+//               }
+//            }
+//               break;
+//
+//            case Blue:
+//            {
+//               if (!disableDataSent)
+//               {
+//                  m_ledOutput.setValue(blueCmd.getBytes());
+//                  disableDataSent = true;
+//               }
+//            }
+//               break;
+//            default:
+//            {
+//               disableDataSent = false;
+//            }
+//               break;
+//         }
+//      }
    }
 
    @Override
@@ -145,6 +156,10 @@ public class LED implements Subsystem
       if (source.getName().equals(SwerveInputs.ANTI_TURBO.getName()))
       {
          m_antiTurbo = ((DigitalInput) source).getValue();
+      }
+      else if (source.getName().equals(SwerveInputs.TURBO.getName()))
+      {
+         m_turbo = ((DigitalInput) source).getValue();
       }
       
       m_newDataAvailable = true;
