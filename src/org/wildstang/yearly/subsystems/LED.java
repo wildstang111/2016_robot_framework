@@ -20,7 +20,6 @@ public class LED implements Subsystem
    boolean autoDataSent = false;
    boolean m_newDataAvailable = false;
    boolean disableDataSent = false;
-   boolean sendData = false;
 
    private String m_name;
 
@@ -60,7 +59,6 @@ public class LED implements Subsystem
    {
       autoDataSent = false;
       disableDataSent = false;
-      sendData = false;
 
       Core.getInputManager().getInput(SwerveInputs.ANTI_TURBO.getName()).addInputListener(this);
       Core.getInputManager().getInput(SwerveInputs.TURBO.getName()).addInputListener(this);
