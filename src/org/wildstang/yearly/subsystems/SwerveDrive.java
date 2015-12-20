@@ -397,7 +397,7 @@ public class SwerveDrive implements Subsystem
    
    private double calculateRotationSpeed(int p_prev, int p_target, int p_tolerance)
    {
-      double result = 0.0;
+      double rotationSpeed = 0.0;
       
       // Usually the angle changes will be small.  For large changes (> 180 difference)
       // follow the shortest path to the new position
@@ -447,25 +447,25 @@ public class SwerveDrive implements Subsystem
       // - 180 degrees away results in full speed
       // - closer is slower
       // - limit minimum output to 15%
-      result = (double)distanceToTarget / 180;
+      rotationSpeed = (double)distanceToTarget / 180;
 
       // If we are within tolerance of the target angle, stop turning
       if (distanceToTarget <= p_tolerance)
       {
-         result = 0.0;
+         rotationSpeed = 0.0;
       }
       // If we are below our minimum useful output, set it to the minimum
-      else if (result < MIN_ROTATION_OUTPUT)
+      else if (rotationSpeed < MIN_ROTATION_OUTPUT)
       {
-         result = MIN_ROTATION_OUTPUT;
+         rotationSpeed = MIN_ROTATION_OUTPUT;
       }
 
       // Set the correct direction
-      result *= dir;
+      rotationSpeed *= dir;
 
-      s_log.fine("Encoder: " + s_format.format(m_flEncoder) + "\tTarget: " + p_target + "\tDistance: " + distanceToTarget + "\tresult: " + s_format.format(result) + "\n");
+      s_log.fine("Encoder: " + s_format.format(m_flEncoder) + "\tTarget: " + p_target + "\tDistance: " + distanceToTarget + "\tresult: " + s_format.format(rotationSpeed) + "\n");
 
-      return result;
+      return rotationSpeed;
    }
 
    private void recalculateDriveMode()
