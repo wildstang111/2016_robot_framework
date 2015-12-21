@@ -6,8 +6,11 @@ import org.wildstang.framework.io.outputs.OutputType;
 import org.wildstang.hardware.crio.outputs.WSOutputType;
 import org.wildstang.hardware.crio.outputs.WsDoubleSolenoidState;
 import org.wildstang.hardware.crio.outputs.config.WsDoubleSolenoidConfig;
+import org.wildstang.hardware.crio.outputs.config.WsI2COutputConfig;
 import org.wildstang.hardware.crio.outputs.config.WsSolenoidConfig;
 import org.wildstang.hardware.crio.outputs.config.WsVictorConfig;
+
+import edu.wpi.first.wpilibj.I2C;
 
 public enum WSOutputs implements Outputs
 {
@@ -19,6 +22,8 @@ public enum WSOutputs implements Outputs
    FRONT_RIGHT_ROT("Front right rotation",   WSOutputType.VICTOR,    new WsVictorConfig(5, 0.0), true),
    REAR_LEFT_ROT("Rear left rotation",       WSOutputType.VICTOR,    new WsVictorConfig(6, 0.0), true),
    REAR_RIGHT_ROT("Rear right rotation",     WSOutputType.VICTOR,    new WsVictorConfig(7, 0.0), true),
+
+   LED("LEDs", WSOutputType.I2C, new WsI2COutputConfig(I2C.Port.kMXP, 0x9), true),
 
    // Solenoids
    DOUBLE("Double solenoid", WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(1, 0, 1, WsDoubleSolenoidState.FORWARD), true),

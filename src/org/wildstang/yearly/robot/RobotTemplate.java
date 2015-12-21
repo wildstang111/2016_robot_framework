@@ -78,6 +78,9 @@ public class RobotTemplate extends IterativeRobot
       Core.getStateTracker().addIOInfo("Auto", "Monitor", "Input", null);
       Core.getStateTracker().addIOInfo("Memory in use", "Monitor", "Input", null);
 
+      Core.getStateTracker().addIOInfo("FL Enc Offset", "Swerve", "Input", null);
+      Core.getStateTracker().addIOInfo("FL Rot Target", "Swerve", "Input", null);
+      Core.getStateTracker().addIOInfo("FL Rot New", "Swerve", "Input", null);
       
       Writer outputWriter = null;
       

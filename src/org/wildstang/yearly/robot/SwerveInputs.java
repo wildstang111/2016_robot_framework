@@ -29,10 +29,10 @@ public enum SwerveInputs implements Inputs
    DRV_BUTTON_4("Driver button 4", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 3), true),
    DRV_BUTTON_5("Driver button 5", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 4), true),
    DRV_BUTTON_6("Driver button 6", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 5), true),
-   DRV_BUTTON_7("Driver button 7", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 6), true),
-   DRV_BUTTON_8("Driver button 8", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 7), true),
-   DRV_BUTTON_9("Driver button 9", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 8), true),
-   DRV_BUTTON_10("Driver button 10", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 9), true),
+   TURBO("Turbo (Driver 7)", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 6), true),
+   ANTI_TURBO("Antiturbo (Driver 8)", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 7), true),
+   HOME_BUTTON_1("Wheel home button 1", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 8), true),
+   HOME_BUTTON_2("Wheel home button 2", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 9), true),
    DRV_BUTTON_11("Driver button 11", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 10), true),
    DRV_BUTTON_12("Driver button 12", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 11), true),
    
@@ -55,11 +55,16 @@ public enum SwerveInputs implements Inputs
 //    MAN_BUTTON_11("Manipulator button 11", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 10), true),
 //    MAN_BUTTON_12("Manipulator button 12", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 11), true),
     
-   TEST_HALL_EFFECT("Test Hall Effect", WSInputType.SWITCH, new WsDigitalInputConfig(0, true), true),
+   FRONT_LEFT_HOME("Front Left Home Hall Effect", WSInputType.SWITCH, new WsDigitalInputConfig(0, true), true),
+   FRONT_RIGHT_HOME("Front Right Home Hall Effect", WSInputType.SWITCH, new WsDigitalInputConfig(1, true), true),
+   REAR_LEFT_HOME("Rear Left Home Hall Effect", WSInputType.SWITCH, new WsDigitalInputConfig(2, true), true),
+   REAR_RIGHT_HOME("Rear Right Home Hall Effect", WSInputType.SWITCH, new WsDigitalInputConfig(3, true), true),
+   
    FRONT_LEFT_ROT_ENCODER("Front left rotation encoder", WSInputType.ABSOLUTE_ENCODER, new WsAbsoluteEncoderConfig(0, 5), true),
    FRONT_RIGHT_ROT_ENCODER("Front right rotation encoder", WSInputType.ABSOLUTE_ENCODER, new WsAbsoluteEncoderConfig(1, 5), true),
    REAR_LEFT_ROT_ENCODER("Rear left rotation encoder", WSInputType.ABSOLUTE_ENCODER, new WsAbsoluteEncoderConfig(2, 5), true),
    REAR_RIGHT_ROT_ENCODER("Rear right rotation encoder", WSInputType.ABSOLUTE_ENCODER, new WsAbsoluteEncoderConfig(3, 5), true),
+   
    HALL_EFFECT("Lift hall effect sensors", WSInputType.HALL_EFFECT, new WsI2CInputConfig(Port.kMXP, 0x10), true);
 //   LIMIT_SWITCH("Limit switch", WSInputType.SWITCH, 0, true),
 //   POT("Pot", WSInputType.POT, new WsAnalogInputConfig(0), true);
