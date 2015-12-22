@@ -87,9 +87,9 @@ public class CrabTankMode implements SwerveMode
 //	         phoneHome(HOMEROTATESPEED);
 //	      }
 
-	      if (Math.abs(leftX) < JOYSTICKDEADBAND) leftX = 0;
-	      if (Math.abs(leftY) < JOYSTICKDEADBAND) leftY = 0;
-	      if (Math.abs(rightX) < JOYSTICKDEADBAND) rightX = 0;
+//	      if (Math.abs(leftX) < JOYSTICKDEADBAND) leftX = 0;
+//	      if (Math.abs(leftY) < JOYSTICKDEADBAND) leftY = 0;
+//	      if (Math.abs(rightX) < JOYSTICKDEADBAND) rightX = 0;
 
 	      if (leftX == 0 && leftY == 0 && rightX == 0)
 	      { // if no controller input
@@ -156,6 +156,13 @@ public class CrabTankMode implements SwerveMode
 	         rightMag = adjustMagnitude(magnitude, -rightX, false);
 	      }
 	      int setAngle =  (int) (desiredAngle*(180/Math.PI));
+	      //if one drive side is less than the deadband, set the desired angle to the last value
+	      if(Math.abs(leftMag)<JOYSTICKDEADBAND)
+	    	  {
+	    	  setAngle = p_prevState.getFrontLeft().getRotationAngle();
+	    	  leftMag = 0;
+	    	  rightMag = 0;
+	    	  }
 	      // assign motor values
 	      newFrontRight.setSpeed(rightMag);
 	      newFrontLeft.setSpeed(leftMag);
