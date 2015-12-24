@@ -2,11 +2,8 @@ package org.wildstang.yearly.auto.steps.drivebase;
 
 import org.wildstang.framework.auto.steps.AutoStep;
 import org.wildstang.framework.core.Core;
-import org.wildstang.framework.io.InputManager;
 import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.yearly.robot.SwerveInputs;
-import org.wildstang.yearly.robot.WSSubsystems;
-import org.wildstang.yearly.subsystems.SwerveDrive;
 
 /**
  *
@@ -16,6 +13,9 @@ public class StepCrabDriveHeadingForDistance extends AutoStep
 {
 
    private double leftX, leftY, desiredAngle, distance, heading, throttle;
+   private long timeToDrive = 0;
+   private long lastStart;
+   private long elapsed = 0;
    
    public StepCrabDriveHeadingForDistance(double throttle, double heading, double distance)
    {
@@ -29,16 +29,26 @@ public class StepCrabDriveHeadingForDistance extends AutoStep
    @Override
    public void initialize()
    {
-//      ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).overrideThrottleValue(throttle);
-//      ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).overrideHeadingValue(heading);
-       ((AnalogInput)Core.getInputManager().getInput("Driver heading X")).setValue(leftX);
-       ((AnalogInput)Core.getInputManager().getInput("Driver heading Y")).setValue(leftY);
-	   finished = true;
+      timeToDrive = (long)distance;  // Calculate time to drive from the distance
    }
 
    @Override
    public void update()
    {
+      long now = System.currentTimeMillis();
+      elapsed += now - lastStart;
+      lastStart = now;
+      
+      if (elapsed >= timeToDrive)
+      {
+         setFinished(true);
+      }
+      else
+      {
+         ((AnalogInput)Core.getInputManager().getInput(SwerveInputs.DRV_HEADING_X.getName())).setValue(leftX);
+         ((AnalogInput)Core.getInputManager().getInput(SwerveInputs.DRV_HEADING_Y.getName())).setValue(leftY);
+      }
+
    }
 
    @Override

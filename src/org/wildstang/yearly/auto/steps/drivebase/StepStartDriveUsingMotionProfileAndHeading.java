@@ -32,7 +32,7 @@ public class StepStartDriveUsingMotionProfileAndHeading extends AutoStep
    public void initialize()
    {
 //      ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).startMoveWithHeadingAndMotionProfile(distance, goal_velocity, heading);
-      finished = true;
+      setFinished(true);
    }
 
    @Override

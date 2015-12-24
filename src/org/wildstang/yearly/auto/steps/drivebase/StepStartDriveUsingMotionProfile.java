@@ -29,7 +29,7 @@ public class StepStartDriveUsingMotionProfile extends AutoStep
    public void initialize()
    {
 //      ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).startStraightMoveWithMotionProfile(distance, goal_velocity);
-      finished = true;
+      setFinished(true);
    }
 
    @Override

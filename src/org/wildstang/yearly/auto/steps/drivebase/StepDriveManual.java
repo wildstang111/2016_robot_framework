@@ -30,7 +30,7 @@ public class StepDriveManual extends AutoStep
    {
 //      ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).overrideThrottleValue(throttle);
 //      ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).overrideHeadingValue(heading);
-      finished = true;
+      setFinished(true);
    }
 
    @Override
