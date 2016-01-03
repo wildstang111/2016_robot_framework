@@ -13,6 +13,7 @@ import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.framework.timer.ProfilingTimer;
 import org.wildstang.hardware.crio.RoboRIOInputFactory;
 import org.wildstang.hardware.crio.RoboRIOOutputFactory;
+import org.wildstang.yearly.auto.programs.Drive;
 import org.wildstang.yearly.subsystems.HardwareTest;
 import org.wildstang.yearly.subsystems.Monitor;
 
@@ -164,24 +165,7 @@ public class RobotTemplate extends IterativeRobot
       startloggingState();
 
       // 2. Add Auto programs
-
-      // OLD CODE
-      // AutoManager.getInstance();
-
-      // sets up the USB camera for streaming to the smartdashboard
-      // this is unneeded if using an Ethernet camera (or no camera)
-      /*
-       * try { frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB,
-       * 0);
-       * 
-       * // the camera name (ex "cam0") can be found through the roborio web
-       * interface session = NIVision.IMAQdxOpenCamera("cam0",
-       * NIVision.IMAQdxCameraControlMode.CameraControlModeController);
-       * CameraServer.getInstance().setQuality(1);
-       * NIVision.IMAQdxConfigureGrab(session);
-       * 
-       * NIVision.IMAQdxStartAcquisition(session); } catch(Exception e){}
-       */
+      AutoManager.getInstance().addProgram(new Drive());
 
       s_log.logp(Level.ALL, this.getClass().getName(), "robotInit", "Startup Completed");
       startupTimer.endTimingSection();

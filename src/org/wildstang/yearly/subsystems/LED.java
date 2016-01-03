@@ -9,6 +9,7 @@ import org.wildstang.yearly.robot.SwerveInputs;
 import org.wildstang.yearly.robot.WSOutputs;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -98,6 +99,9 @@ public class LED implements Subsystem
                }
                m_newDataAvailable = false;
             }
+               SmartDashboard.putBoolean("Turbo", m_turbo);
+               SmartDashboard.putBoolean("Antiturbo", m_antiTurbo);
+
 //         }
 //         else if (isRobotAuton)
 //         {

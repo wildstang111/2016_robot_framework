@@ -3,9 +3,7 @@ package org.wildstang.yearly.auto.programs;
 import org.wildstang.framework.auto.AutoProgram;
 import org.wildstang.framework.auto.steps.AutoSerialStepGroup;
 import org.wildstang.framework.core.Core;
-import org.wildstang.yearly.auto.steps.drivebase.StepStartDriveUsingMotionProfile;
-import org.wildstang.yearly.auto.steps.drivebase.StepStopDriveUsingMotionProfile;
-import org.wildstang.yearly.auto.steps.drivebase.StepWaitForDriveMotionProfile;
+import org.wildstang.yearly.auto.steps.drivebase.StepCrabDriveHeadingForDistance;
 
 public class Drive extends AutoProgram
 {
@@ -16,9 +14,7 @@ public class Drive extends AutoProgram
    {
 
       AutoSerialStepGroup drive = new AutoSerialStepGroup("Drive");
-      drive.addStep(new StepStartDriveUsingMotionProfile(DISTANCE, 1.0));
-      drive.addStep(new StepWaitForDriveMotionProfile());
-      drive.addStep(new StepStopDriveUsingMotionProfile());
+      drive.addStep(new StepCrabDriveHeadingForDistance(0.5, 0.5, 2000));
 
       addStep(drive);
    }
