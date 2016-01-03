@@ -26,7 +26,7 @@ public class StepSetShifter extends AutoStep
    public void initialize()
    {
 //      ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).setShifter(highGear);
-      this.finished = true;
+      setFinished(true);
    }
 
    @Override

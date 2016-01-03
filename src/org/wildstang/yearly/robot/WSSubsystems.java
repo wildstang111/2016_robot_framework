@@ -12,7 +12,7 @@ public enum WSSubsystems implements Subsystems
 //   DRIVE_BASE("Drive base", DriveBase.class),
    SWERVE_BASE("Swerve base", SwerveDrive.class),
 //   HARDWARE_TEST("Hardware test", HardwareTest.class),
-//   LED("LED", LED.class),
+   LED("LED", LED.class),
    MONITOR("Monitor", Monitor.class);
 
    private String m_name;

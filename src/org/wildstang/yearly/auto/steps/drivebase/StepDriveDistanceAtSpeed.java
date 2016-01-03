@@ -93,13 +93,13 @@ public class StepDriveDistanceAtSpeed extends AutoStep
          else
          {
 //            driveBase.disableDriveOverride();
-            finished = true;
+            setFinished(true);
          }
       }
       else if (hasReachedTarget)
       {
 //         driveBase.disableDriveOverride();
-         finished = true;
+         setFinished(true);
       }
    }
 

@@ -47,7 +47,7 @@ public class StepQuickTurn extends AutoStep
    {
       if (shouldFinish)
       {
-         finished = true;
+         setFinished(true);
 //         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).overrideHeadingValue(0.0);
          return;
       }
