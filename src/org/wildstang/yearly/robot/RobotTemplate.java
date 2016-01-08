@@ -9,17 +9,13 @@ package org.wildstang.yearly.robot;
 import org.wildstang.framework.auto.AutoManager;
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.logger.StateLogger;
-import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.framework.timer.ProfilingTimer;
 import org.wildstang.hardware.crio.RoboRIOInputFactory;
 import org.wildstang.hardware.crio.RoboRIOOutputFactory;
 import org.wildstang.yearly.auto.programs.Drive;
-import org.wildstang.yearly.subsystems.HardwareTest;
-import org.wildstang.yearly.subsystems.Monitor;
 
 import com.ni.vision.NIVision.Image;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 import java.io.*;
@@ -52,37 +48,6 @@ public class RobotTemplate extends IterativeRobot
 
    private void startloggingState()
    {
-      // Add the monitored inputs
-      // TODO: Can we do this better?
-      
-      Core.getStateTracker().addIOInfo("Current 0", "Monitor", "Input", null);
-      Core.getStateTracker().addIOInfo("Current 1", "Monitor", "Input", null);
-      Core.getStateTracker().addIOInfo("Current 2", "Monitor", "Input", null);
-      Core.getStateTracker().addIOInfo("Current 3", "Monitor", "Input", null);
-      Core.getStateTracker().addIOInfo("Current 4", "Monitor", "Input", null);
-      Core.getStateTracker().addIOInfo("Current 5", "Monitor", "Input", null);
-      Core.getStateTracker().addIOInfo("Current 6", "Monitor", "Input", null);
-      Core.getStateTracker().addIOInfo("Current 7", "Monitor", "Input", null);
-      Core.getStateTracker().addIOInfo("Current 8", "Monitor", "Input", null);
-      Core.getStateTracker().addIOInfo("Current 9", "Monitor", "Input", null);
-      Core.getStateTracker().addIOInfo("Current 10", "Monitor", "Input", null);
-      Core.getStateTracker().addIOInfo("Current 11", "Monitor", "Input", null);
-      Core.getStateTracker().addIOInfo("Current 12", "Monitor", "Input", null);
-      Core.getStateTracker().addIOInfo("Current 13", "Monitor", "Input", null);
-      Core.getStateTracker().addIOInfo("Current 14", "Monitor", "Input", null);
-      Core.getStateTracker().addIOInfo("Current 15", "Monitor", "Input", null);
-      Core.getStateTracker().addIOInfo("Total Current", "Monitor", "Input", null);
-      Core.getStateTracker().addIOInfo("Voltage", "Monitor", "Input", null);
-      Core.getStateTracker().addIOInfo("Temperature", "Monitor", "Input", null);
-      Core.getStateTracker().addIOInfo("Enabled", "Monitor", "Input", null);
-      Core.getStateTracker().addIOInfo("Teleop", "Monitor", "Input", null);
-      Core.getStateTracker().addIOInfo("Auto", "Monitor", "Input", null);
-      Core.getStateTracker().addIOInfo("Memory in use", "Monitor", "Input", null);
-
-      Core.getStateTracker().addIOInfo("FL Enc Offset", "Swerve", "Input", null);
-      Core.getStateTracker().addIOInfo("FL Rot Target", "Swerve", "Input", null);
-      Core.getStateTracker().addIOInfo("FL Rot New", "Swerve", "Input", null);
-      
       Writer outputWriter = null;
       
       outputWriter = getFileWriter();
@@ -158,7 +123,6 @@ public class RobotTemplate extends IterativeRobot
       m_core.createInputs(SwerveInputs.values());
       m_core.createOutputs(WSOutputs.values());
 
-      // TODO
       // 1. Add subsystems
       m_core.createSubsystems(WSSubsystems.values());
 

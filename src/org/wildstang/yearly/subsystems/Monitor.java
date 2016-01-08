@@ -24,6 +24,31 @@ public class Monitor implements Subsystem
    public void init()
    {
       pdp = new PowerDistributionPanel();
+
+      // Add the monitored inputs
+      Core.getStateTracker().addIOInfo("Current 0", "Monitor", "Input", null);
+      Core.getStateTracker().addIOInfo("Current 1", "Monitor", "Input", null);
+      Core.getStateTracker().addIOInfo("Current 2", "Monitor", "Input", null);
+      Core.getStateTracker().addIOInfo("Current 3", "Monitor", "Input", null);
+      Core.getStateTracker().addIOInfo("Current 4", "Monitor", "Input", null);
+      Core.getStateTracker().addIOInfo("Current 5", "Monitor", "Input", null);
+      Core.getStateTracker().addIOInfo("Current 6", "Monitor", "Input", null);
+      Core.getStateTracker().addIOInfo("Current 7", "Monitor", "Input", null);
+      Core.getStateTracker().addIOInfo("Current 8", "Monitor", "Input", null);
+      Core.getStateTracker().addIOInfo("Current 9", "Monitor", "Input", null);
+      Core.getStateTracker().addIOInfo("Current 10", "Monitor", "Input", null);
+      Core.getStateTracker().addIOInfo("Current 11", "Monitor", "Input", null);
+      Core.getStateTracker().addIOInfo("Current 12", "Monitor", "Input", null);
+      Core.getStateTracker().addIOInfo("Current 13", "Monitor", "Input", null);
+      Core.getStateTracker().addIOInfo("Current 14", "Monitor", "Input", null);
+      Core.getStateTracker().addIOInfo("Current 15", "Monitor", "Input", null);
+      Core.getStateTracker().addIOInfo("Total Current", "Monitor", "Input", null);
+      Core.getStateTracker().addIOInfo("Voltage", "Monitor", "Input", null);
+      Core.getStateTracker().addIOInfo("Temperature", "Monitor", "Input", null);
+      Core.getStateTracker().addIOInfo("Enabled", "Monitor", "Input", null);
+      Core.getStateTracker().addIOInfo("Teleop", "Monitor", "Input", null);
+      Core.getStateTracker().addIOInfo("Auto", "Monitor", "Input", null);
+      Core.getStateTracker().addIOInfo("Memory in use", "Monitor", "Input", null);
    }
 
    @Override
