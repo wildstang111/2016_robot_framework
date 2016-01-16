@@ -120,7 +120,8 @@ public class RobotTemplate extends IterativeRobot
       loadConfig();
 
       // Create application systems
-      m_core.createInputs(SwerveInputs.values());
+      m_core.createInputs(WSInputs.values());
+     // m_core.createInputs(SwerveInputs.values());
       m_core.createOutputs(WSOutputs.values());
 
       // 1. Add subsystems

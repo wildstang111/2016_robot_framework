@@ -15,8 +15,8 @@ import edu.wpi.first.wpilibj.I2C;
 public enum WSOutputs implements Outputs
 {
    FRONT_LEFT("Front left drive",            WSOutputType.VICTOR,    new WsVictorConfig(0, 0.0), true),
-   FRONT_RIGHT("Front right drive",          WSOutputType.VICTOR,    new WsVictorConfig(1, 0.0), true),
-   REAR_LEFT("Rear left drive",              WSOutputType.VICTOR,    new WsVictorConfig(2, 0.0), true),
+   FRONT_RIGHT("Front right drive",          WSOutputType.VICTOR,    new WsVictorConfig(2, 0.0), true),
+   REAR_LEFT("Rear left drive",              WSOutputType.VICTOR,    new WsVictorConfig(1, 0.0), true),
    REAR_RIGHT("Rear right drive",            WSOutputType.VICTOR,    new WsVictorConfig(3, 0.0), true),
    FRONT_LEFT_ROT("Front left rotation",     WSOutputType.VICTOR,    new WsVictorConfig(4, 0.0), true),
    FRONT_RIGHT_ROT("Front right rotation",   WSOutputType.VICTOR,    new WsVictorConfig(5, 0.0), true),

@@ -32,10 +32,10 @@ public enum WSInputs implements Inputs
    DRV_BUTTON_6("Driver button 6", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 5), true),
    DRV_BUTTON_7("Driver button 7", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 6), true),
    DRV_BUTTON_8("Driver button 8", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 7), true),
-   DRV_BUTTON_9("Driver button 9", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 8), true),
-   DRV_BUTTON_10("Driver button 10", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 9), true),
-   DRV_BUTTON_11("Driver button 11", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 10), true),
-   DRV_BUTTON_12("Driver button 12", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 11), true),
+   //DRV_BUTTON_9("Driver button 9", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 8), true),
+   //DRV_BUTTON_10("Driver button 10", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 9), true),
+   //DRV_BUTTON_11("Driver button 11", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 10), true),
+   //DRV_BUTTON_12("Driver button 12", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 11), true),
 
    // Manipulator Enums
    MAN_RIGHT_JOYSTICK_Y("MANIPULATOR_BACK_ARM_CONTROL", WSInputType.JS_JOYSTICK, new WsJSJoystickInputConfig(1, JoystickConstants.RIGHT_JOYSTICK_Y), true),

@@ -8,7 +8,8 @@ import org.wildstang.yearly.subsystems.SwerveDrive;
 
 public enum WSSubsystems implements Subsystems
 {
-   SWERVE_BASE("Swerve base", SwerveDrive.class),
+	SIXWHEEL_BASE("Six Wheel", DriveBase.class),
+   //SWERVE_BASE("Swerve base", SwerveDrive.class),
    LED("LED", LED.class),
    MONITOR("Monitor", Monitor.class);
 
