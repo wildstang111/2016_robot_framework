@@ -65,7 +65,7 @@ public enum SwerveInputs implements Inputs
    FRONT_RIGHT_ROT_ENCODER("Front right rotation encoder", WSInputType.ABSOLUTE_ENCODER, new WsAbsoluteEncoderConfig(1, 5), true),
    REAR_LEFT_ROT_ENCODER("Rear left rotation encoder", WSInputType.ABSOLUTE_ENCODER, new WsAbsoluteEncoderConfig(2, 5), true),
    REAR_RIGHT_ROT_ENCODER("Rear right rotation encoder", WSInputType.ABSOLUTE_ENCODER, new WsAbsoluteEncoderConfig(3, 5), true),
-   IMU("IMU", WSInputType.I2C, new WsI2CInputConfig(I2C.Port.kOnboard, 0x6F), true);
+   IMU("IMU", WSInputType.I2C, new WsI2CInputConfig(I2C.Port.kOnboard, 0x20), true);
 //   HALL_EFFECT("Lift hall effect sensors", WSInputType.HALL_EFFECT, new WsI2CInputConfig(Port.kMXP, 0x10), true);
 //   LIMIT_SWITCH("Limit switch", WSInputType.SWITCH, 0, true),
 //   POT("Pot", WSInputType.POT, new WsAnalogInputConfig(0), true);
