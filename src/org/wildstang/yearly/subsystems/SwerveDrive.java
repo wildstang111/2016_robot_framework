@@ -13,6 +13,7 @@ import org.wildstang.yearly.robot.SwerveInputs;
 import org.wildstang.yearly.robot.WSOutputs;
 import org.wildstang.yearly.robot.WSSubsystems;
 import org.wildstang.yearly.subsystems.swerve.CrabDriveMode;
+import org.wildstang.yearly.subsystems.swerve.FieldCentricDriveMode;
 import org.wildstang.yearly.subsystems.swerve.SwerveBaseState;
 import org.wildstang.yearly.subsystems.swerve.SwerveDriveMode;
 import org.wildstang.yearly.subsystems.swerve.WheelModuleState;
@@ -21,6 +22,7 @@ public class SwerveDrive implements Subsystem
 {
    private static final int CRAB = 0;
    private static final int SWERVE = 1;
+   private static final int FIELD_CENTRIC = 2;
 
    boolean firstTime = true;
    
@@ -73,6 +75,7 @@ public class SwerveDrive implements Subsystem
    
    private CrabDriveMode m_crabDriveMode = new CrabDriveMode();
    private SwerveDriveMode m_swerveDriveMode = new SwerveDriveMode();
+   private FieldCentricDriveMode m_fieldcentricDriveMode = new FieldCentricDriveMode();
    private SwerveBaseState m_prevState = new SwerveBaseState(new WheelModuleState(), new WheelModuleState(), new WheelModuleState(), new WheelModuleState());
    
    private static final DecimalFormat s_format = new DecimalFormat("#.##");
@@ -271,6 +274,9 @@ public class SwerveDrive implements Subsystem
             case SWERVE:
                currentState = m_swerveDriveMode.calculateNewState(m_prevState, m_headingX, m_headingY, m_joystickRotation);
                break;
+            case FIELD_CENTRIC:
+            	currentState = m_fieldcentricDriveMode.calculateNewState(m_prevState, m_headingX, m_headingY, m_joystickRotation);
+            	break;
             // TODO: Add any more modes here
             default:
                currentState = m_crabDriveMode.calculateNewState(m_prevState, m_headingX, m_headingY, m_joystickRotation);
@@ -476,7 +482,11 @@ public class SwerveDrive implements Subsystem
       if (((DigitalInput)Core.getInputManager().getInput(SwerveInputs.DRV_BUTTON_5.getName())).getValue())
       {
          m_mode = SWERVE;
+      } 
+      else if (((DigitalInput)Core.getInputManager().getInput(SwerveInputs.DRV_BUTTON_6.getName())).getValue()) {
+    	  m_mode = FIELD_CENTRIC;
       }
+    	  
       else
       {
          m_mode = CRAB;
@@ -493,7 +503,7 @@ public class SwerveDrive implements Subsystem
    @Override
    public String getName()
    {
-      return WSSubsystems.SWERVE_BASE.getName();
+      return "Swerve Base"; //WSSubsystems.SWERVE_BASE.getName();
    }
 
 }
