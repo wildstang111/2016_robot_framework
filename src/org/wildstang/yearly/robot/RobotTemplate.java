@@ -88,8 +88,21 @@ public class RobotTemplate extends IterativeRobot
       
       try
       {
-         File outputFile = new File("/home/lvuser/log.txt");
-         if (outputFile.exists())
+    	  File outputFile;
+    	  String osname = System.getProperty("os.name");
+          if (osname.startsWith("Windows"))
+          {
+        	  outputFile = new File("./../../log.txt");
+          }
+          else if (osname.startsWith("Mac"))
+          {
+        	  outputFile = new File ("./../../log.txt");
+          }
+          else
+          {
+        	  outputFile = new File("/home/lvuser/log.txt");
+          }
+          if (outputFile.exists())
          {
             outputFile.delete();
          }
@@ -138,8 +151,20 @@ public class RobotTemplate extends IterativeRobot
 
    private void loadConfig()
    {
-      // TODO: Get filename somehow
-      File configFile = new File("/ws_config.txt");
+	   File configFile;
+	   String osname = System.getProperty("os.name");
+       if (osname.startsWith("Windows"))
+       {
+    	   configFile = new File("./Config/ws_config.txt");
+       }
+       else if (osname.startsWith("Mac"))
+       {
+    	   configFile = new File("./Config/ws_config.txt");
+       }
+       else
+       {
+    	   configFile = new File("/ws_config.txt");
+       }
 
       BufferedReader reader = null;
 
