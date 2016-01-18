@@ -9,6 +9,7 @@ import org.wildstang.hardware.crio.inputs.config.WsAnalogInputConfig;
 import org.wildstang.hardware.crio.inputs.config.WsI2CInputConfig;
 import org.wildstang.hardware.crio.inputs.config.WsJSButtonInputConfig;
 import org.wildstang.hardware.crio.inputs.config.WsJSJoystickInputConfig;
+import org.wildstang.hardware.crio.inputs.config.WsDigitalInputConfig;
 
 import edu.wpi.first.wpilibj.I2C.Port;
 
@@ -58,8 +59,9 @@ public enum WSInputs implements Inputs
    
    HALL_EFFECT("Lift hall effect sensors", WSInputType.HALL_EFFECT, new WsI2CInputConfig(Port.kMXP, 0x10), true),
 //   LIMIT_SWITCH("Limit switch", WSInputType.SWITCH, 0, true),
-   POT("Pot", WSInputType.POT, new WsAnalogInputConfig(0), true);
+   POT("Pot", WSInputType.POT, new WsAnalogInputConfig(0), true),
    
+	DIO_0("digitalIO 0", WSInputType.SWITCH, new WsDigitalInputConfig(0, true), true);
 
    private final String m_name;
    private final InputType m_type;

@@ -1,11 +1,13 @@
 package org.wildstang.yearly.robot;
 
+// expand this and edit if trouble with Ws
 import org.wildstang.framework.core.Outputs;
 import org.wildstang.framework.hardware.OutputConfig;
 import org.wildstang.framework.io.outputs.OutputType;
 import org.wildstang.hardware.crio.outputs.WSOutputType;
 import org.wildstang.hardware.crio.outputs.WsDoubleSolenoidState;
 import org.wildstang.hardware.crio.outputs.config.WsDoubleSolenoidConfig;
+import org.wildstang.hardware.crio.outputs.config.WsDigitalOutputConfig;
 import org.wildstang.hardware.crio.outputs.config.WsI2COutputConfig;
 import org.wildstang.hardware.crio.outputs.config.WsSolenoidConfig;
 import org.wildstang.hardware.crio.outputs.config.WsVictorConfig;
@@ -27,8 +29,12 @@ public enum WSOutputs implements Outputs
 
    // Solenoids
    DOUBLE("Double solenoid", WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(1, 0, 1, WsDoubleSolenoidState.FORWARD), true),
-   SINGLE("Single solenoid", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 2, false), true);
-
+   SINGLE("Single solenoid", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 2, false), true),
+   
+   // DIO Outputs
+   LED_0("Rear right rotation",     WSOutputType.DIGITAL_OUTPUT,    new WsDigitalOutputConfig(3, true), true),
+   LED_1("Rear right rotation",     WSOutputType.DIGITAL_OUTPUT,    new WsDigitalOutputConfig(4, true), true);
+   
    private String m_name;
    private OutputType m_type;
    private OutputConfig m_config;
