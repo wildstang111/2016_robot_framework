@@ -6,6 +6,7 @@ import org.wildstang.framework.io.inputs.InputType;
 import org.wildstang.hardware.JoystickConstants;
 import org.wildstang.hardware.crio.inputs.WSInputType;
 import org.wildstang.hardware.crio.inputs.config.WsAnalogInputConfig;
+import org.wildstang.hardware.crio.inputs.config.WsDigitalInputConfig;
 import org.wildstang.hardware.crio.inputs.config.WsI2CInputConfig;
 import org.wildstang.hardware.crio.inputs.config.WsJSButtonInputConfig;
 import org.wildstang.hardware.crio.inputs.config.WsJSJoystickInputConfig;
@@ -24,7 +25,7 @@ public enum WSInputs implements Inputs
 //   DRV_RIGHT_Y("Driver right Y", WSInputType.JS_JOYSTICK, new WsJSJoystickInputConfig(0, JoystickConstants.RIGHT_JOYSTICK_Y), true),
 //   DRV_DPAD_Y("Driver DPad Y", WSInputType.JS_DPAD, 0, JoystickConstants.DPAD_Y, true),
 //   DRV_DPAD_X("Driver DPad X", WSInputType.JS_DPAD, 0, JoystickConstants.DPAD_X, true),
-   DRV_BUTTON_1("Driver button 1", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 0), true),
+   LIFT_BUTTON("Driver button 1", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 0), true),
    DRV_BUTTON_2("Driver button 2", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 1), true),
    DRV_BUTTON_3("Driver button 3", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 2), true),
    DRV_BUTTON_4("Driver button 4", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 3), true),
@@ -36,6 +37,8 @@ public enum WSInputs implements Inputs
 //   DRV_BUTTON_10("Driver button 10", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 9), true),
 //   DRV_BUTTON_11("Driver button 11", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 10), true),
 //   DRV_BUTTON_12("Driver button 12", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 11), true),
+   
+   
 
    // Manipulator Enums
 //   MAN_RIGHT_JOYSTICK_Y("MANIPULATOR_BACK_ARM_CONTROL", WSInputType.JS_JOYSTICK, new WsJSJoystickInputConfig(1, JoystickConstants.RIGHT_JOYSTICK_Y), true),

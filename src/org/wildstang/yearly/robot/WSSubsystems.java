@@ -4,14 +4,19 @@ import org.wildstang.framework.core.Subsystems;
 import org.wildstang.yearly.subsystems.DriveBase;
 import org.wildstang.yearly.subsystems.LED;
 import org.wildstang.yearly.subsystems.Monitor;
+//import org.wildstang.yearly.subsystems.SixWheelDriveBase;
 import org.wildstang.yearly.subsystems.SwerveDrive;
+import org.wildstang.yearly.subsystems.Climber;
 
 public enum WSSubsystems implements Subsystems
 {
    SWERVE_BASE("Swerve base", SwerveDrive.class),
    LED("LED", LED.class),
-   MONITOR("Monitor", Monitor.class);
+   MONITOR("Monitor", Monitor.class),
+   CLIMBER("Lift Subsystem", Climber.class);
 
+   
+   
    private String m_name;
    private Class m_class;
 
