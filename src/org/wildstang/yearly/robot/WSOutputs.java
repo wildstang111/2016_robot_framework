@@ -34,9 +34,9 @@ public enum WSOutputs implements Outputs
    SINGLE("Single solenoid", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 2, false), true),
    
    // DIO Outputs
-   DIO_LED_0("Rear right rotation",          WSOutputType.DIGITAL_OUTPUT,    new WsDigitalOutputConfig(7, true), true),
-   SENSOR_LED_1("Rear right rotation",       WSOutputType.DIGITAL_OUTPUT,    new WsDigitalOutputConfig(8, true), true),
-   FRONT_ROLLER_LED_2("Rear right rotation", WSOutputType.DIGITAL_OUTPUT,    new WsDigitalOutputConfig(9, true), true);
+   DIO_LED_0("LED 0",          WSOutputType.DIGITAL_OUTPUT,    new WsDigitalOutputConfig(7, false), true),
+   SENSOR_LED_1("Sensor LED",       WSOutputType.DIGITAL_OUTPUT,    new WsDigitalOutputConfig(8, false), true),
+   FRONT_ROLLER_LED_2("Front roller LED", WSOutputType.DIGITAL_OUTPUT,    new WsDigitalOutputConfig(9, false), true);
    
    private String m_name;
    private OutputType m_type;

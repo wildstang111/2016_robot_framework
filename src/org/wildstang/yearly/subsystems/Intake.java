@@ -15,7 +15,9 @@ public class Intake implements Subsystem
    // add variables here
 	private boolean buttonPress;
 	private boolean sensorReading;
-	private boolean frontRoller;
+	private boolean buttonPress2;
+	private boolean rollerMoving;
+
 
    @Override
    public void inputUpdate(Input source)
@@ -25,30 +27,24 @@ public class Intake implements Subsystem
       // does something with Inputs and variables
       
       // setting buttonPress to DRV_BUTTON_1
-	   if (source.getName().equals(WSInputs.DRV_BUTTON_2.getName()))
-	   	{
-	   		buttonPress = ((DigitalInput)source).getValue();
-	   	}
+	   if (source.getName().equals(WSInputs.DRV_BUTTON_1.getName()))
+	   {
+	   	buttonPress = ((DigitalInput)source).getValue();
+	   }
 	   
-	   // setting digitalIO_0 to DIO_0
-/*	   else if (source.getName().equals(WSInputs.DIO_0_INTAKE_SENSOR.getName()))
+	   // setting buttonPress2 to DRV_BUTTON_2
+	   else if (source.getName().equals(WSInputs.DRV_BUTTON_2.getName()))
+      {
+         buttonPress2 = ((DigitalInput)source).getValue();
+      }
+	   
+	   // setting sensorReading to DIO_0_INTAKE_SENSOR
+	   else if (source.getName().equals(WSInputs.DIO_0_INTAKE_SENSOR.getName()))
       {
 	      sensorReading = ((DigitalInput)source).getValue();
-	      
-	      if (frontRoller = true)
-	      {
-	         buttonPress = true;
-	      }
-	      else
-	      {
-	         buttonPress = false;
-	      }
       }
-	   else if (source.getName().equals(WSInputs.DRV_BUTTON_1.getName()))
-      {
-	      frontRoller = ((DigitalInput)source).getValue();
-      }
-*/
+	   
+
    }
 
    @Override
@@ -58,7 +54,7 @@ public class Intake implements Subsystem
      
       // asking for below Inputs
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_1.getName()).addInputListener(this);
-//	   Core.getInputManager().getInput(WSInputs.DRV_BUTTON_2.getName()).addInputListener(this);
+	   Core.getInputManager().getInput(WSInputs.DRV_BUTTON_2.getName()).addInputListener(this);
 
 	   Core.getInputManager().getInput(WSInputs.DIO_0_INTAKE_SENSOR.getName()).addInputListener(this);
    }
@@ -77,15 +73,29 @@ public class Intake implements Subsystem
       
       // does something with variables and Outputs
       
-      // tells status of booleans buttonPress and digitalIO_0
-	   System.out.println("the boolean, buttonPress, is " + buttonPress);
-	   System.out.println("the boolean, sensorReading, is " + sensorReading);
+      // tells status of buttonPress, digitalIO_0, sensorReading, and rollerMoving
+	   System.out.println("buttonPress=" + buttonPress + " buttonPress2=" + buttonPress2 + " sensorReading=" + sensorReading + " rollerMoving=" + rollerMoving);
 	   
-	   // booleans buttonPress and digitalIO_0 control LED_0 and LED_1 respectively
+	   // sets rollerMoving to buttonPress
+	   rollerMoving = buttonPress;
+	   
+	   // if the sensor is triggered, the roller will not move unless button2 is pressed
+      if (buttonPress2 == true)
+      {
+         rollerMoving = true;
+         sensorReading = false;
+      }
+      
+      else if (sensorReading == true)
+      {
+         rollerMoving = false;
+      }
+      
+	   // buttonPress controls DIO_LED_0 etc.
 	   ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.DIO_LED_0.getName())).setValue(buttonPress);
 	   ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.SENSOR_LED_1.getName())).setValue(sensorReading);
-	   ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.FRONT_ROLLER_LED_2.getName())).setValue(frontRoller);
-	   //((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.FRONT_ROLLER.getName())).setValue(frontRoller);
+	   ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.FRONT_ROLLER_LED_2.getName())).setValue(rollerMoving);
+//	   ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.FRONT_ROLLER.getName())).setValue(rollerMoving);
    }
 
    @Override

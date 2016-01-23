@@ -61,7 +61,7 @@ public enum WSInputs implements Inputs
 //   LIMIT_SWITCH("Limit switch", WSInputType.SWITCH, 0, true),
    POT("Pot", WSInputType.POT, new WsAnalogInputConfig(0), true),
 
-   DIO_0_INTAKE_SENSOR("Paul's Test Input 1", WSInputType.SWITCH, new WsDigitalInputConfig(6, true), true);
+   DIO_0_INTAKE_SENSOR("bolder sensor", WSInputType.SWITCH, new WsDigitalInputConfig(6, true), true);
    
 //	DIO_0_INTAKE_SENSOR("intake sensor", WSInputType.SWITCH, new WsDigitalInputConfig(6, true), true);
 
