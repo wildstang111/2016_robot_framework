@@ -14,7 +14,8 @@ public class Intake implements Subsystem
 {
    // add variables here
 	private boolean buttonPress;
-	private boolean digitalIO_0;
+	private boolean sensorReading;
+	private boolean frontRoller;
 
    @Override
    public void inputUpdate(Input source)
@@ -24,16 +25,30 @@ public class Intake implements Subsystem
       // does something with Inputs and variables
       
       // setting buttonPress to DRV_BUTTON_1
-	   if (source.getName().equals(WSInputs.DRV_BUTTON_1.getName()))
+	   if (source.getName().equals(WSInputs.DRV_BUTTON_2.getName()))
 	   	{
 	   		buttonPress = ((DigitalInput)source).getValue();
 	   	}
 	   
 	   // setting digitalIO_0 to DIO_0
-	   else if (source.getName().equals(WSInputs.DIO_0.getName()))
+/*	   else if (source.getName().equals(WSInputs.DIO_0_INTAKE_SENSOR.getName()))
       {
-         digitalIO_0 = ((DigitalInput)source).getValue();
+	      sensorReading = ((DigitalInput)source).getValue();
+	      
+	      if (frontRoller = true)
+	      {
+	         buttonPress = true;
+	      }
+	      else
+	      {
+	         buttonPress = false;
+	      }
       }
+	   else if (source.getName().equals(WSInputs.DRV_BUTTON_1.getName()))
+      {
+	      frontRoller = ((DigitalInput)source).getValue();
+      }
+*/
    }
 
    @Override
@@ -42,8 +57,10 @@ public class Intake implements Subsystem
       // TODO Auto-generated method stub
      
       // asking for below Inputs
-	   Core.getInputManager().getInput(WSInputs.DRV_BUTTON_1.getName()).addInputListener(this);
-	   Core.getInputManager().getInput(WSInputs.DIO_0.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_1.getName()).addInputListener(this);
+//	   Core.getInputManager().getInput(WSInputs.DRV_BUTTON_2.getName()).addInputListener(this);
+
+	   Core.getInputManager().getInput(WSInputs.DIO_0_INTAKE_SENSOR.getName()).addInputListener(this);
    }
 
    @Override
@@ -62,11 +79,13 @@ public class Intake implements Subsystem
       
       // tells status of booleans buttonPress and digitalIO_0
 	   System.out.println("the boolean, buttonPress, is " + buttonPress);
-	   System.out.println("the boolean, digitalIO_0, is " + digitalIO_0);
+	   System.out.println("the boolean, sensorReading, is " + sensorReading);
 	   
 	   // booleans buttonPress and digitalIO_0 control LED_0 and LED_1 respectively
-	   ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.LED_0.getName())).setValue(buttonPress);
-	   ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.LED_1.getName())).setValue(digitalIO_0);
+	   ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.DIO_LED_0.getName())).setValue(buttonPress);
+	   ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.SENSOR_LED_1.getName())).setValue(sensorReading);
+	   ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.FRONT_ROLLER_LED_2.getName())).setValue(frontRoller);
+	   //((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.FRONT_ROLLER.getName())).setValue(frontRoller);
    }
 
    @Override

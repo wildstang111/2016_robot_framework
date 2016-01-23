@@ -44,7 +44,7 @@ public enum WSInputs implements Inputs
 //   MAN_LEFT_JOYSTICK_X("MANIPULATOR_LEFT_JOYSTICK_X", WSInputType.JS_JOYSTICK, new WsJSJoystickInputConfig(1, JoystickConstants.LEFT_JOYSTICK_X), true),
 //   MAN_DPAD_Y("Manipulator DPad Y", WSInputType.JS_DPAD, 1, JoystickConstants.DPAD_Y, true),
 //   MAN_DPAD_X("Manipulator DPad X", WSInputType.JS_DPAD, 1, JoystickConstants.DPAD_X, true),
-//   MAN_BUTTON_1("Manipulator button 1", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 0), true),
+   MAN_BUTTON_1("Manipulator button 1", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 0), true),
 //   MAN_BUTTON_2("Manipulator button 2", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 1), true),
 //   MAN_BUTTON_3("Manipulator button 3", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 2), true),
 //   MAN_BUTTON_4("Manipulator button 4", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 3), true),
@@ -60,8 +60,10 @@ public enum WSInputs implements Inputs
    HALL_EFFECT("Lift hall effect sensors", WSInputType.HALL_EFFECT, new WsI2CInputConfig(Port.kMXP, 0x10), true),
 //   LIMIT_SWITCH("Limit switch", WSInputType.SWITCH, 0, true),
    POT("Pot", WSInputType.POT, new WsAnalogInputConfig(0), true),
+
+   DIO_0_INTAKE_SENSOR("Paul's Test Input 1", WSInputType.SWITCH, new WsDigitalInputConfig(6, true), true);
    
-	DIO_0("digitalIO 0", WSInputType.SWITCH, new WsDigitalInputConfig(0, true), true);
+//	DIO_0_INTAKE_SENSOR("intake sensor", WSInputType.SWITCH, new WsDigitalInputConfig(6, true), true);
 
    private final String m_name;
    private final InputType m_type;

@@ -24,6 +24,8 @@ public enum WSOutputs implements Outputs
    FRONT_RIGHT_ROT("Front right rotation",   WSOutputType.VICTOR,    new WsVictorConfig(5, 0.0), true),
    REAR_LEFT_ROT("Rear left rotation",       WSOutputType.VICTOR,    new WsVictorConfig(6, 0.0), true),
    REAR_RIGHT_ROT("Rear right rotation",     WSOutputType.VICTOR,    new WsVictorConfig(7, 0.0), true),
+   FRONT_ROLLER("Front intake roller",     WSOutputType.VICTOR,    new WsVictorConfig(8, 0.0), true),
+   INTAKE_ROLLER("Front intake roller",     WSOutputType.VICTOR,    new WsVictorConfig(9, 0.0), true),
 
    LED("LEDs", WSOutputType.I2C, new WsI2COutputConfig(I2C.Port.kOnboard, 0x10), true),
 
@@ -32,8 +34,9 @@ public enum WSOutputs implements Outputs
    SINGLE("Single solenoid", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 2, false), true),
    
    // DIO Outputs
-   LED_0("Rear right rotation",     WSOutputType.DIGITAL_OUTPUT,    new WsDigitalOutputConfig(3, true), true),
-   LED_1("Rear right rotation",     WSOutputType.DIGITAL_OUTPUT,    new WsDigitalOutputConfig(4, true), true);
+   DIO_LED_0("Rear right rotation",          WSOutputType.DIGITAL_OUTPUT,    new WsDigitalOutputConfig(7, true), true),
+   SENSOR_LED_1("Rear right rotation",       WSOutputType.DIGITAL_OUTPUT,    new WsDigitalOutputConfig(8, true), true),
+   FRONT_ROLLER_LED_2("Rear right rotation", WSOutputType.DIGITAL_OUTPUT,    new WsDigitalOutputConfig(9, true), true);
    
    private String m_name;
    private OutputType m_type;
