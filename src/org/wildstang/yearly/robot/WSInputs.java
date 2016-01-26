@@ -37,7 +37,8 @@ public enum WSInputs implements Inputs
 //   DRV_BUTTON_10("Driver button 10", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 9), true),
 //   DRV_BUTTON_11("Driver button 11", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 10), true),
 //   DRV_BUTTON_12("Driver button 12", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 11), true),
-
+   INTAKE_DEPLOY_BUTTON("Driver button 4", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 3), true),
+   
    // Manipulator Enums
 //   MAN_RIGHT_JOYSTICK_Y("MANIPULATOR_BACK_ARM_CONTROL", WSInputType.JS_JOYSTICK, new WsJSJoystickInputConfig(1, JoystickConstants.RIGHT_JOYSTICK_Y), true),
 //   MAN_RIGHT_JOYSTICK_X("MANIPULATOR_RIGHT_JOYSTICK_X", WSInputType.JS_JOYSTICK, new WsJSJoystickInputConfig(1, JoystickConstants.RIGHT_JOYSTICK_X), true),
@@ -61,7 +62,7 @@ public enum WSInputs implements Inputs
 //   LIMIT_SWITCH("Limit switch", WSInputType.SWITCH, 0, true),
    POT("Pot", WSInputType.POT, new WsAnalogInputConfig(0), true),
 
-   DIO_0_INTAKE_SENSOR("bolder sensor", WSInputType.SWITCH, new WsDigitalInputConfig(6, true), true);
+   INTAKE_BOLDER_SENSOR("bolder sensor", WSInputType.SWITCH, new WsDigitalInputConfig(6, true), true);
    
 //	DIO_0_INTAKE_SENSOR("intake sensor", WSInputType.SWITCH, new WsDigitalInputConfig(6, true), true);
 

@@ -17,6 +17,9 @@ public class Intake implements Subsystem
 	private boolean sensorReading;
 	private boolean buttonPress2;
 	private boolean rollerMoving;
+	private boolean pnumaticGo;
+	private boolean buttonPress3;
+
 
 
    @Override
@@ -29,7 +32,7 @@ public class Intake implements Subsystem
       // setting buttonPress to DRV_BUTTON_1
 	   if (source.getName().equals(WSInputs.DRV_BUTTON_1.getName()))
 	   {
-	   	buttonPress = ((DigitalInput)source).getValue();
+	     buttonPress = ((DigitalInput)source).getValue();
 	   }
 	   
 	   // setting buttonPress2 to DRV_BUTTON_2
@@ -39,7 +42,7 @@ public class Intake implements Subsystem
       }
 	   
 	   // setting sensorReading to DIO_0_INTAKE_SENSOR
-	   else if (source.getName().equals(WSInputs.DIO_0_INTAKE_SENSOR.getName()))
+	   else if (source.getName().equals(WSInputs.INTAKE_BOLDER_SENSOR.getName()))
       {
 	      sensorReading = ((DigitalInput)source).getValue();
       }
@@ -55,8 +58,9 @@ public class Intake implements Subsystem
       // asking for below Inputs
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_1.getName()).addInputListener(this);
 	   Core.getInputManager().getInput(WSInputs.DRV_BUTTON_2.getName()).addInputListener(this);
+	   Core.getInputManager().getInput(WSInputs.DRV_BUTTON_3.getName()).addInputListener(this);
 
-	   Core.getInputManager().getInput(WSInputs.DIO_0_INTAKE_SENSOR.getName()).addInputListener(this);
+	   Core.getInputManager().getInput(WSInputs.INTAKE_BOLDER_SENSOR.getName()).addInputListener(this);
    }
 
    @Override
@@ -76,11 +80,14 @@ public class Intake implements Subsystem
       // tells status of buttonPress, digitalIO_0, sensorReading, and rollerMoving
 	   System.out.println("buttonPress=" + buttonPress + " buttonPress2=" + buttonPress2 + " sensorReading=" + sensorReading + " rollerMoving=" + rollerMoving);
 	   
-	   // sets rollerMoving to buttonPress
-	   rollerMoving = buttonPress;
+	   // toggles rollerMoving to buttonPress
+	   if (buttonPress == true)
+	   {
+	      rollerMoving = true;
+	   }
 	   
 	   // if the sensor is triggered, the roller will not move unless button2 is pressed
-      if (buttonPress2 == true)
+	   if (buttonPress2 == true)
       {
          rollerMoving = true;
          sensorReading = false;
