@@ -18,7 +18,6 @@ public class Shooter implements Subsystem
 {
    private boolean flyWheelToggle = false;
    private boolean currentState;
-   private boolean btnSeven;
    private boolean oldState;
    private boolean PID = false;
    private double speedMod = 1.0;
