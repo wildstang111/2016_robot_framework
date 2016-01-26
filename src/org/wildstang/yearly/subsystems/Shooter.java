@@ -96,7 +96,7 @@ public class Shooter implements Subsystem {
 		flyWheel.reverseOutput(true);
 		flyWheel.setProfile(0);
 		flyWheel.setF((0.25 * 1023)/(1000 * 1.70666666));
-		flyWheel.setP((0.05 * 1023)/500);
+		flyWheel.setP((0.02 * 1023)/500);
 		flyWheel.enableControl();
 //		 flyWheel.setVoltageRampRate(rampRate);
 		
@@ -114,7 +114,7 @@ public class Shooter implements Subsystem {
 	@Override
 	public void update() {
 		// TODO Auto-generated method stub
-		targetSpeed = speedMod * rightSpeed * 4000;
+		targetSpeed = (speedMod * rightSpeed) * 4000;
 		if (flyWheelToggle == true) {
 			flyWheel.changeControlMode(TalonControlMode.PercentVbus);
 			flyWheel.set(rightSpeed * speedMod);
