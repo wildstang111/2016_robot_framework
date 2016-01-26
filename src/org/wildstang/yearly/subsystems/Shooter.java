@@ -131,9 +131,6 @@ public class Shooter implements Subsystem
          }
       }
       oldState = currentState;
-      System.out.println("current: " + currentState);
-      System.out.println("OldState: " + oldState);
-      System.out.println("toggle: " + flyWheelToggle);
 
       targetSpeed = speedMod * rightSpeed * 4000;
       if (flyWheelToggle == true)
