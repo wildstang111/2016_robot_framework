@@ -58,7 +58,7 @@ public class Intake implements Subsystem
       {
          buttonPress4 = ((DigitalInput) source).getValue();
       }
-      
+
    }
 
    @Override
@@ -94,25 +94,26 @@ public class Intake implements Subsystem
             + buttonPress2 + " sensorReading=" + sensorReading
             + " rollerMoving=" + rollerMoving);
 
-      // toggles rollerMoving to buttonPress
-      if (buttonPress == true)
-      {
-         rollerMoving = true;
-      }
-      
       // toggles pnumaticGo1 and pnumaticGo2 to buttonPress3
       if (buttonPress3 == true)
       {
          pnumaticGo1 = true;
-         pnumaticGo2 = true;
+         pnumaticGo2 = false;
       }
 
       // toggles pnumaticGo2 to buttonPress4
       if (buttonPress4 == true)
       {
          pnumaticGo2 = true;
+         rollerMoving = false;
       }
       
+      // toggles rollerMoving to buttonPress
+      if (buttonPress == true)
+      {
+         rollerMoving = true;
+      }
+
       // if the sensor is triggered, the roller will not move unless button2 is
       // pressed
       if (buttonPress2 == true)
