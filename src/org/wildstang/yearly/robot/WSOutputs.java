@@ -34,7 +34,11 @@ public enum WSOutputs implements Outputs
    SINGLE("Single solenoid", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 2, false), true),
    
    // DIO Outputs
-   DIO_LED_0("LED 0",          WSOutputType.DIGITAL_OUTPUT,    new WsDigitalOutputConfig(7, false), true),
+   PNUMATIC_1_LED("Back pnumatic LED", WSOutputType.DIGITAL_OUTPUT,    new WsDigitalOutputConfig(2, false), true),
+   PNUMATIC_2_LED("Front pnumatic LED", WSOutputType.DIGITAL_OUTPUT,    new WsDigitalOutputConfig(3, false), true),
+   PNUMATIC_1("Back pnumatic", WSOutputType.DIGITAL_OUTPUT,    new WsDigitalOutputConfig(4, false), true),
+   PNUMATIC_2("Front pnumatic", WSOutputType.DIGITAL_OUTPUT,    new WsDigitalOutputConfig(5, false), true),
+   DIO_LED_0("LED 0",             WSOutputType.DIGITAL_OUTPUT,    new WsDigitalOutputConfig(7, false), true),
    SENSOR_LED_1("Sensor LED",       WSOutputType.DIGITAL_OUTPUT,    new WsDigitalOutputConfig(8, false), true),
    FRONT_ROLLER_LED_2("Front roller LED", WSOutputType.DIGITAL_OUTPUT,    new WsDigitalOutputConfig(9, false), true);
    

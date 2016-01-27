@@ -17,8 +17,10 @@ public class Intake implements Subsystem
    private boolean sensorReading;
    private boolean buttonPress2;
    private boolean rollerMoving;
-   private boolean pnumaticGo;
+   private boolean pnumaticGo1;
+   private boolean pnumaticGo2;
    private boolean buttonPress3;
+   private boolean buttonPress4;
 
    @Override
    public void inputUpdate(Input source)
@@ -51,6 +53,12 @@ public class Intake implements Subsystem
          buttonPress3 = ((DigitalInput) source).getValue();
       }
 
+      // setting buttonPress3 to DRV_BUTTON_3
+      else if (source.getName().equals(WSInputs.DRV_BUTTON_4.getName()))
+      {
+         buttonPress4 = ((DigitalInput) source).getValue();
+      }
+      
    }
 
    @Override
@@ -91,12 +99,20 @@ public class Intake implements Subsystem
       {
          rollerMoving = true;
       }
-      // toggles pistonGo to buttonPress3
+      
+      // toggles pnumaticGo1 and pnumaticGo2 to buttonPress3
       if (buttonPress3 == true)
       {
-         pnumaticGo = true;
+         pnumaticGo1 = true;
+         pnumaticGo2 = true;
       }
 
+      // toggles pnumaticGo2 to buttonPress4
+      if (buttonPress4 == true)
+      {
+         pnumaticGo2 = true;
+      }
+      
       // if the sensor is triggered, the roller will not move unless button2 is
       // pressed
       if (buttonPress2 == true)
@@ -119,6 +135,10 @@ public class Intake implements Subsystem
       ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.DIO_LED_0.getName())).setValue(buttonPress);
       ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.SENSOR_LED_1.getName())).setValue(sensorReading);
       ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.FRONT_ROLLER_LED_2.getName())).setValue(rollerMoving);
+      // ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.PNUMATIC_1.getName())).setValue(pnumaticGo1);
+      // ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.PNUMATIC_2.getName())).setValue(pnumaticGo2);
+      ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.PNUMATIC_1_LED.getName())).setValue(pnumaticGo1);
+      ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.PNUMATIC_2_LED.getName())).setValue(pnumaticGo2);
    }
 
    @Override
