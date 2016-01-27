@@ -1,14 +1,14 @@
-package org.wildstang.yearly.auto.steps.intake;
+package org.wildstang.yearly.auto.steps.shooter;
 
 import org.wildstang.framework.auto.steps.AutoStep;
 
-public class StepSetIntakeState extends AutoStep
+public class StepSetShooterPosition extends AutoStep
 {
-   private boolean deployed;
+   private boolean state;
 
-   public StepSetIntakeState(boolean setState)
+   public StepSetShooterPosition(boolean position)
    {
-      this.deployed = setState;
+      this.state = position;
    }
 
    @Override
@@ -29,7 +29,7 @@ public class StepSetIntakeState extends AutoStep
    public String toString()
    {
       // TODO Auto-generated method stub
-      return "Intake deployed: " + deployed;
+      return "Shooter deployed: " + state;
    }
 
 }

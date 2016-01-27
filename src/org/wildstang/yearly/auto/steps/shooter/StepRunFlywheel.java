@@ -29,7 +29,7 @@ public class StepRunFlywheel extends AutoStep
    public String toString()
    {
       // TODO Auto-generated method stub
-      return "Spinning ";
+      return "Running flywheel at " + speed;
    }
 
 }

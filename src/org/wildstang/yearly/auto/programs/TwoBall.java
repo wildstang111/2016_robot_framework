@@ -9,6 +9,7 @@ import org.wildstang.yearly.auto.steps.drivebase.StepQuickTurn;
 import org.wildstang.yearly.auto.steps.intake.StepIntake;
 import org.wildstang.yearly.auto.steps.intake.StepSetIntakeState;
 import org.wildstang.yearly.auto.steps.shooter.StepRunFlywheel;
+import org.wildstang.yearly.auto.steps.shooter.StepSetShooterPosition;
 import org.wildstang.yearly.auto.steps.shooter.StepShoot;
 
 public class TwoBall extends AutoProgram
@@ -23,6 +24,7 @@ public class TwoBall extends AutoProgram
       AutoSerialStepGroup gotoGoal = new AutoSerialStepGroup("Go to goal");
       // Start shooter to get to speed
       beginAuto.addStep(new StepRunFlywheel(speed));
+      beginAuto.addStep(new StepSetShooterPosition(true));
       // Drive to point in line with goal
       gotoGoal.addStep(new StepDriveDistanceAtSpeed(-71.25, 1, true));
       // Turn to face goal
@@ -37,10 +39,13 @@ public class TwoBall extends AutoProgram
       AutoSerialStepGroup gotoLowBar = new AutoSerialStepGroup("Go to low bar");
       // Stop flywheel
       leaveCourtyard.addStep(new StepRunFlywheel(0));
+      leaveCourtyard.addStep(new StepSetShooterPosition(false));
       // Drive to point in line with low bar
       gotoLowBar.addStep(new StepDriveDistanceAtSpeed(-19, 1, true));
       // Turn to face low bar
       gotoLowBar.addStep(new StepQuickTurn(-60));
+      // lower intake
+      leaveCourtyard.addStep(new StepSetIntakeState(true));
       // Drive to low bar
       gotoLowBar.addStep(new StepDriveDistanceAtSpeed(-108, 1, true));
       leaveCourtyard.addStep(gotoLowBar);
@@ -55,14 +60,10 @@ public class TwoBall extends AutoProgram
       AutoSerialStepGroup gotoBall = new AutoSerialStepGroup("Go to ball");
       // Intake ball
       grabBall.addStep(new StepIntake(true));
-      // Deploy intake
-      gotoBall.addStep(new StepSetIntakeState(true));
       // Drive to ball
       gotoBall.addStep(new StepDriveDistanceAtSpeed(-56, 1, true));
       // Wait while ball is collected
       gotoBall.addStep(new AutoStepDelay(1000));
-      // Retract intake
-      gotoBall.addStep(new StepSetIntakeState(false));
       grabBall.addStep(gotoBall);
       addStep(grabBall);
 
@@ -79,6 +80,10 @@ public class TwoBall extends AutoProgram
       shootTwo.addStep(new StepRunFlywheel(speed));
       // Cross low bar
       gotoGoalTwo.addStep(new StepDriveDistanceAtSpeed(80.5, 1, true));
+      // Retract intake
+      gotoGoalTwo.addStep(new StepSetIntakeState(false));
+      // Extend shooter
+      gotoGoalTwo.addStep(new StepSetShooterPosition(true));
       // Drive to point in line with goal
       gotoGoalTwo.addStep(new StepDriveDistanceAtSpeed(108, 1, true));
       // Turn to face goal

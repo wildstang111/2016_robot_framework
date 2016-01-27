@@ -29,7 +29,7 @@ public class StepIntake extends AutoStep
    public String toString()
    {
       // TODO Auto-generated method stub
-      return null;
+      return "Running intake: " + running;
    }
 
 }
