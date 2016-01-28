@@ -15,6 +15,10 @@ import org.wildstang.yearly.robot.WSOutputs;
 
 public class Climber implements Subsystem
 {
+   /*
+    * Climber Robot Class
+    * Authors: Wallace Butler and Lucas Papaioannou
+    */
    private boolean liftButton;
    private boolean liftButtonPrev;
    private boolean liftButtonChanged;
@@ -42,18 +46,6 @@ public class Climber implements Subsystem
       {
          hookButton = ((DigitalInput) source).getValue();
       }
-      // if (liftButton != liftButtonPrev)
-      // {
-      // if (liftButtonChanged)
-      // {
-      // liftButtonChanged = false;
-      // }
-      // else
-      // {
-      // liftButtonChanged = true;
-      // }
-      // liftButtonChanged = liftButton;
-      // }
       System.out.println("input update got called");
 
    }
@@ -61,6 +53,9 @@ public class Climber implements Subsystem
    @Override
    public void init()
    {
+      /*
+       * Sets default values and calls for inputs
+       */
       System.out.println("init got called");
       invtOutputs = false;
       winchButton = false;
@@ -87,6 +82,9 @@ public class Climber implements Subsystem
    @Override
    public void update()
    {
+      /*
+       * Starts state change code
+       */
       liftButtonChanged = false;
       hookButtonChanged = false;
       if (liftButton != liftButtonPrev && liftButton)
@@ -99,7 +97,9 @@ public class Climber implements Subsystem
          hookButtonChanged = true;
 
       }
-      /* Flips pistons on or off when buttons are pressed */
+      /* 
+       * Flips pistons on or off when buttons are pressed 
+       */
       if (liftButtonChanged)
       {
          if (!pistonlow)
@@ -145,6 +145,9 @@ public class Climber implements Subsystem
          ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_BACK.getName())).setValue(0.3);
          System.out.println("winching...");
       }
+      /*
+       * Flips hooks when button pressed
+       */
       if (hookButtonChanged)
       {
          if (hook)
@@ -153,20 +156,15 @@ public class Climber implements Subsystem
             hook = false;
             System.out.println("Hooks in");
          }
-         else if (!hook)
+         else
          {
             ((WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.HOOKS.getName())).setValue(WsDoubleSolenoidState.FORWARD.ordinal());
             hook = true;
             System.out.println("Hooks out");
          }
-         else
-         {
-            System.out.println("WHAT IS GOING ON?!?!?!?!?!");
-         }
-
       }
       liftButtonPrev = liftButton;
-      hookButtonPrev= hookButton;
+      hookButtonPrev = hookButton;
    }
 
    @Override
