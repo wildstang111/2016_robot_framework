@@ -7,11 +7,11 @@ import org.wildstang.framework.io.outputs.AnalogOutput;
 import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.io.outputs.DigitalOutput;
 import org.wildstang.framework.subsystems.Subsystem;
+import org.wildstang.hardware.crio.outputs.WsDoubleSolenoid;
+import org.wildstang.hardware.crio.outputs.WsDoubleSolenoidState;
+import org.wildstang.hardware.crio.outputs.WsSolenoid;
 import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
-
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.Solenoid;
 
 public class Climber implements Subsystem
 {
@@ -26,7 +26,7 @@ public class Climber implements Subsystem
    private boolean pistonlow;
    private boolean pistonhigh;
    private boolean invtOutputs;
-   
+
    @Override
    public void inputUpdate(Input source)
    {
@@ -37,6 +37,10 @@ public class Climber implements Subsystem
       else if (source.getName().equals(WSInputs.WINCH_BUTTON.getName()))
       {
          winchButton = ((DigitalInput) source).getValue();
+      }
+      else if (source.getName().equals(WSInputs.HOOK_BUTTON.getName()))
+      {
+         hookButton = ((DigitalInput) source).getValue();
       }
       // if (liftButton != liftButtonPrev)
       // {
@@ -100,7 +104,7 @@ public class Climber implements Subsystem
       {
          if (!pistonlow)
          {
-            ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.LOWPISTONS.getName())).setValue(true
+            ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LOWPISTONS.getName())).setValue(true
                   ^ invtOutputs);
             pistonlow = true;
             System.out.println("Pistons Out");
@@ -108,7 +112,7 @@ public class Climber implements Subsystem
          }
          else if (pistonlow)
          {
-            ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.LOWPISTONS.getName())).setValue(false
+            ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LOWPISTONS.getName())).setValue(false
                   ^ invtOutputs);
 
             pistonlow = false;
@@ -117,7 +121,7 @@ public class Climber implements Subsystem
          }
          if (!pistonhigh)
          {
-            ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.HIGHPISTONS.getName())).setValue(true
+            ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.HIGHPISTONS.getName())).setValue(true
                   ^ invtOutputs);
             pistonhigh = true;
             System.out.println("Pistons Out");
@@ -125,7 +129,7 @@ public class Climber implements Subsystem
          }
          else if (pistonhigh)
          {
-            ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.HIGHPISTONS.getName())).setValue(false
+            ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.HIGHPISTONS.getName())).setValue(false
                   ^ invtOutputs);
             pistonhigh = false;
             System.out.println("Pistons In");
@@ -141,16 +145,28 @@ public class Climber implements Subsystem
          ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_BACK.getName())).setValue(0.3);
          System.out.println("winching...");
       }
-//      if (hookButtonChanged){
-//         if (hook){
-//            ((DoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.HOOKS.getName())).setValue(true);
-//            hook = false;
-//         }else{
-//            hook = false;
-//         }
-//      }
+      if (hookButtonChanged)
+      {
+         if (hook)
+         {
+            ((WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.HOOKS.getName())).setValue(WsDoubleSolenoidState.REVERSE.ordinal());
+            hook = false;
+            System.out.println("Hooks in");
+         }
+         else if (!hook)
+         {
+            ((WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.HOOKS.getName())).setValue(WsDoubleSolenoidState.FORWARD.ordinal());
+            hook = true;
+            System.out.println("Hooks out");
+         }
+         else
+         {
+            System.out.println("WHAT IS GOING ON?!?!?!?!?!");
+         }
+
+      }
       liftButtonPrev = liftButton;
-      hookButtonChanged = hookButton;
+      hookButtonPrev= hookButton;
    }
 
    @Override

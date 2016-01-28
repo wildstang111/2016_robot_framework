@@ -88,7 +88,7 @@ public class RobotTemplate extends IterativeRobot
       
       try
       {
-         File outputFile = new File("/home/lvuser/log.txt");
+         File outputFile = new File("log.txt");
          if (outputFile.exists())
          {
             outputFile.delete();
@@ -120,7 +120,7 @@ public class RobotTemplate extends IterativeRobot
       loadConfig();
 
       // Create application systems
-      m_core.createInputs(SwerveInputs.values());
+      m_core.createInputs(WSInputs.values());
       m_core.createOutputs(WSOutputs.values());
 
       // 1. Add subsystems
@@ -139,7 +139,7 @@ public class RobotTemplate extends IterativeRobot
    private void loadConfig()
    {
       // TODO: Get filename somehow
-      File configFile = new File("/ws_config.txt");
+      File configFile = new File("./Config/ws_config.txt");
 
       BufferedReader reader = null;
 

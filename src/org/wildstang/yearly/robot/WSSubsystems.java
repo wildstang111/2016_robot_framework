@@ -10,8 +10,8 @@ import org.wildstang.yearly.subsystems.Climber;
 
 public enum WSSubsystems implements Subsystems
 {
-   SWERVE_BASE("Swerve base", SwerveDrive.class),
-   LED("LED", LED.class),
+   //SWERVE_BASE("Swerve base", SwerveDrive.class),
+   //LED("LED", LED.class),
    MONITOR("Monitor", Monitor.class),
    CLIMBER("Lift Subsystem", Climber.class);
 
