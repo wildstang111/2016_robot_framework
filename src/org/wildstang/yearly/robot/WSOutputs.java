@@ -26,26 +26,17 @@ public enum WSOutputs implements Outputs
    REAR_LEFT_ROT("Rear left rotation",       WSOutputType.VICTOR,    new WsVictorConfig(6, 0.0), true),
    REAR_RIGHT_ROT("Rear right rotation",     WSOutputType.VICTOR,    new WsVictorConfig(7, 0.0), true),
    
-   RIGHTLOWPIS("Right Lower Piston",         WSOutputType.DIGITAL_OUTPUT, new WsDigitalOutputConfig(8, false), true),
-   LEFTLOWPIS("Left Lower Piston",           WSOutputType.DIGITAL_OUTPUT, new WsDigitalOutputConfig(9, false), true),
-   RIGHTHIGHPIS("Right Higher Piston",       WSOutputType.DIGITAL_OUTPUT, new WsDigitalOutputConfig(10, false), true),
-   LEFTHIGHPIS("Left Higher Piston",         WSOutputType.DIGITAL_OUTPUT, new WsDigitalOutputConfig(11, false), true),
-  
-   RIGHTHOOK("Right Hook",                   WSOutputType.DIGITAL_OUTPUT, new WsDigitalOutputConfig(12, false), true),
-   LEFTHOOK("Left Hook",                     WSOutputType.DIGITAL_OUTPUT, new WsDigitalOutputConfig(13, false), true),
+   LOWPISTONS("Lower Pistons",         WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 2, false), true),
+   HIGHPISTONS("Higher Pistons",         WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(2, 2, false), true),
+   HOOKS("Hooks",       WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(1, 0, 1, WsDoubleSolenoidState.FORWARD), true),
+   WINCH_FRONT("Front Winch",         WSOutputType.VICTOR, new WsVictorConfig(8, 0.0), true),
+   WINCH_BACK("Back Winch",         WSOutputType.VICTOR, new WsVictorConfig(9, 0.0), true),
    
-   RIGHTWINCH("Right Winch",                 WSOutputType.VICTOR,    new WsVictorConfig(14, 0.0), true),
-   LEFTWINCH("Left Winch",                   WSOutputType.VICTOR,    new WsVictorConfig(15, 0.0), true),
-   
-   
- 
-   
-
-   LED("LEDs", WSOutputType.I2C, new WsI2COutputConfig(I2C.Port.kOnboard, 0x10), true),
+   LED("LEDs", WSOutputType.I2C, new WsI2COutputConfig(I2C.Port.kOnboard, 0x10), true);
 
    // Solenoids
-   DOUBLE("Double solenoid", WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(1, 0, 1, WsDoubleSolenoidState.FORWARD), true),
-   SINGLE("Single solenoid", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 2, false), true);
+//   DOUBLE("Double solenoid", WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(1, 0, 1, WsDoubleSolenoidState.FORWARD), true),
+//   SINGLE("Single solenoid", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 2, false), true);
 
    private String m_name;
    private OutputType m_type;

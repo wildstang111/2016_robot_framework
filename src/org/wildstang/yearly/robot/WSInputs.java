@@ -25,10 +25,10 @@ public enum WSInputs implements Inputs
 //   DRV_RIGHT_Y("Driver right Y", WSInputType.JS_JOYSTICK, new WsJSJoystickInputConfig(0, JoystickConstants.RIGHT_JOYSTICK_Y), true),
 //   DRV_DPAD_Y("Driver DPad Y", WSInputType.JS_DPAD, 0, JoystickConstants.DPAD_Y, true),
 //   DRV_DPAD_X("Driver DPad X", WSInputType.JS_DPAD, 0, JoystickConstants.DPAD_X, true),
-   LIFT_BUTTON_1("Driver button 1", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 0), true),
-   LIFT_BUTTON_2("Driver button 2", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 1), true),
-   WINCH_BUTTON("Driver button 3", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 2), true),
-   DRV_BUTTON_4("Driver button 4", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 3), true),
+   LIFT_BUTTON("Lift Button (Driver 2)", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 0), true),
+   WINCH_BUTTON("Winch Button (Driver 2)", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 1), true),
+   HOOK_BUTTON("Hook Button (Driver 3)", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 2), true),
+//   DRV_BUTTON_4("Driver button 4", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 3), true),
 //   DRV_BUTTON_5("Driver button 5", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 4), true),
 //   DRV_BUTTON_6("Driver button 6", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 5), true),
 //   DRV_BUTTON_7("Driver button 7", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 6), true),
@@ -38,7 +38,8 @@ public enum WSInputs implements Inputs
 //   DRV_BUTTON_11("Driver button 11", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 10), true),
 //   DRV_BUTTON_12("Driver button 12", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 11), true),
    
-   
+     // This should get deleted, for debug only
+   DRV_BUTTON_12("Antiturbo (Driver 8)", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 11), true),
 
    // Manipulator Enums
 //   MAN_RIGHT_JOYSTICK_Y("MANIPULATOR_BACK_ARM_CONTROL", WSInputType.JS_JOYSTICK, new WsJSJoystickInputConfig(1, JoystickConstants.RIGHT_JOYSTICK_Y), true),
