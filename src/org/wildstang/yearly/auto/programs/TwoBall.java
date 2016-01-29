@@ -47,7 +47,7 @@ public class TwoBall extends AutoProgram
       // lower intake
       leaveCourtyard.addStep(new StepSetIntakeState(true));
       // Drive to low bar
-      gotoLowBar.addStep(new StepDriveDistanceAtSpeed(-108, 1, true));
+      gotoLowBar.addStep(new StepDriveDistanceAtSpeed(-108, 1, false));
       leaveCourtyard.addStep(gotoLowBar);
       addStep(leaveCourtyard);
 
@@ -59,7 +59,7 @@ public class TwoBall extends AutoProgram
       AutoParallelStepGroup grabBall = new AutoParallelStepGroup("Run intake and go to/return from ball");
       AutoSerialStepGroup gotoBall = new AutoSerialStepGroup("Go to ball");
       // Intake ball
-      grabBall.addStep(new StepIntake(true));
+      grabBall.addStep(new StepIntake(1));
       // Drive to ball
       gotoBall.addStep(new StepDriveDistanceAtSpeed(-56, 1, true));
       // Wait while ball is collected
@@ -68,7 +68,7 @@ public class TwoBall extends AutoProgram
       addStep(grabBall);
 
       // Stop intake
-      addStep(new StepIntake(false));
+      addStep(new StepIntake(0));
       // Drive to low bar
       addStep(new StepDriveDistanceAtSpeed(56, 1, true));
       // Turn to face low bar

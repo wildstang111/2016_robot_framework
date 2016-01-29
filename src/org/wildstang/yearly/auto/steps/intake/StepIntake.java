@@ -4,11 +4,11 @@ import org.wildstang.framework.auto.steps.AutoStep;
 
 public class StepIntake extends AutoStep
 {
-   private boolean running;
+   private int speed;
 
-   public StepIntake(boolean running)
+   public StepIntake(int runningSpeed)
    {
-      this.running = running;
+      this.speed = runningSpeed;
    }
 
    @Override
@@ -29,7 +29,7 @@ public class StepIntake extends AutoStep
    public String toString()
    {
       // TODO Auto-generated method stub
-      return "Running intake: " + running;
+      return "Running intake at: " + speed;
    }
 
 }

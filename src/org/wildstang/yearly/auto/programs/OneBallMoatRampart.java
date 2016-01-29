@@ -5,13 +5,20 @@ import org.wildstang.framework.auto.steps.AutoParallelStepGroup;
 import org.wildstang.framework.auto.steps.AutoSerialStepGroup;
 import org.wildstang.framework.auto.steps.control.AutoStepDelay;
 import org.wildstang.yearly.auto.steps.drivebase.StepDriveDistanceAtSpeed;
+import org.wildstang.yearly.auto.steps.drivebase.StepQuickTurn;
 import org.wildstang.yearly.auto.steps.intake.StepSetIntakeState;
+import org.wildstang.yearly.auto.steps.shooter.StepRunFlywheel;
+import org.wildstang.yearly.auto.steps.shooter.StepSetShooterPosition;
 import org.wildstang.yearly.auto.steps.shooter.StepShoot;
 
 public class OneBallMoatRampart extends AutoProgram
 {
    private double speed;
    private int defensePosition;
+   protected final double dist2 = 91.78;
+   protected final double dist3 = 38.59;
+   protected final double dist4 = -15.12;
+   protected final double dist5 = -67.27;
 
    @Override
    protected void defineSteps()
@@ -20,7 +27,7 @@ public class OneBallMoatRampart extends AutoProgram
       AutoParallelStepGroup crossDefense = new AutoParallelStepGroup();
       AutoSerialStepGroup crossSeries = new AutoSerialStepGroup();
       // Drive to low bar and cross low bar
-      crossSeries.addStep(new StepDriveDistanceAtSpeed(52.5, 1, true));
+      crossSeries.addStep(new StepDriveDistanceAtSpeed(52.5, 1, false));
       crossSeries.addStep(new StepDriveDistanceAtSpeed(80.5, 1, true));
       crossDefense.addStep(crossSeries);
       // Wait 1 second before deploying intake
@@ -32,6 +39,42 @@ public class OneBallMoatRampart extends AutoProgram
       AutoSerialStepGroup gotoGoal = new AutoSerialStepGroup();
       // add in 4 different cases for driving waypoints based on defense
       // position
+      findGoal.addStep(new StepRunFlywheel(speed));
+      findGoal.addStep(new StepSetShooterPosition(true));
+      findGoal.addStep(new StepSetIntakeState(false));
+      switch (defensePosition)
+      {
+      // set different drive instructions based on the distance of the
+      // defense from the center goal, to drive to perpendicular, rotate to
+      // face, and shoot
+
+         case (2):
+         {
+            gotoGoal.addStep(new StepQuickTurn(90 * (dist2 / Math.abs(dist2))));
+            gotoGoal.addStep(new StepDriveDistanceAtSpeed(Math.abs(dist2), 1, true));
+            gotoGoal.addStep(new StepQuickTurn(-90 * (dist2 / Math.abs(dist2))));
+         }
+         case (3):
+         {
+            gotoGoal.addStep(new StepQuickTurn(90 * (dist3 / Math.abs(dist3))));
+            gotoGoal.addStep(new StepDriveDistanceAtSpeed(Math.abs(dist3), 1, true));
+            gotoGoal.addStep(new StepQuickTurn(-90 * (dist3 / Math.abs(dist3))));
+         }
+         case (4):
+         {
+            gotoGoal.addStep(new StepQuickTurn(90 * (dist4 / Math.abs(dist4))));
+            gotoGoal.addStep(new StepDriveDistanceAtSpeed(Math.abs(dist4), 1, true));
+            gotoGoal.addStep(new StepQuickTurn(-90 * (dist4 / Math.abs(dist4))));
+         }
+         case (5):
+         {
+            gotoGoal.addStep(new StepQuickTurn(90 * (dist5 / Math.abs(dist5))));
+            gotoGoal.addStep(new StepDriveDistanceAtSpeed(Math.abs(dist5), 1, true));
+            gotoGoal.addStep(new StepQuickTurn(-90 * (dist5 / Math.abs(dist5))));
+         }
+      }
+      findGoal.addStep(gotoGoal);
+      addStep(findGoal);
 
       addStep(new StepShoot());
 
