@@ -61,9 +61,9 @@ public class LED implements Subsystem
       autoDataSent = false;
       disableDataSent = false;
 
-      Core.getInputManager().getInput(SwerveInputs.ANTI_TURBO.getName()).addInputListener(this);
-      Core.getInputManager().getInput(SwerveInputs.TURBO.getName()).addInputListener(this);
-      Core.getInputManager().getInput(SwerveInputs.DRV_BUTTON_2.getName()).addInputListener(this);
+//      Core.getInputManager().getInput(SwerveInputs.ANTI_TURBO.getName()).addInputListener(this);
+//      Core.getInputManager().getInput(SwerveInputs.TURBO.getName()).addInputListener(this);
+//      Core.getInputManager().getInput(SwerveInputs.DRV_BUTTON_2.getName()).addInputListener(this);
 
       m_ledOutput = (WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName());
    }
@@ -155,14 +155,14 @@ public class LED implements Subsystem
    @Override
    public void inputUpdate(Input source)
    {
-      if (source.getName().equals(SwerveInputs.ANTI_TURBO.getName()))
-      {
-         m_antiTurbo = ((DigitalInput) source).getValue();
-      }
-      else if (source.getName().equals(SwerveInputs.TURBO.getName()))
-      {
-         m_turbo = ((DigitalInput) source).getValue();
-      }
+//      if (source.getName().equals(SwerveInputs.ANTI_TURBO.getName()))
+//      {
+//         m_antiTurbo = ((DigitalInput) source).getValue();
+//      }
+//      else if (source.getName().equals(SwerveInputs.TURBO.getName()))
+//      {
+//         m_turbo = ((DigitalInput) source).getValue();
+//      }
       
       m_newDataAvailable = true;
    }

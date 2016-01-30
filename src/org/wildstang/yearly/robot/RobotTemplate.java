@@ -26,7 +26,6 @@ import java.util.logging.Logger;
 
 //import edu.wpi.first.wpilibj.Watchdog;
 
-
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the IterativeRobot
@@ -49,9 +48,9 @@ public class RobotTemplate extends IterativeRobot
    private void startloggingState()
    {
       Writer outputWriter = null;
-      
+
       outputWriter = getFileWriter();
-//      outputWriter = getNetworkWriter("10.1.11.12", 17654);
+      // outputWriter = getNetworkWriter("10.1.11.12", 17654);
 
       m_stateLogger.setWriter(outputWriter);
       m_stateLogger.start();
@@ -62,7 +61,7 @@ public class RobotTemplate extends IterativeRobot
    private Writer getNetworkWriter(String ipAddress, int port)
    {
       BufferedWriter output = null;
-      
+
       try
       {
          Socket socket = new Socket(ipAddress, port);
@@ -78,14 +77,14 @@ public class RobotTemplate extends IterativeRobot
          // TODO Auto-generated catch block
          e.printStackTrace();
       }
-      
+
       return output;
    }
-   
+
    private FileWriter getFileWriter()
    {
       FileWriter output = null;
-      
+
       try
       {
     	  File outputFile;
@@ -118,6 +117,11 @@ public class RobotTemplate extends IterativeRobot
       return output;
    }
 
+   public void testInit()
+   {
+
+   }
+
    /**
     * This function is run when the robot is first started up and should be used
     * for any initialization code.
@@ -133,7 +137,8 @@ public class RobotTemplate extends IterativeRobot
       loadConfig();
 
       // Create application systems
-      m_core.createInputs(SwerveInputs.values());
+      m_core.createInputs(WSInputs.values());
+      // m_core.createInputs(SwerveInputs.values());
       m_core.createOutputs(WSOutputs.values());
 
       // 1. Add subsystems
@@ -225,7 +230,7 @@ public class RobotTemplate extends IterativeRobot
    public void autonomousInit()
    {
       Core.getSubsystemManager().init();
-      
+
       m_core.setAutoManager(AutoManager.getInstance());
       AutoManager.getInstance().startCurrentProgram();
    }
@@ -247,7 +252,7 @@ public class RobotTemplate extends IterativeRobot
    {
       // Remove the AutoManager from the Core
       m_core.setAutoManager(null);
-      
+
       Core.getSubsystemManager().init();
 
       periodTimer.startTimingSection();
@@ -258,7 +263,8 @@ public class RobotTemplate extends IterativeRobot
       teleopPerodicCalled = true;
 
       long cycleStartTime = System.currentTimeMillis();
-//      System.out.println("Cycle separation time: " + (cycleStartTime - lastCycleTime));
+      // System.out.println("Cycle separation time: " + (cycleStartTime -
+      // lastCycleTime));
 
       // Update all inputs, outputs and subsystems
       m_core.executeUpdate();
@@ -270,7 +276,7 @@ public class RobotTemplate extends IterativeRobot
 
       long cycleEndTime = System.currentTimeMillis();
       long cycleLength = cycleEndTime - cycleStartTime;
-//      System.out.println("Cycle time: " + cycleLength);
+      // System.out.println("Cycle time: " + cycleLength);
       lastCycleTime = cycleEndTime;
       // Watchdog.getInstance().feed();
    }

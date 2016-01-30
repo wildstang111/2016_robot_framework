@@ -503,7 +503,7 @@ public class SwerveDrive implements Subsystem
    @Override
    public String getName()
    {
-      return WSSubsystems.SWERVE_BASE.getName();
+      return "Swerve Base"; //WSSubsystems.SWERVE_BASE.getName();
    }
 
 }
