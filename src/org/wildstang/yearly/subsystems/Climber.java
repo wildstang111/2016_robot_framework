@@ -5,7 +5,6 @@ import org.wildstang.framework.io.Input;
 import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.framework.io.outputs.AnalogOutput;
 import org.wildstang.framework.io.inputs.AnalogInput;
-import org.wildstang.framework.io.outputs.DigitalOutput;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.hardware.crio.outputs.WsDoubleSolenoid;
 import org.wildstang.hardware.crio.outputs.WsDoubleSolenoidState;
@@ -16,38 +15,38 @@ import org.wildstang.yearly.robot.WSOutputs;
 public class Climber implements Subsystem
 {
    /*
-    * Climber Robot Class
-    * Authors: Wallace Butler and Lucas Papaioannou
+    * Climber Robot Class Authors: Wallace Butler and Lucas Papaioannou
     */
    private boolean liftButton;
    private boolean liftButtonPrev;
    private boolean liftButtonChanged;
-   private boolean winchButton;
+   private double winchValue;
    private boolean hook;
    private boolean hookButton;
    private boolean hookButtonPrev;
    private boolean hookButtonChanged;
    private boolean pistonlow;
    private boolean pistonhigh;
-   private boolean invtOutputs;
+   private int count = 0;
+   private boolean brakePressed;
 
    @Override
    public void inputUpdate(Input source)
    {
-      if (source.getName().equals(WSInputs.LIFT_BUTTON.getName()))
+      if (source.getName().equals(WSInputs.MAN_BUTTON_2.getName()))
       {
+         // Climb down
          liftButton = ((DigitalInput) source).getValue();
       }
-      else if (source.getName().equals(WSInputs.WINCH_BUTTON.getName()))
+      else if (source.getName().equals(WSInputs.MAN_RIGHT_JOYSTICK_Y.getName()))
       {
-         winchButton = ((DigitalInput) source).getValue();
+         winchValue = ((AnalogInput) source).getValue();
       }
-      else if (source.getName().equals(WSInputs.HOOK_BUTTON.getName()))
+      else if (source.getName().equals(WSInputs.MAN_BUTTON_4.getName()))
       {
+         // Climb up
          hookButton = ((DigitalInput) source).getValue();
       }
-      System.out.println("input update got called");
-
    }
 
    @Override
@@ -57,8 +56,6 @@ public class Climber implements Subsystem
        * Sets default values and calls for inputs
        */
       System.out.println("init got called");
-      invtOutputs = false;
-      winchButton = false;
       hookButtonChanged = false;
       hookButtonPrev = false;
       hook = false;
@@ -66,9 +63,9 @@ public class Climber implements Subsystem
       liftButtonPrev = false;
       pistonlow = false;
       pistonhigh = false;
-      Core.getInputManager().getInput(WSInputs.LIFT_BUTTON.getName()).addInputListener(this);
-      Core.getInputManager().getInput(WSInputs.WINCH_BUTTON.getName()).addInputListener(this);
-      Core.getInputManager().getInput(WSInputs.HOOK_BUTTON.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.MAN_RIGHT_JOYSTICK_Y.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_2.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_4.getName()).addInputListener(this);
 
    }
 
@@ -82,7 +79,7 @@ public class Climber implements Subsystem
    @Override
    public void update()
    {
-      /*
+       /*
        * Starts state change code
        */
       liftButtonChanged = false;
@@ -97,54 +94,54 @@ public class Climber implements Subsystem
          hookButtonChanged = true;
 
       }
-      /* 
-       * Flips pistons on or off when buttons are pressed 
+      /*
+       * Flips pistons on or off when buttons are pressed
        */
       if (liftButtonChanged)
       {
-         if (!pistonlow)
+         if (!pistonlow && !pistonhigh)
          {
-            ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LOWPISTONS.getName())).setValue(true
-                  ^ invtOutputs);
+            ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.HIGHPISTONS.getName())).setValue(true);
+            ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LOWPISTONS.getName())).setValue(true);
             pistonlow = true;
-            System.out.println("Pistons Out");
-
-         }
-         else if (pistonlow)
-         {
-            ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LOWPISTONS.getName())).setValue(false
-                  ^ invtOutputs);
-
-            pistonlow = false;
-            System.out.println("Pistons In");
-
-         }
-         if (!pistonhigh)
-         {
-            ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.HIGHPISTONS.getName())).setValue(true
-                  ^ invtOutputs);
             pistonhigh = true;
-            System.out.println("Pistons Out");
+            System.out.println("pistons out");
 
          }
-         else if (pistonhigh)
+         else if (pistonlow && pistonhigh)
          {
-            ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.HIGHPISTONS.getName())).setValue(false
-                  ^ invtOutputs);
+            ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LOWPISTONS.getName())).setValue(false);
+            ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.HIGHPISTONS.getName())).setValue(false);
             pistonhigh = false;
-            System.out.println("Pistons In");
+            pistonlow = false;
+            System.out.println("pistons in");
+
+         }
+         if (!pistonhigh && pistonlow)
+         {
+            ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LOWPISTONS.getName())).setValue(false);
+            pistonlow = false;
+            System.out.println("Low pistons in");
+
+         }
+         else if (pistonhigh && !pistonlow)
+         {
+            ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.HIGHPISTONS.getName())).setValue(false);
+            pistonhigh = false;
+            System.out.println("High pistons in");
 
          }
       }
       /*
        * Runs the winch
        */
-      if (winchButton)
-      {
-         ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_FRONT.getName())).setValue(0.3);
-         ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_BACK.getName())).setValue(0.3);
-         System.out.println("winching...");
+      
+      count++;
+      if(count%50==0){
+         System.out.println(winchValue);
       }
+      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_FRONT.getName())).setValue(winchValue);
+      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_BACK.getName())).setValue(winchValue);
       /*
        * Flips hooks when button pressed
        */
@@ -162,6 +159,9 @@ public class Climber implements Subsystem
             hook = true;
             System.out.println("Hooks out");
          }
+      }
+      if(brakePressed){
+         ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LOWPISTONS.getName())).setValue(true);
       }
       liftButtonPrev = liftButton;
       hookButtonPrev = hookButton;

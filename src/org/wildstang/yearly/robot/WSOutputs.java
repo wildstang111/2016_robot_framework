@@ -21,18 +21,23 @@ public enum WSOutputs implements Outputs
    FRONT_RIGHT("Front right drive",          WSOutputType.VICTOR,    new WsVictorConfig(1, 0.0), true),
    REAR_LEFT("Rear left drive",              WSOutputType.VICTOR,    new WsVictorConfig(2, 0.0), true),
    REAR_RIGHT("Rear right drive",            WSOutputType.VICTOR,    new WsVictorConfig(3, 0.0), true),
-   FRONT_LEFT_ROT("Front left rotation",     WSOutputType.VICTOR,    new WsVictorConfig(4, 0.0), true),
-   FRONT_RIGHT_ROT("Front right rotation",   WSOutputType.VICTOR,    new WsVictorConfig(5, 0.0), true),
-   REAR_LEFT_ROT("Rear left rotation",       WSOutputType.VICTOR,    new WsVictorConfig(6, 0.0), true),
-   REAR_RIGHT_ROT("Rear right rotation",     WSOutputType.VICTOR,    new WsVictorConfig(7, 0.0), true),
    
-   LOWPISTONS("Lower Pistons",         WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 2, false), true),
-   HIGHPISTONS("Higher Pistons",         WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(2, 2, false), true),
-   HOOKS("Hooks",       WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(1, 0, 1, WsDoubleSolenoidState.FORWARD), true),
-   WINCH_FRONT("Front Winch",         WSOutputType.VICTOR, new WsVictorConfig(8, 0.0), true),
-   WINCH_BACK("Back Winch",         WSOutputType.VICTOR, new WsVictorConfig(9, 0.0), true),
    
-   LED("LEDs", WSOutputType.I2C, new WsI2COutputConfig(I2C.Port.kOnboard, 0x10), true);
+   WINCH_FRONT("Front Winch",                WSOutputType.VICTOR, new WsVictorConfig(4, 0.0), true),
+   WINCH_BACK("Back Winch",                  WSOutputType.VICTOR, new WsVictorConfig(5, 0.0), true),
+   
+   LOWPISTONS("Lower Pistons",               WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 5, false), true),
+   HIGHPISTONS("Higher Pistons",             WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 6, false), true),
+   WINCH_BRAKE("Stop the winches",             WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(2, 3, false), true),
+   HOOKS("Hooks",                            WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(1, 7, 8, WsDoubleSolenoidState.FORWARD), true),
+  
+   
+//   FRONT_LEFT_ROT("Front left drive",            WSOutputType.VICTOR,    new WsVictorConfig(99, 0.0), true),
+//   FRONT_RIGHT_ROT("Front right drive",          WSOutputType.VICTOR,    new WsVictorConfig(99, 0.0), true),
+//   REAR_LEFT_ROT("Rear left drive",              WSOutputType.VICTOR,    new WsVictorConfig(99, 0.0), true),
+//   REAR_RIGHT_ROT("Rear right drive",            WSOutputType.VICTOR,    new WsVictorConfig(99, 0.0), true),
+   
+   LED("LEDs",                               WSOutputType.I2C, new WsI2COutputConfig(I2C.Port.kOnboard, 0x10), true);
 
    // Solenoids
 //   DOUBLE("Double solenoid", WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(1, 0, 1, WsDoubleSolenoidState.FORWARD), true),
