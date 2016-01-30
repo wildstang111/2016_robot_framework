@@ -3,8 +3,8 @@ package org.wildstang.yearly.subsystems;
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.Input;
 import org.wildstang.framework.io.inputs.AnalogInput;
-import org.wildstang.framework.io.outputs.AnalogOutput;
 import org.wildstang.framework.io.inputs.DigitalInput;
+import org.wildstang.framework.io.outputs.AnalogOutput;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
@@ -17,12 +17,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Shooter implements Subsystem
 {
    private boolean flyWheelToggle = false;
-   private boolean currentState;
-   private boolean oldState;
    private boolean PID = false;
+   private boolean currentState, oldState;
    private double speedMod = 1.0;
    private double leftSpeed, rightSpeed;
    private double targetSpeed;
+   private double milsecToMax = 1000;
+   private long startTime;
+   private long sysTime;
+
    CANTalon flyWheel;
 
    @Override
@@ -52,11 +55,12 @@ public class Shooter implements Subsystem
       }
       else if (source.getName().equals(WSInputs.DRV_BUTTON_5.getName()))
       {
-         speedMod += 0.05;
+         speedMod += 0.02;
       }
       else if (source.getName().equals(WSInputs.DRV_BUTTON_6.getName()))
       {
-         speedMod -= 0.05;
+         speedMod -= 0.02;
+
       }
       else if (source.getName().equals(WSInputs.DRV_THROTTLE.getName()))
       {
@@ -87,8 +91,8 @@ public class Shooter implements Subsystem
       Core.getInputManager().getInput(WSInputs.DRV_RIGHT_Y.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.DRV_THROTTLE.getName()).addInputListener(this);
 
-      flyWheel = new CANTalon(1); //
-      flyWheel.changeControlMode(TalonControlMode.Speed);
+      flyWheel = new CANTalon(1);
+      // flyWheel.changeControlMode(TalonControlMode.Speed);
       flyWheel.changeControlMode(TalonControlMode.PercentVbus);
       flyWheel.setFeedbackDevice(FeedbackDevice.QuadEncoder);
       flyWheel.configNominalOutputVoltage(+0.0f, -0.0f);
@@ -98,21 +102,13 @@ public class Shooter implements Subsystem
       flyWheel.reverseOutput(true);
       flyWheel.setProfile(0);
       flyWheel.setF((0.25 * 1023) / (1000 * 1.70666666));
-      flyWheel.setP((0.05 * 1023) / 500);
-      flyWheel.enableControl(); //
+      flyWheel.setP((0.02 * 1023) / 500);
+      flyWheel.enableControl();
       // flyWheel.setVoltageRampRate(rampRate);
-
       // (Ideal Rotations / min) X (1 min / 60 sec) X (1 sec / 10 TvelMeas) X
       // (1024 native units / rotation) =
       // (Ideal Rotations / min) X (1.70666666) = Feed Forward constant
       speedMod = .25;
-   }
-
-   @Override
-   public void selfTest()
-   {
-      // TODO Auto-generated method stub
-
    }
 
    @Override
@@ -124,30 +120,61 @@ public class Shooter implements Subsystem
          if (flyWheelToggle == true)
          {
             flyWheelToggle = false;
+            startTime = System.currentTimeMillis();
          }
          else if (flyWheelToggle == false)
          {
             flyWheelToggle = true;
+            startTime = System.currentTimeMillis();
          }
       }
       oldState = currentState;
-
-      targetSpeed = speedMod * rightSpeed * 4000;
+      sysTime = System.currentTimeMillis();
+      // targetSpeed = (speedMod * rightSpeed) * 4000;
       if (flyWheelToggle == true)
       {
-         flyWheel.changeControlMode(TalonControlMode.PercentVbus);
-         flyWheel.set(rightSpeed * speedMod);
+         if (sysTime < startTime + milsecToMax)
+         {
+            // flyWheel.changeControlMode(TalonControlMode.PercentVbus);
+            flyWheel.set((rightSpeed * speedMod)
+                  * ((sysTime - startTime) / milsecToMax));
+         }
+         else
+         {
+            flyWheel.set((rightSpeed * speedMod));
+         }
+
       }
       // else if(PID)
       // {
       // flyWheel.changeControlMode(TalonControlMode.Speed);
       // flyWheel.set(targetSpeed);
-      // } else { flyWheel.set(0.0); }
+      // }
+      else
+      {
+         if (sysTime < startTime + milsecToMax)
+         {
+            flyWheel.set((rightSpeed * speedMod) - (rightSpeed * speedMod)
+                  * ((sysTime - startTime) / milsecToMax));
+         }
+         else
+         {
+            flyWheel.set(0);
+         }
+      }
       ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.FRONT_LEFT.getName())).setValue(leftSpeed
             * speedMod);
       SmartDashboard.putNumber("TalonEncoder", flyWheel.getEncVelocity());
       SmartDashboard.putNumber("rightStick", rightSpeed);
       SmartDashboard.putNumber("speedMod", speedMod);
+      SmartDashboard.putBoolean("Toggle", flyWheelToggle);
+   }
+
+   @Override
+   public void selfTest()
+   {
+      // TODO Auto-generated method stub
+
    }
 
    private void getAnalogInVelocity()

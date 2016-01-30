@@ -9,27 +9,17 @@ import org.wildstang.framework.io.Input;
 import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.framework.io.outputs.AnalogOutput;
-import org.wildstang.framework.io.outputs.DigitalOutput;
 import org.wildstang.framework.motionprofile.ContinuousAccelFilter;
 import org.wildstang.framework.pid.controller.SpeedPidController;
 import org.wildstang.framework.subsystems.Subsystem;
-import org.wildstang.hardware.crio.inputs.WsMotionProfileControl;
-//import org.wildstang.framework.pid.inputs.DriveBaseSpeedPidInput;
-//import org.wildstang.framework.pid.outputs.DriveBaseSpeedPidOutput;
 import org.wildstang.yearly.robot.RobotTemplate;
 import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
 
-//import edu.wpi.first.wpilibj.Encoder;
-//import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-/**
- * 
- * @author Smitty
- */
-public class DriveBase implements Subsystem
+public class DriveBaseNew implements Subsystem
 {
 
    private static Logger s_log = Logger.getLogger(RobotTemplate.class.getName());
@@ -115,10 +105,42 @@ public class DriveBase implements Subsystem
 
    private String m_name;
 
-   public DriveBase()
+   @Override
+   public void inputUpdate(Input source)
    {
-      m_name = "Six Wheel";
+      if (source.getName().equals(WSInputs.DRV_BUTTON_7.getName()))
+      {
+         antiTurboFlag = ((DigitalInput) source).getValue();
+      }
+      else if (source.getName().equals(WSInputs.DRV_BUTTON_6.getName()))
+      {
+         if (((DigitalInput) source).getValue())
+         {
+            highGearFlag = !highGearFlag;
+         }
+      }
+      else if (source.getName().equals(WSInputs.DRV_BUTTON_5.getName()))
+      {
+         superAntiTurboFlag = ((DigitalInput) source).getValue();
+      }
+      else if (source.getName().equals(WSInputs.DRV_BUTTON_4.getName()))
+      {
+         hellaAntiTurboFlag = ((DigitalInput) source).getValue();
+      }
+      else if (source.getName().equals(WSInputs.DRV_THROTTLE.getName()))
+      {
+         throttleValue = ((AnalogInput) Core.getInputManager().getInput(WSInputs.DRV_THROTTLE.getName())).getValue();
+      }
+      else if (source.getName().equals(WSInputs.DRV_HEADING.getName()))
+      {
+         headingValue = ((AnalogInput) Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).getValue();
+      }
 
+   }
+
+   @Override
+   public void init()
+   {
       // Load the config parameters
       // notifyConfigChange(Core.getConfigManager().getConfig());
 
@@ -130,8 +152,6 @@ public class DriveBase implements Subsystem
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_5.getName()).addInputListener(this);
       // HELLA ANTI TURBO!!! WARNING!!! EXTREMELY SLOW...
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_4.getName()).addInputListener(this);
-
-      Core.getInputManager().getInput(WSInputs.MOTION_PROFILE_CONTROL.getName()).addInputListener(this);
 
       // Initialize the drive base encoders
       // leftDriveEncoder = new Encoder(0, 1, true, EncodingType.k4X);
@@ -148,12 +168,7 @@ public class DriveBase implements Subsystem
       // driveSpeedPidOutput = new DriveBaseSpeedPidOutput();
       // driveSpeedPid = new SpeedPidController(driveSpeedPidInput,
       // driveSpeedPidOutput, "DriveBaseSpeedPid");
-      init();
-   }
 
-   @Override
-   public void init()
-   {
       driveBaseThrottleValue = 0.0;
       driveBaseHeadingValue = 0.0;
       antiTurboFlag = false;
@@ -196,115 +211,17 @@ public class DriveBase implements Subsystem
    }
 
    @Override
+   public void selfTest()
+   {
+      // TODO Auto-generated method stub
+
+   }
+
+   @Override
    public void update()
    {
-      updateSpeedAndAccelerationCalculations();
-      if (true == motionProfileActive)
-      {
+      // TODO Auto-generated method stub
 
-         // Update PID using profile velocity as setpoint and measured
-         // velocity as PID input
-         enableSpeedPidControl();
-         setDriveSpeedPidSetpoint(continuousAccelerationFilter.getCurrVel());
-         // Update system to get feed forward terms
-         deltaPosError = this.deltaPosition - (deltaProfilePosition);
-         distance_moved += this.deltaPosition;
-         // distance_remaining = this.distance_to_move - currentProfileX;
-         distance_remaining = this.distance_to_move - distance_moved;
-         // Logger.getLogger().debug(this.getClass().getName(),
-         // "AccelFilter", "distance_left: " + distance_remaining + " p: " +
-         // continuousAccelerationFilter.getCurrPos()+ " v: " +
-         // continuousAccelerationFilter.getCurrVel() + " a: " +
-         // continuousAccelerationFilter.getCurrAcc() );
-         continuousAccelerationFilter.calculateSystem(distance_remaining, currentProfileV, goal_velocity, MAX_ACCELERATION_DRIVE_PROFILE, MAX_SPEED_INCHES_LOWGEAR, deltaTime);
-         deltaProfilePosition = continuousAccelerationFilter.getCurrPos()
-               - currentProfileX;
-         currentProfileX = continuousAccelerationFilter.getCurrPos();
-         currentProfileV = continuousAccelerationFilter.getCurrVel();
-         currentProfileA = continuousAccelerationFilter.getCurrAcc();
-         SmartDashboard.putNumber("Speed PID Error", driveSpeedPid.getError());
-         SmartDashboard.putNumber("Speed PID Output", DriveBase.pidSpeedValue);
-         SmartDashboard.putNumber("Distance Error", this.deltaPosError);
-         // Update motor output with PID output and feed forward velocity and
-         // acceleration
-         throttleValue = DriveBase.pidSpeedValue
-               + FEED_FORWARD_VELOCITY_CONSTANT
-               * (continuousAccelerationFilter.getCurrVel() / MAX_SPEED_INCHES_LOWGEAR)
-               + FEED_FORWARD_ACCELERATION_CONSTANT
-               * continuousAccelerationFilter.getCurrAcc();
-
-         if (((distance_remaining < getStoppingDistanceFromDistanceToMove(distance_to_move))
-               && (currentProfileV > 0) && (currentProfileA < 0))
-               || ((distance_remaining > -getStoppingDistanceFromDistanceToMove(distance_to_move))
-                     && (currentProfileV < 0) && (currentProfileA > 0)))
-         {
-            throttleValue = 0.0;
-         }
-
-         // Update the throttle value outside the function so that the
-         // acceleration factor is not applied.
-         driveBaseThrottleValue = throttleValue;
-         if (driveBaseThrottleValue > MAX_INPUT_THROTTLE_VALUE)
-         {
-            driveBaseThrottleValue = MAX_INPUT_THROTTLE_VALUE;
-         }
-         else if (driveBaseThrottleValue < -MAX_INPUT_THROTTLE_VALUE)
-         {
-            driveBaseThrottleValue = -MAX_INPUT_THROTTLE_VALUE;
-         }
-         SmartDashboard.putNumber("Motion Profile Throttle", driveBaseThrottleValue);
-         updateDriveMotors();
-      }
-      else
-      {
-         // We are in manual control
-         // heading, throttle and strafe values have been updated by
-         // inputUpdate
-         // or direct setter methods
-
-         // TODO: These need to be moved to inputUpdate
-
-         SmartDashboard.putNumber("Throttle Joystick Value", throttleValue);
-         SmartDashboard.putNumber("Heading Joystick Value", headingValue);
-         if (!driveOverrideEnabled)
-         {
-            setThrottleValue(throttleValue);
-            setHeadingValue(headingValue);
-         }
-         else
-         {
-            setThrottleValue(overriddenThrottle);
-            setHeadingValue(overriddenHeading);
-         }
-
-         // Use updated values to update the quickTurnFlag
-         checkAutoQuickTurn();
-
-         // Set the drive motor outputs
-         updateDriveMotors();
-
-         SmartDashboard.putNumber("Throttle Value", driveBaseThrottleValue);
-         SmartDashboard.putNumber("Heading Value", driveBaseHeadingValue);
-         SmartDashboard.putBoolean("High Gear", highGearFlag);
-         SmartDashboard.putBoolean("Anti-Turbo Flag", antiTurboFlag);
-         SmartDashboard.putBoolean("Quickturn", quickTurnFlag);
-
-         // Set gear shift output
-         // TODO: This is not right! Need to fix with double solenoid
-         ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.SINGLE.getName())).setValue(highGearFlag);
-         // getOutput(Robot.SHIFTER).set(new Integer(highGearFlag == true ?
-         // DoubleSolenoid.Value.kReverse.value :
-         // DoubleSolenoid.Value.kForward.value));
-      }
-
-      // SmartDashboard.putNumber("Left encoder count: ",
-      // this.getLeftEncoderValue());
-      // SmartDashboard.putNumber("Right encoder count: ",
-      // this.getRightEncoderValue());
-      // SmartDashboard.putNumber("Right Distance: ",
-      // this.getRightDistance());
-      // SmartDashboard.putNumber("Left Distance: ", this.getLeftDistance());
-      // SmartDashboard.putNumber("Gyro angle", this.getGyroAngle());
    }
 
    public void overrideThrottleValue(double throttle)
@@ -539,7 +456,6 @@ public class DriveBase implements Subsystem
       }
    }
 
-   // TODO: Update
    public void updateDriveMotors()
    {
       double rightMotorSpeed = 0.0;
@@ -845,111 +761,11 @@ public class DriveBase implements Subsystem
       return quickTurnFlag;
    }
 
-   public void notifyConfigChange(Config config)
-   {
-
-      // Changed config params
-      ACCELERATION_ENABLED = Core.getConfigManager().getConfig().getBoolean(this.getClass().getName()
-            + ".acceleration_enabled", false);
-
-      WHEEL_DIAMETER = config.getDouble(this.getClass().getName()
-            + ".wheel_diameter", 6);
-      TICKS_PER_ROTATION = config.getDouble(this.getClass().getName()
-            + ".ticks_per_rotation", 360.0);
-      THROTTLE_LOW_GEAR_ACCEL_FACTOR = config.getDouble(this.getClass().getName()
-            + ".throttle_low_gear_accel_factor", 0.250);
-      HEADING_LOW_GEAR_ACCEL_FACTOR = config.getDouble(this.getClass().getName()
-            + ".heading_low_gear_accel_factor", 0.500);
-      THROTTLE_HIGH_GEAR_ACCEL_FACTOR = config.getDouble(this.getClass().getName()
-            + ".throttle_high_gear_accel_factor", 0.125);
-      HEADING_HIGH_GEAR_ACCEL_FACTOR = config.getDouble(this.getClass().getName()
-            + ".heading_high_gear_accel_factor", 0.250);
-      MAX_HIGH_GEAR_PERCENT = config.getDouble(this.getClass().getName()
-            + ".max_high_gear_percent", 0.80);
-      ENCODER_GEAR_RATIO = config.getDouble(this.getClass().getName()
-            + ".encoder_gear_ratio", 7.5);
-      SLOW_TURN_FORWARD_SPEED = config.getDouble(this.getClass().getName()
-            + ".slow_turn_forward_speed", 0.16);
-      SLOW_TURN_BACKWARD_SPEED = config.getDouble(this.getClass().getName()
-            + ".slow_turn_backward_speed", -0.19);
-      FEED_FORWARD_VELOCITY_CONSTANT = config.getDouble(this.getClass().getName()
-            + ".feed_forward_velocity_constant", 1.00);
-      FEED_FORWARD_ACCELERATION_CONSTANT = config.getDouble(this.getClass().getName()
-            + ".feed_forward_acceleration_constant", 0.00018);
-      MAX_ACCELERATION_DRIVE_PROFILE = config.getDouble(this.getClass().getName()
-            + ".max_acceleration_drive_profile", 600.0);
-      MAX_SPEED_INCHES_LOWGEAR = config.getDouble(this.getClass().getName()
-            + ".max_speed_inches_lowgear", 90.0);
-      DEADBAND = config.getDouble(this.getClass().getName() + ".deadband", 0.05);
-      DECELERATION_VELOCITY_THRESHOLD = config.getDouble(this.getClass().getName()
-            + ".deceleration_velocity_threshold", 48.0);
-      DECELERATION_MOTOR_SPEED = config.getDouble(this.getClass().getName()
-            + ".deceleration_motor_speed", 0.3);
-      STOPPING_DISTANCE_AT_MAX_SPEED_LOWGEAR = config.getDouble(this.getClass().getName()
-            + ".stopping_distance_at_max_speed_lowgear", 10.0);
-      QUICK_TURN_CAP = config.getDouble(this.getClass().getName()
-            + ".quick_turn_cap", 10.0);
-      QUICK_TURN_ANTITURBO = config.getDouble(this.getClass().getName()
-            + ".quick_turn_antiturbo", 10.0);
-      SUPER_ANTITURBO_FACTOR = config.getDouble(this.getClass().getName()
-            + ".super_antiturbo_factor", 0.5);
-      ACCELERATION_ENABLED = Core.getConfigManager().getConfig().getBoolean(this.getClass().getName()
-            + ".acceleration_enabled", false);
-      outputScaleFactor = config.getDouble(this.getClass().getName()
-            + ".output_scale_factor", 1.0);
-      driveSpeedPid.notifyConfigChange();
-   }
-
-   @Override
-   public void inputUpdate(Input source)
-   {
-      if (source.getName().equals(WSInputs.DRV_BUTTON_7.getName()))
-      {
-         antiTurboFlag = ((DigitalInput) source).getValue();
-      }
-      else if (source.getName().equals(WSInputs.DRV_BUTTON_6.getName()))
-      {
-         if (((DigitalInput) source).getValue())
-         {
-            highGearFlag = !highGearFlag;
-         }
-      }
-      else if (source.getName().equals(WSInputs.DRV_BUTTON_5.getName()))
-      {
-         superAntiTurboFlag = ((DigitalInput) source).getValue();
-      }
-      else if (source.getName().equals(WSInputs.DRV_BUTTON_4.getName()))
-      {
-         hellaAntiTurboFlag = ((DigitalInput) source).getValue();
-      }
-      else if (source.getName().equals(WSInputs.MOTION_PROFILE_CONTROL.getName()))
-      {
-         motionProfileActive = ((WsMotionProfileControl) source).getProfileEnabled();
-         if (((WsMotionProfileControl) source).getResetKinematics())
-         {
-            resetKinematics();
-         }
-      }
-      else if (source.getName().equals(WSInputs.DRV_THROTTLE.getName()))
-      {
-         throttleValue = ((AnalogInput) Core.getInputManager().getInput(WSInputs.DRV_THROTTLE.getName())).getValue();
-      }
-      else if (source.getName().equals(WSInputs.DRV_HEADING.getName()))
-      {
-         headingValue = ((AnalogInput) Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).getValue();
-      }
-
-   }
-
-   @Override
-   public void selfTest()
-   {
-   }
-
    @Override
    public String getName()
    {
-      return m_name;
+      // TODO Auto-generated method stub
+      return null;
    }
 
    public double getSpeedError()
@@ -978,4 +794,71 @@ public class DriveBase implements Subsystem
    {
       highGearFlag = highGear;
    }
+
+   // public void notifyConfigChange(Config config)
+   // {
+   //
+   // // Changed config params
+   // ACCELERATION_ENABLED =
+   // Core.getConfigManager().getConfig().getBoolean(this.getClass().getName()
+   // + ".acceleration_enabled", false);
+   //
+   // WHEEL_DIAMETER = config.getDouble(this.getClass().getName()
+   // + ".wheel_diameter", 6);
+   // TICKS_PER_ROTATION = config.getDouble(this.getClass().getName()
+   // + ".ticks_per_rotation", 360.0);
+   // THROTTLE_LOW_GEAR_ACCEL_FACTOR =
+   // config.getDouble(this.getClass().getName()
+   // + ".throttle_low_gear_accel_factor", 0.250);
+   // HEADING_LOW_GEAR_ACCEL_FACTOR = config.getDouble(this.getClass().getName()
+   // + ".heading_low_gear_accel_factor", 0.500);
+   // THROTTLE_HIGH_GEAR_ACCEL_FACTOR =
+   // config.getDouble(this.getClass().getName()
+   // + ".throttle_high_gear_accel_factor", 0.125);
+   // HEADING_HIGH_GEAR_ACCEL_FACTOR =
+   // config.getDouble(this.getClass().getName()
+   // + ".heading_high_gear_accel_factor", 0.250);
+   // MAX_HIGH_GEAR_PERCENT = config.getDouble(this.getClass().getName()
+   // + ".max_high_gear_percent", 0.80);
+   // ENCODER_GEAR_RATIO = config.getDouble(this.getClass().getName()
+   // + ".encoder_gear_ratio", 7.5);
+   // SLOW_TURN_FORWARD_SPEED = config.getDouble(this.getClass().getName()
+   // + ".slow_turn_forward_speed", 0.16);
+   // SLOW_TURN_BACKWARD_SPEED = config.getDouble(this.getClass().getName()
+   // + ".slow_turn_backward_speed", -0.19);
+   // FEED_FORWARD_VELOCITY_CONSTANT =
+   // config.getDouble(this.getClass().getName()
+   // + ".feed_forward_velocity_constant", 1.00);
+   // FEED_FORWARD_ACCELERATION_CONSTANT =
+   // config.getDouble(this.getClass().getName()
+   // + ".feed_forward_acceleration_constant", 0.00018);
+   // MAX_ACCELERATION_DRIVE_PROFILE =
+   // config.getDouble(this.getClass().getName()
+   // + ".max_acceleration_drive_profile", 600.0);
+   // MAX_SPEED_INCHES_LOWGEAR = config.getDouble(this.getClass().getName()
+   // + ".max_speed_inches_lowgear", 90.0);
+   // DEADBAND = config.getDouble(this.getClass().getName() + ".deadband",
+   // 0.05);
+   // DECELERATION_VELOCITY_THRESHOLD =
+   // config.getDouble(this.getClass().getName()
+   // + ".deceleration_velocity_threshold", 48.0);
+   // DECELERATION_MOTOR_SPEED = config.getDouble(this.getClass().getName()
+   // + ".deceleration_motor_speed", 0.3);
+   // STOPPING_DISTANCE_AT_MAX_SPEED_LOWGEAR =
+   // config.getDouble(this.getClass().getName()
+   // + ".stopping_distance_at_max_speed_lowgear", 10.0);
+   // QUICK_TURN_CAP = config.getDouble(this.getClass().getName()
+   // + ".quick_turn_cap", 10.0);
+   // QUICK_TURN_ANTITURBO = config.getDouble(this.getClass().getName()
+   // + ".quick_turn_antiturbo", 10.0);
+   // SUPER_ANTITURBO_FACTOR = config.getDouble(this.getClass().getName()
+   // + ".super_antiturbo_factor", 0.5);
+   // ACCELERATION_ENABLED =
+   // Core.getConfigManager().getConfig().getBoolean(this.getClass().getName()
+   // + ".acceleration_enabled", false);
+   // outputScaleFactor = config.getDouble(this.getClass().getName()
+   // + ".output_scale_factor", 1.0);
+   // driveSpeedPid.notifyConfigChange();
+   // }
+
 }
