@@ -47,7 +47,7 @@ public class Shooter implements Subsystem
       }
       else if (source.getName().equals(WSInputs.MAN_FLY_SPEED.getName()))
       {
-         currentFlySpeed = ((DigitalInput)source).getValue();
+         currentFlySpeed = ((DigitalInput) source).getValue();
       }
    }
 
@@ -116,7 +116,7 @@ public class Shooter implements Subsystem
          }
       }
       oldHoodState = currentHoodState;
-      
+
       if (oldFlySpeed == false && currentFlySpeed == true)
       {
          if (flySpeed == .75)
@@ -126,63 +126,67 @@ public class Shooter implements Subsystem
          else if (flySpeed == .7)
          {
             flySpeed = .75;
-         }else{
+         }
+         else
+         {
             flySpeed = .75;
          }
       }
       oldFlySpeed = currentFlySpeed;
-      flyWheel.set(flySpeed);
       
-//      sysTime = System.currentTimeMillis();
+      if (flyWheelToggle == true)
+      {
+         flyWheel.set(flySpeed);
+      }
+      else
+      {
+         flyWheel.set(0);
+      }
+
+      // sysTime = System.currentTimeMillis();
       // targetSpeed = (speedMod * rightSpeed) * 4000;
-//      if (flyWheelToggle == true)
-//      {
-//         if (sysTime < startTime + milsecToMax)
-//         {
-//            // flyWheel.changeControlMode(TalonControlMode.PercentVbus);
-//            flyWheel.set((rightSpeed * speedMod)
-//                  * ((sysTime - startTime) / milsecToMax));
-//         }
-//         else
-//         {
-//            flyWheel.set((rightSpeed * speedMod));
-//         }
-//      }
+      // if (flyWheelToggle == true)
+      // {
+      // if (sysTime < startTime + milsecToMax)
+      // {
+      // // flyWheel.changeControlMode(TalonControlMode.PercentVbus);
+      // flyWheel.set((rightSpeed * speedMod)
+      // * ((sysTime - startTime) / milsecToMax));
+      // }
+      // else
+      // {
+      // flyWheel.set((rightSpeed * speedMod));
+      // }
+      // }
       // else if(PID)
       // {
       // flyWheel.changeControlMode(TalonControlMode.Speed);
       // flyWheel.set(targetSpeed);
       // }
-//      else
-//      {
-//         if (sysTime < startTime + milsecToMax)
-//         {
-//            flyWheel.set((rightSpeed * speedMod) - (rightSpeed * speedMod)
-//                  * ((sysTime - startTime) / milsecToMax));
-//         }
-//         else
-//         {
-//            flyWheel.set(0);
-//         }
-//      }
+      // else
+      // {
+      // if (sysTime < startTime + milsecToMax)
+      // {
+      // flyWheel.set((rightSpeed * speedMod) - (rightSpeed * speedMod)
+      // * ((sysTime - startTime) / milsecToMax));
+      // }
+      // else
+      // {
+      // flyWheel.set(0);
+      // }
+      // }
       ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.HOOD_TOGGLE.getName())).setValue(hoodPosition);
-      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.FRONT_LEFT.getName())).setValue(flySpeed);
       SmartDashboard.putNumber("TalonEncoder", flyWheel.getEncVelocity());
       SmartDashboard.putNumber("Fly Wheel Speed", flySpeed);
-//      SmartDashboard.putNumber("rightStick", rightSpeed);
-//      SmartDashboard.putNumber("speedMod", speedMod);
-      SmartDashboard.putBoolean("Toggle", flyWheelToggle);
+      // SmartDashboard.putNumber("rightStick", rightSpeed);
+      // SmartDashboard.putNumber("speedMod", speedMod);
+      SmartDashboard.putBoolean("Fly Wheel Toggle State", flyWheelToggle);
       SmartDashboard.putBoolean("Hood State", hoodPosition);
+      SmartDashboard.putNumber("Fly Wheel Current", flyWheel.getOutputCurrent());
    }
 
    @Override
    public void selfTest()
-   {
-      // TODO Auto-generated method stub
-
-   }
-
-   private void getAnalogInVelocity()
    {
       // TODO Auto-generated method stub
 
