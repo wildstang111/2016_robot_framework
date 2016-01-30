@@ -26,7 +26,10 @@ public class HarpoonAuto extends AutoProgram
       driveToEnd.addStep(deployAndDrive);
       addStep(driveToEnd);
 
+      // Retract intake to prevent crossing midline during turn, then drive
+      // forward and extend intake for low bar crossing
       AutoSerialStepGroup crossTheRoad = new AutoSerialStepGroup();
+      crossTheRoad.addStep(new StepIntake(0));
       crossTheRoad.addStep(new StepSetIntakeState(false));
       crossTheRoad.addStep(new StepQuickTurn(90));
       crossTheRoad.addStep(new StepDriveDistanceAtSpeed(32, 1, false));
@@ -34,6 +37,7 @@ public class HarpoonAuto extends AutoProgram
       crossTheRoad.addStep(new StepDriveDistanceAtSpeed(80.5, 1, true));
       addStep(crossTheRoad);
 
+      // Start running flywheels while going to side goal shooting position
       AutoParallelStepGroup Score = new AutoParallelStepGroup();
       AutoSerialStepGroup gotoGoal = new AutoSerialStepGroup();
       Score.addStep(new StepRunFlywheel(speed));
