@@ -5,6 +5,7 @@ import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.Input;
 import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.framework.io.outputs.DigitalOutput;
+import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.io.outputs.AnalogOutput;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.yearly.robot.WSInputs;
@@ -13,14 +14,19 @@ import org.wildstang.yearly.robot.WSOutputs;
 public class Intake implements Subsystem
 {
    // add variables here
-   private boolean buttonPress;
+
    private boolean sensorReading;
-   private boolean buttonPress2;
-   private boolean rollerMoving;
-   private boolean pnumaticGo1;
-   private boolean pnumaticGo2;
-   private boolean buttonPress3;
-   private boolean buttonPress4;
+   private boolean rollerMovingIn;
+   private boolean rollerMovingOut;
+   private boolean intakeNosePnumatic;
+   private boolean deployIntakePnumatic;
+   private boolean manRollerInOverride;
+   private boolean manIntakeNoseControl;
+   private boolean drvIntakeNoseControl;
+   private boolean manDeployIntakePnumaticControl;
+   private boolean manRollerInOverrideCurrentState;
+   private boolean manRollerInOverrideOldState;
+   private double  manLeftJoyRollerIn;
 
    @Override
    public void inputUpdate(Input source)
@@ -28,38 +34,42 @@ public class Intake implements Subsystem
       // TODO Auto-generated method stub
 
       // does something with Inputs and variables
-
-      // setting buttonPress to DRV_BUTTON_1
-      if (source.getName().equals(WSInputs.DRV_BUTTON_1.getName()))
-      {
-         buttonPress = ((DigitalInput) source).getValue();
-      }
-
-      // setting buttonPress2 to DRV_BUTTON_2
-      else if (source.getName().equals(WSInputs.DRV_BUTTON_2.getName()))
-      {
-         buttonPress2 = ((DigitalInput) source).getValue();
-      }
-
-      // setting sensorReading to DIO_0_INTAKE_SENSOR
-      else if (source.getName().equals(WSInputs.INTAKE_BOLDER_SENSOR.getName()))
-      {
+      
+       //setting sensorReading to DIO_0_INTAKE_SENSOR
+     if (source.getName().equals(WSInputs.INTAKE_BOLDER_SENSOR.getName()))
+     {
          sensorReading = ((DigitalInput) source).getValue();
       }
-
-      // setting buttonPress3 to DRV_BUTTON_3
-      else if (source.getName().equals(WSInputs.DRV_BUTTON_3.getName()))
-      {
-         buttonPress3 = ((DigitalInput) source).getValue();
+      
+      //setting manLeftJoyRollerIn to the left joystick's y axis
+      if (source.getName().equals(WSInputs.MAN_LEFT_JOYSTICK_Y.getName())){
+         manLeftJoyRollerIn = ((AnalogInput) source).getValue();
       }
-
-      // setting buttonPress3 to DRV_BUTTON_3
-      else if (source.getName().equals(WSInputs.DRV_BUTTON_4.getName()))
-      {
-         buttonPress4 = ((DigitalInput) source).getValue();
+      
+      //sets manIntakeNoseControl to Manipulator button 6
+      if (source.getName().equals(WSInputs.MAN_BUTTON_6.getName())){
+         manIntakeNoseControl = ((DigitalInput) source).getValue();
       }
-
-   }
+      
+      //sets drvIntakeNoseControl to Drive Button 6
+      if (source.getName().equals(WSInputs.DRV_BUTTON_6.getName())){
+         drvIntakeNoseControl = ((DigitalInput) source).getValue();
+      }
+      
+      //setting manRollerInOverride to Manipulator button 1
+      if (source.getName().equals(WSInputs.MAN_BUTTON_1.getName()))
+      {
+         manRollerInOverrideCurrentState = ((DigitalInput) source).getValue();
+      }
+      
+    //setting manDeployIntakePnumaticControl to Manipulator button 8
+      if (source.getName().equals(WSInputs.MAN_BUTTON_8.getName())){
+         manDeployIntakePnumaticControl = ((DigitalInput) source).getValue();
+      }
+      }
+   
+      
+      
 
    @Override
    public void init()
@@ -67,10 +77,12 @@ public class Intake implements Subsystem
       // TODO Auto-generated method stub
 
       // asking for below Inputs
-      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_1.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_6.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_6.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_1.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_2.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_3.getName()).addInputListener(this);
-
+      Core.getInputManager().getInput(WSInputs.MAN_LEFT_JOYSTICK_Y.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.INTAKE_BOLDER_SENSOR.getName()).addInputListener(this);
    }
 
@@ -84,62 +96,87 @@ public class Intake implements Subsystem
    @Override
    public void update()
    {
+      
       // TODO Auto-generated method stub
 
       // does something with variables and Outputs
 
-      // tells status of buttonPress, digitalIO_0, sensorReading, and
-      // rollerMoving
-      System.out.println("buttonPress=" + buttonPress + " buttonPress2="
-            + buttonPress2 + " sensorReading=" + sensorReading
-            + " rollerMoving=" + rollerMoving);
+      // tells status of manLeftJoyRollerIn, sensorReading, and rollerMovingIn
+      System.out.println("manLeftJoyRollerIn=" + manLeftJoyRollerIn + " sensorReading=" 
+      + sensorReading + " rollerMovingIn=" + rollerMovingIn + " intakeNosePnumatic=" + intakeNosePnumatic);
 
-      // toggles pnumaticGo1 and pnumaticGo2 to buttonPress3
-      if (buttonPress3 == true)
+      // toggles intakeNosePnumatic and deployIntakePnumatic to manIntakeNoseControl
+      // pneumatic1 is the nose; pneumatic2 is the intake deploy
+      if (manIntakeNoseControl == true)
       {
-         pnumaticGo1 = true;
-         pnumaticGo2 = false;
-      }
-
-      // toggles pnumaticGo2 to buttonPress4
-      if (buttonPress4 == true)
-      {
-         pnumaticGo2 = true;
-         rollerMoving = false;
+         intakeNosePnumatic = true;
+         deployIntakePnumatic = false;
       }
       
-      // toggles rollerMoving to buttonPress
-      if (buttonPress == true)
+      // toggles intakeNosePnumatic and deployIntakePnumatic to drvIntakeNoseControl
+      if (drvIntakeNoseControl == true) 
       {
-         rollerMoving = true;
+         intakeNosePnumatic = true;
+         deployIntakePnumatic = false;
       }
 
-      // if the sensor is triggered, the roller will not move unless button2 is
-      // pressed
-      if (buttonPress2 == true)
+      // toggles deployIntakePnumatic to manDeployIntakePnumaticControl
+      if (manDeployIntakePnumaticControl == true)
       {
-         rollerMoving = true;
+         intakeNosePnumatic = false;
+         deployIntakePnumatic = true;
+         rollerMovingIn = false;
+         rollerMovingOut = false;
+      }
+      
+      // if you push the left joy stick up, the intake will roll inwards.
+      // if you push the left joy stick down, the intake will roll outwards.
+      if (manLeftJoyRollerIn >= .5){
+         rollerMovingOut = false;
+         rollerMovingIn = true;
+      } else if (manLeftJoyRollerIn <= -.5) {
+         rollerMovingIn = false;
+         rollerMovingOut = true;
+      }
+      
+      // if the sensor is triggered, the roller will not move in unless manRollerInOverride is pressed
+      if (manRollerInOverrideOldState == false && manRollerInOverrideCurrentState == true){
+      if (manRollerInOverride == true)
+      {
          sensorReading = false;
-      }
+         rollerMovingIn = true;
 
-      else if (sensorReading == true)
+         }}
+      manRollerInOverrideOldState = manRollerInOverrideCurrentState;
+
+      //if sensorReading is true, the roller will stop
+      if (sensorReading == true)
       {
-         rollerMoving = false;
-      }
+         rollerMovingIn = false;
+      } 
 
-      if (rollerMoving == true)
+      //if rollerMovingOut is true, the roller will move inwards
+      if (rollerMovingIn == true)
       {
          ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.FRONT_ROLLER.getName())).setValue(0.75);
       }
+      
+      //if rollerMovingOut is true, the roller will move in reverse
+      if (rollerMovingOut == true)
+      {
+         ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.FRONT_ROLLER.getName())).setValue(-0.75);
+      }
 
-      // buttonPress controls DIO_LED_0 etc.
-      ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.DIO_LED_0.getName())).setValue(buttonPress);
+
+     /* // buttonPress controls DIO_LED_0 etc.
+      ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.DIO_LED_0.getName())).setValue(manLeftJoyRollerIn >= .5);
       ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.SENSOR_LED_1.getName())).setValue(sensorReading);
-      ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.FRONT_ROLLER_LED_2.getName())).setValue(rollerMoving);
-      // ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.PNUMATIC_1.getName())).setValue(pnumaticGo1);
-      // ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.PNUMATIC_2.getName())).setValue(pnumaticGo2);
-      ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.PNUMATIC_1_LED.getName())).setValue(pnumaticGo1);
-      ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.PNUMATIC_2_LED.getName())).setValue(pnumaticGo2);
+      ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.FRONT_ROLLER_LED_2.getName())).setValue(rollerMovingIn);
+      // ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.PNUMATIC_1.getName())).setValue(intakeNosePnumatic);
+      // ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.PNUMATIC_2.getName())).setValue(deployIntakePnumatic);
+      ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.PNUMATIC_1_LED.getName())).setValue(intakeNosePnumatic);
+      ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.PNUMATIC_2_LED.getName())).setValue(deployIntakePnumatic);
+      */
    }
 
    @Override
