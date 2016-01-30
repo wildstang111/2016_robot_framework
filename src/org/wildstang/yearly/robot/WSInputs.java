@@ -75,12 +75,12 @@ public enum WSInputs implements Inputs
    MAN_BUTTON_1("Manipulator button 1", WSInputType.JS_BUTTON,
          new WsJSButtonInputConfig(1, 0), true), MAN_BUTTON_2(
          "Manipulator button 2", WSInputType.JS_BUTTON,
-         new WsJSButtonInputConfig(1, 1), true), MAN_BUTTON_3(
-         "Manipulator button 3", WSInputType.JS_BUTTON,
-         new WsJSButtonInputConfig(1, 2), true), MAN_BUTTON_4(
-         "Manipulator button 4", WSInputType.JS_BUTTON,
-         new WsJSButtonInputConfig(1, 3), true), MAN_BUTTON_5(
-         "Manipulator button 5", WSInputType.JS_BUTTON,
+         new WsJSButtonInputConfig(1, 1), true), MAN_FLY_TOGGLE(
+         "Fly Toggle", WSInputType.JS_BUTTON,
+         new WsJSButtonInputConfig(1, 2), true), MAN_FLY_SPEED(
+         "Flywheel Speed Toggle", WSInputType.JS_BUTTON,
+         new WsJSButtonInputConfig(1, 3), true), MAN_HOOD_TOGGLE(
+         "Toggle Hood Btn", WSInputType.JS_BUTTON,
          new WsJSButtonInputConfig(1, 4), true), MAN_BUTTON_6(
          "Manipulator button 6", WSInputType.JS_BUTTON,
          new WsJSButtonInputConfig(1, 5), true), MAN_BUTTON_7(

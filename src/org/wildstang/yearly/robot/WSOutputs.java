@@ -26,9 +26,10 @@ public enum WSOutputs implements Outputs
    LED("LEDs", WSOutputType.I2C, new WsI2COutputConfig(I2C.Port.kOnboard, 0x10), true),
 
    // Solenoids
-   DOUBLE("Double solenoid", WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(1, 0, 1, WsDoubleSolenoidState.FORWARD), true),
+   HOOD_TOGGLE("Toggle Hood Solenoid", WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(1, 0, 1, WsDoubleSolenoidState.FORWARD), true),
    SINGLE("Single solenoid", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 2, false), true);
-
+   
+   
    private String m_name;
    private OutputType m_type;
    private OutputConfig m_config;
