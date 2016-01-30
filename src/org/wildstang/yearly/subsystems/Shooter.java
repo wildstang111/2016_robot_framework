@@ -126,6 +126,8 @@ public class Shooter implements Subsystem
          else if (flySpeed == .7)
          {
             flySpeed = .75;
+         }else{
+            flySpeed = .75;
          }
       }
       oldFlySpeed = currentFlySpeed;
