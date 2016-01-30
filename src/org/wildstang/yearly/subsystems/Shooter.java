@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Shooter implements Subsystem
 {
    private boolean flyWheelToggle = false;
-
    private boolean PID = false;
    private boolean currentState, oldState;
    private double speedMod = 1.0;

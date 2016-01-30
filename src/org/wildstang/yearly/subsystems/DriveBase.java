@@ -13,6 +13,7 @@ import org.wildstang.framework.io.outputs.DigitalOutput;
 import org.wildstang.framework.motionprofile.ContinuousAccelFilter;
 import org.wildstang.framework.pid.controller.SpeedPidController;
 import org.wildstang.framework.subsystems.Subsystem;
+import org.wildstang.hardware.crio.inputs.WsMotionProfileControl;
 //import org.wildstang.framework.pid.inputs.DriveBaseSpeedPidInput;
 //import org.wildstang.framework.pid.outputs.DriveBaseSpeedPidOutput;
 import org.wildstang.yearly.robot.RobotTemplate;
@@ -129,6 +130,8 @@ public class DriveBase implements Subsystem
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_5.getName()).addInputListener(this);
       // HELLA ANTI TURBO!!! WARNING!!! EXTREMELY SLOW...
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_4.getName()).addInputListener(this);
+
+      Core.getInputManager().getInput(WSInputs.MOTION_PROFILE_CONTROL.getName()).addInputListener(this);
 
       // Initialize the drive base encoders
       // leftDriveEncoder = new Encoder(0, 1, true, EncodingType.k4X);
@@ -918,6 +921,14 @@ public class DriveBase implements Subsystem
       else if (source.getName().equals(WSInputs.DRV_BUTTON_4.getName()))
       {
          hellaAntiTurboFlag = ((DigitalInput) source).getValue();
+      }
+      else if (source.getName().equals(WSInputs.MOTION_PROFILE_CONTROL.getName()))
+      {
+         motionProfileActive = ((WsMotionProfileControl) source).getProfileEnabled();
+         if (((WsMotionProfileControl) source).getResetKinematics())
+         {
+            resetKinematics();
+         }
       }
       else if (source.getName().equals(WSInputs.DRV_THROTTLE.getName()))
       {
