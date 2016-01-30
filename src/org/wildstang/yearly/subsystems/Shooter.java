@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Shooter implements Subsystem
 {
    private boolean flyWheelToggle = false;
+
    private boolean PID = false;
    private boolean currentState, oldState;
    private double speedMod = 1.0;
@@ -25,6 +26,7 @@ public class Shooter implements Subsystem
    private double milsecToMax = 1000;
    private long startTime;
    private long sysTime;
+
    CANTalon flyWheel;
 
    @Override
@@ -59,6 +61,7 @@ public class Shooter implements Subsystem
       else if (source.getName().equals(WSInputs.DRV_BUTTON_6.getName()))
       {
          speedMod -= 0.02;
+
       }
       else if (source.getName().equals(WSInputs.DRV_THROTTLE.getName()))
       {
@@ -88,6 +91,7 @@ public class Shooter implements Subsystem
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_8.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.DRV_RIGHT_Y.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.DRV_THROTTLE.getName()).addInputListener(this);
+
       flyWheel = new CANTalon(1);
       // flyWheel.changeControlMode(TalonControlMode.Speed);
       flyWheel.changeControlMode(TalonControlMode.PercentVbus);
@@ -102,18 +106,10 @@ public class Shooter implements Subsystem
       flyWheel.setP((0.02 * 1023) / 500);
       flyWheel.enableControl();
       // flyWheel.setVoltageRampRate(rampRate);
-
       // (Ideal Rotations / min) X (1 min / 60 sec) X (1 sec / 10 TvelMeas) X
       // (1024 native units / rotation) =
       // (Ideal Rotations / min) X (1.70666666) = Feed Forward constant
       speedMod = .25;
-   }
-
-   @Override
-   public void selfTest()
-   {
-      // TODO Auto-generated method stub
-
    }
 
    @Override
@@ -173,6 +169,12 @@ public class Shooter implements Subsystem
       SmartDashboard.putNumber("rightStick", rightSpeed);
       SmartDashboard.putNumber("speedMod", speedMod);
       SmartDashboard.putBoolean("Toggle", flyWheelToggle);
+   }
+
+   @Override
+   public void selfTest()
+   {
+      // TODO Auto-generated method stub
 
    }
 
