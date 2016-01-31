@@ -12,7 +12,8 @@ import org.wildstang.framework.logger.StateLogger;
 import org.wildstang.framework.timer.ProfilingTimer;
 import org.wildstang.hardware.crio.RoboRIOInputFactory;
 import org.wildstang.hardware.crio.RoboRIOOutputFactory;
-import org.wildstang.yearly.auto.programs.Drive;
+import org.wildstang.yearly.auto.programs.*;
+
 
 import com.ni.vision.NIVision.Image;
 
@@ -147,7 +148,7 @@ public class RobotTemplate extends IterativeRobot
       startloggingState();
 
       // 2. Add Auto programs
-      AutoManager.getInstance().addProgram(new Drive());
+      AutoManager.getInstance().addProgram(new OneBallMoatRampart());
 
       s_log.logp(Level.ALL, this.getClass().getName(), "robotInit", "Startup Completed");
       startupTimer.endTimingSection();

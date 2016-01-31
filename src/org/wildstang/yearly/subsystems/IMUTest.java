@@ -2,14 +2,9 @@ package org.wildstang.yearly.subsystems;
 
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.Input;
-import org.wildstang.framework.io.inputs.AnalogInput;
-import org.wildstang.framework.io.inputs.I2CInput;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.hardware.crio.inputs.WsI2CInput;
-import org.wildstang.hardware.crio.outputs.WsI2COutput;
-import org.wildstang.yearly.robot.SwerveInputs;
 import org.wildstang.yearly.robot.WSInputs;
-import org.wildstang.yearly.robot.WSOutputs;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -30,7 +25,7 @@ public class IMUTest implements Subsystem{
 	@Override
 	public void inputUpdate(Input p_source) {
 		// TODO Auto-generated method stub
-		if (p_source.getName().equals(SwerveInputs.IMU.getName()))
+		if (p_source.getName().equals(WSInputs.IMU.getName()))
 	      {
 //			HeadingBytes = ((WsI2CInput) p_source).getValue();
 			HeadingBytes = m_IMUInput.getValue();
@@ -40,7 +35,7 @@ public class IMUTest implements Subsystem{
 	@Override
 	public void init() {
 		// TODO Auto-generated method stub
-		 Core.getInputManager().getInput(SwerveInputs.IMU.getName()).addInputListener(this);
+		 Core.getInputManager().getInput(WSInputs.IMU.getName()).addInputListener(this);
 		 
 		 m_IMUInput = (WsI2CInput) Core.getInputManager().getInput(WSInputs.IMU.getName());
 	}
