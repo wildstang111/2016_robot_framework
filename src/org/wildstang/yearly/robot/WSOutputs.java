@@ -5,11 +5,14 @@ import org.wildstang.framework.core.Outputs;
 import org.wildstang.framework.hardware.OutputConfig;
 import org.wildstang.framework.io.outputs.OutputType;
 import org.wildstang.hardware.crio.outputs.WSOutputType;
+import org.wildstang.hardware.crio.outputs.WsDigitalOutput;
 import org.wildstang.hardware.crio.outputs.WsDoubleSolenoidState;
 import org.wildstang.hardware.crio.outputs.config.WsDoubleSolenoidConfig;
 import org.wildstang.hardware.crio.outputs.config.WsI2COutputConfig;
 import org.wildstang.hardware.crio.outputs.config.WsSolenoidConfig;
 import org.wildstang.hardware.crio.outputs.config.WsVictorConfig;
+import org.wildstang.hardware.crio.outputs.config.WsDigitalOutputConfig;
+
 
 import edu.wpi.first.wpilibj.I2C;
 
@@ -25,8 +28,23 @@ public enum WSOutputs implements Outputs
    WINCH_RIGHT("Right Winch", WSOutputType.VICTOR, new WsVictorConfig(5, 0.0), true),
    FRONT_ROLLER("Front intake roller",     WSOutputType.VICTOR,    new WsVictorConfig(7, 0.0), true),
    
-
-   LED("LEDs", WSOutputType.I2C, new WsI2COutputConfig(I2C.Port.kOnboard, 0x10), true),
+   
+   
+   WINCH_FRONT("Front Winch",                WSOutputType.VICTOR, new WsVictorConfig(4, 0.0), true),
+   WINCH_BACK("Back Winch",                  WSOutputType.VICTOR, new WsVictorConfig(5, 0.0), true),
+   
+   LOWPISTONS("Lower Pistons",               WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 5, false), true),
+   HIGHPISTONS("Higher Pistons",             WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 6, false), true),
+   WINCH_BRAKE("Stop the winches",             WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(2, 3, false), true),
+   HOOKS("Hooks",                            WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(1, 7, 8, WsDoubleSolenoidState.FORWARD), true),
+  
+   
+//   FRONT_LEFT_ROT("Front left drive",            WSOutputType.VICTOR,    new WsVictorConfig(99, 0.0), true),
+//   FRONT_RIGHT_ROT("Front right drive",          WSOutputType.VICTOR,    new WsVictorConfig(99, 0.0), true),
+//   REAR_LEFT_ROT("Rear left drive",              WSOutputType.VICTOR,    new WsVictorConfig(99, 0.0), true),
+//   REAR_RIGHT_ROT("Rear right drive",            WSOutputType.VICTOR,    new WsVictorConfig(99, 0.0), true),
+   
+   LED("LEDs",                               WSOutputType.I2C, new WsI2COutputConfig(I2C.Port.kOnboard, 0x10), true);
 
    // Solenoids
    
@@ -54,7 +72,7 @@ public enum WSOutputs implements Outputs
       m_trackingState = p_trackingState;
    }
    
-   
+  
    @Override
    public String getName()
    {

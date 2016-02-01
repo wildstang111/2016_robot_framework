@@ -6,6 +6,7 @@ import org.wildstang.framework.io.inputs.InputType;
 import org.wildstang.hardware.JoystickConstants;
 import org.wildstang.hardware.crio.inputs.WSInputType;
 import org.wildstang.hardware.crio.inputs.config.WsDigitalInputConfig;
+import org.wildstang.hardware.crio.inputs.config.WsDigitalInputConfig;
 import org.wildstang.hardware.crio.inputs.config.WsI2CInputConfig;
 import org.wildstang.hardware.crio.inputs.config.WsJSButtonInputConfig;
 import org.wildstang.hardware.crio.inputs.config.WsJSJoystickInputConfig;
@@ -31,6 +32,9 @@ public enum WSInputs implements Inputs {
     DRV_BUTTON_7("Driver Shift", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 6), true), 
     DRV_BUTTON_8("Driver Turret Mode", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 7), true),
 							    
+     // This should get deleted, for debug only
+   DRV_BUTTON_12("Antiturbo (Driver 8)", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 11), true),
+
     // Manipulator Enums
     MAN_RIGHT_JOYSTICK_Y("Manip Climb up_down", WSInputType.JS_JOYSTICK, new WsJSJoystickInputConfig(1, JoystickConstants.RIGHT_JOYSTICK_Y), true), 
     //MAN_RIGHT_JOYSTICK_X("MANIPULATOR_RIGHT_JOYSTICK_X", WSInputType.JS_JOYSTICK,new WsJSJoystickInputConfig(1, JoystickConstants.RIGHT_JOYSTICK_X), true), 
