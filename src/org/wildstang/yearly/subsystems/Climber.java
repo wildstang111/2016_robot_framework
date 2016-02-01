@@ -2,9 +2,9 @@ package org.wildstang.yearly.subsystems;
 
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.Input;
+import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.framework.io.outputs.AnalogOutput;
-import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.hardware.crio.outputs.WsDoubleSolenoid;
 import org.wildstang.hardware.crio.outputs.WsDoubleSolenoidState;
@@ -101,8 +101,8 @@ public class Climber implements Subsystem
       {
          if (!pistonlow && !pistonhigh)
          {
-            ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.HIGHPISTONS.getName())).setValue(true);
-            ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LOWPISTONS.getName())).setValue(true);
+            ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.UPPER_ARM.getName())).setValue(true);
+            ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LOWER_ARM.getName())).setValue(true);
             pistonlow = true;
             pistonhigh = true;
             System.out.println("pistons out");
@@ -110,8 +110,8 @@ public class Climber implements Subsystem
          }
          else if (pistonlow && pistonhigh)
          {
-            ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LOWPISTONS.getName())).setValue(false);
-            ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.HIGHPISTONS.getName())).setValue(false);
+            ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LOWER_ARM.getName())).setValue(false);
+            ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.UPPER_ARM.getName())).setValue(false);
             pistonhigh = false;
             pistonlow = false;
             System.out.println("pistons in");
@@ -119,14 +119,14 @@ public class Climber implements Subsystem
          }
          if (!pistonhigh && pistonlow)
          {
-            ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LOWPISTONS.getName())).setValue(false);
+            ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LOWER_ARM.getName())).setValue(false);
             pistonlow = false;
             System.out.println("Low pistons in");
 
          }
          else if (pistonhigh && !pistonlow)
          {
-            ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.HIGHPISTONS.getName())).setValue(false);
+            ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.UPPER_ARM.getName())).setValue(false);
             pistonhigh = false;
             System.out.println("High pistons in");
 
@@ -140,8 +140,8 @@ public class Climber implements Subsystem
       if(count%50==0){
          System.out.println(winchValue);
       }
-      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_FRONT.getName())).setValue(winchValue);
-      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_BACK.getName())).setValue(winchValue);
+      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_LEFT.getName())).setValue(winchValue);
+      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_RIGHT.getName())).setValue(winchValue);
       /*
        * Flips hooks when button pressed
        */
@@ -161,7 +161,7 @@ public class Climber implements Subsystem
          }
       }
       if(brakePressed){
-         ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LOWPISTONS.getName())).setValue(true);
+         ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LOWER_ARM.getName())).setValue(true);
       }
       liftButtonPrev = liftButton;
       hookButtonPrev = hookButton;
