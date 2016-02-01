@@ -2,9 +2,7 @@ package org.wildstang.yearly.subsystems;
 
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.Input;
-import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.io.inputs.DigitalInput;
-import org.wildstang.framework.io.outputs.AnalogOutput;
 import org.wildstang.framework.io.outputs.DigitalOutput;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.yearly.robot.WSInputs;
@@ -35,17 +33,17 @@ public class Shooter implements Subsystem
    public void inputUpdate(Input source)
    {
       // TODO Auto-generated method stub
-      if (source.getName().equals(WSInputs.MAN_FLY_TOGGLE.getName()))
+      if (source.getName().equals(WSInputs.MAN_BUTTON_3.getName()))
       {
          // manipulator button circle
          currentFlyState = ((DigitalInput) source).getValue();
       }
-      else if (source.getName().equals(WSInputs.MAN_HOOD_TOGGLE.getName()))
+      else if (source.getName().equals(WSInputs.MAN_BUTTON_5.getName()))
       {
          // manipulator button R2
          currentHoodState = ((DigitalInput) source).getValue();
       }
-      else if (source.getName().equals(WSInputs.MAN_FLY_SPEED.getName()))
+      else if (source.getName().equals(WSInputs.MAN_BUTTON_4.getName()))
       {
          currentFlySpeed = ((DigitalInput) source).getValue();
       }
@@ -55,13 +53,12 @@ public class Shooter implements Subsystem
    public void init()
    {
       // TODO Auto-generated method stub
-      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_1.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_1.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_2.getName()).addInputListener(this);
-      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_3.getName()).addInputListener(this);
-      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_4.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_3.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_4.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_5.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_6.getName()).addInputListener(this);
-      Core.getInputManager().getInput(WSInputs.MAN_HOOD_TOGGLE.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_8.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.DRV_RIGHT_Y.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.DRV_THROTTLE.getName()).addInputListener(this);
@@ -175,7 +172,7 @@ public class Shooter implements Subsystem
       // flyWheel.set(0);
       // }
       // }
-      ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.HOOD_TOGGLE.getName())).setValue(hoodPosition);
+      ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.SHOOTER_HOOD.getName())).setValue(hoodPosition);
       SmartDashboard.putNumber("TalonEncoder", flyWheel.getEncVelocity());
       SmartDashboard.putNumber("Fly Wheel Speed", flySpeed);
       // SmartDashboard.putNumber("rightStick", rightSpeed);

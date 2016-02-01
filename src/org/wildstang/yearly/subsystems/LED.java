@@ -2,10 +2,8 @@ package org.wildstang.yearly.subsystems;
 
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.Input;
-import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.hardware.crio.outputs.WsI2COutput;
-import org.wildstang.yearly.robot.SwerveInputs;
 import org.wildstang.yearly.robot.WSOutputs;
 
 import edu.wpi.first.wpilibj.DriverStation;

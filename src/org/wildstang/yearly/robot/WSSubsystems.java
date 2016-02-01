@@ -1,17 +1,23 @@
 package org.wildstang.yearly.robot;
 
 import org.wildstang.framework.core.Subsystems;
+import org.wildstang.yearly.subsystems.Climber;
+import org.wildstang.yearly.subsystems.DriveBase;
+import org.wildstang.yearly.subsystems.Intake;
 import org.wildstang.yearly.subsystems.LED;
 import org.wildstang.yearly.subsystems.Monitor;
 import org.wildstang.yearly.subsystems.Shooter;
+//import org.wildstang.yearly.subsystems.SwerveDrive;
+import org.wildstang.yearly.subsystems.Climber;
 
 public enum WSSubsystems implements Subsystems
 {
-   // SIXWHEEL_BASE("Six Wheel", DriveBase.class),
-   // SWERVE_BASE("Swerve base", SwerveDrive.class),
-   LED("LED", LED.class), MONITOR("Monitor", Monitor.class),
-   // IMUTEST("IMU Test", IMUTest.class);
-   SHOOTER("Shooter", Shooter.class);
+   DRIVE_BASE("Swerve base", DriveBase.class),
+   //LED("LED", LED.class),
+   MONITOR("Monitor", Monitor.class),
+   INTAKE("Intake", Intake.class),
+   SHOOTER("Shooter", Shooter.class),
+   CLIMBER("Climber", Climber.class);
    // BUTTONTEST("Test System", ButtonPresetTests.class);
    private String m_name;
    private Class m_class;

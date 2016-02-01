@@ -129,7 +129,7 @@ public class DriveBase implements Subsystem
       // Super anti-turbo button
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_5.getName()).addInputListener(this);
       // HELLA ANTI TURBO!!! WARNING!!! EXTREMELY SLOW...
-      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_4.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_8.getName()).addInputListener(this);
 
       Core.getInputManager().getInput(WSInputs.MOTION_PROFILE_CONTROL.getName()).addInputListener(this);
 
@@ -291,7 +291,7 @@ public class DriveBase implements Subsystem
 
          // Set gear shift output
          // TODO: This is not right! Need to fix with double solenoid
-         ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.SINGLE.getName())).setValue(highGearFlag);
+         ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.SHIFTER.getName())).setValue(highGearFlag);
          // getOutput(Robot.SHIFTER).set(new Integer(highGearFlag == true ?
          // DoubleSolenoid.Value.kReverse.value :
          // DoubleSolenoid.Value.kForward.value));
@@ -676,14 +676,14 @@ public class DriveBase implements Subsystem
       double left_drive_bias = config.getDouble(this.getClass().getName()
             + ".left_drive_bias", 1.0);
 
-      // Update Output Facade.
-      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.FRONT_LEFT.getName())).setValue(leftMotorSpeed
+      // Update Outputs
+      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.LEFT_2.getName())).setValue(leftMotorSpeed
             * left_drive_bias);
-      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.REAR_LEFT.getName())).setValue(leftMotorSpeed
+      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.LEFT_1.getName())).setValue(leftMotorSpeed
             * left_drive_bias);
-      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.FRONT_RIGHT.getName())).setValue(rightMotorSpeed
+      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.RIGHT_1.getName())).setValue(rightMotorSpeed
             * right_drive_bias);
-      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.REAR_RIGHT.getName())).setValue(rightMotorSpeed
+      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.RIGHT_2.getName())).setValue(rightMotorSpeed
             * right_drive_bias);
       // ((AnalogOutput)
       // Core.getOutputManager().getOutput(WSOutputs.STRAFE_DRIVE_1.getName())).setValue(strafeMotorSpeed);
@@ -918,7 +918,7 @@ public class DriveBase implements Subsystem
       {
          superAntiTurboFlag = ((DigitalInput) source).getValue();
       }
-      else if (source.getName().equals(WSInputs.DRV_BUTTON_4.getName()))
+      else if (source.getName().equals(WSInputs.DRV_BUTTON_8.getName()))
       {
          hellaAntiTurboFlag = ((DigitalInput) source).getValue();
       }
