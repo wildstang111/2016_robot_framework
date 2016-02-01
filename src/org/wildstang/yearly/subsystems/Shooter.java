@@ -37,7 +37,7 @@ public class Shooter implements Subsystem
          // driver button L2
          currentState = ((DigitalInput) source).getValue();
       }
-      else if (source.getName().equals(WSInputs.DRV_BUTTON_1.getName()))
+      else if (source.getName().equals(WSInputs.MAN_BUTTON_1.getName()))
       {
          speedMod = 1.0;
       }
@@ -45,11 +45,11 @@ public class Shooter implements Subsystem
       {
          speedMod = .75;
       }
-      else if (source.getName().equals(WSInputs.DRV_BUTTON_3.getName()))
+      else if (source.getName().equals(WSInputs.MAN_BUTTON_3.getName()))
       {
          speedMod = .5;
       }
-      else if (source.getName().equals(WSInputs.DRV_BUTTON_4.getName()))
+      else if (source.getName().equals(WSInputs.MAN_BUTTON_4.getName()))
       {
          speedMod = .25;
       }
@@ -80,10 +80,10 @@ public class Shooter implements Subsystem
    public void init()
    {
       // TODO Auto-generated method stub
-      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_1.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_1.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_2.getName()).addInputListener(this);
-      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_3.getName()).addInputListener(this);
-      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_4.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_3.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_4.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_5.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_6.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_7.getName()).addInputListener(this);
@@ -162,7 +162,7 @@ public class Shooter implements Subsystem
             flyWheel.set(0);
          }
       }
-      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.FRONT_LEFT.getName())).setValue(leftSpeed
+      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.SHOOTER.getName())).setValue(leftSpeed
             * speedMod);
       SmartDashboard.putNumber("TalonEncoder", flyWheel.getEncVelocity());
       SmartDashboard.putNumber("rightStick", rightSpeed);

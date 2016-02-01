@@ -72,7 +72,7 @@ public class Intake implements Subsystem {
 	Core.getInputManager().getInput(WSInputs.MAN_BUTTON_6.getName()).addInputListener(this);
 	Core.getInputManager().getInput(WSInputs.MAN_BUTTON_1.getName()).addInputListener(this);
 	Core.getInputManager().getInput(WSInputs.DRV_BUTTON_2.getName()).addInputListener(this);
-	Core.getInputManager().getInput(WSInputs.DRV_BUTTON_3.getName()).addInputListener(this);
+	//Core.getInputManager().getInput(WSInputs.DRV_BUTTON_3.getName()).addInputListener(this);
 	Core.getInputManager().getInput(WSInputs.MAN_LEFT_JOYSTICK_Y.getName()).addInputListener(this);
 	Core.getInputManager().getInput(WSInputs.INTAKE_BOLDER_SENSOR.getName()).addInputListener(this);
     }
