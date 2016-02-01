@@ -12,6 +12,10 @@ import org.wildstang.yearly.subsystems.Climber;
 
 public enum WSSubsystems implements Subsystems
 {
+
+   //DO NOT REMOVE THIS COMMENT.  DO NOT PLACE ANY ENUMERATION DEFINITIONS IN FRONT OF IT.
+   //This keeps the formatter from completely making the enumeration unreadable.
+   // @formatter::off
    DRIVE_BASE("Swerve base", DriveBase.class),
    //LED("LED", LED.class),
    MONITOR("Monitor", Monitor.class),
@@ -19,6 +23,11 @@ public enum WSSubsystems implements Subsystems
    SHOOTER("Shooter", Shooter.class),
    CLIMBER("Climber", Climber.class);
    // BUTTONTEST("Test System", ButtonPresetTests.class);
+   
+   //DO NOT REMOVE THIS COMMENT.  DO NOT PLACE ANY ENUMERATION DEFINITIONS AFTER IT.
+   //This keeps the formatter from completely making the enumeration unreadable.
+   // @formatter::on
+   
    private String m_name;
    private Class m_class;
 
