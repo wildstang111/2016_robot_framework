@@ -15,6 +15,10 @@ import edu.wpi.first.wpilibj.I2C;
 
 public enum WSOutputs implements Outputs
 {
+   //DO NOT REMOVE THE FORMATTER COMMENT.  DO NOT PLACE ANYTHING FOR ENUMERATIONS IN FRONT OF THE @formatter::off
+   //Disable the formatter in this section of code, so it doesn't make the enumeration completely unreadable 
+   // @formatter:off
+   
    //Motors
    LEFT_1("Left motor 1",            WSOutputType.VICTOR,    new WsVictorConfig(0, 0.0), true),
    LEFT_2("Left motor 2",          WSOutputType.VICTOR,    new WsVictorConfig(1, 0.0), true),
@@ -39,7 +43,9 @@ public enum WSOutputs implements Outputs
    SHOOTER_HOOD("Shooter Hood", WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(2, 1, 2, WsDoubleSolenoidState.REVERSE), true),
    WINCH_BRAKE("Winch Brakeput", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(2, 3, false), true);	   
    
-   
+   //Reenable the formatter after this section of code, so it can reformat the rest of the file.
+   //DO NOT REMOVE THIS COMMENT.  IT SHOULD ALWAYS BE AFTER THE LAST ENUMERATION DEFINITION
+   // @formatter:on   
    
    private String m_name;
    private OutputType m_type;
