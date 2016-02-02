@@ -9,6 +9,7 @@ import org.wildstang.hardware.crio.outputs.WsDoubleSolenoidState;
 import org.wildstang.hardware.crio.outputs.config.WsDoubleSolenoidConfig;
 import org.wildstang.hardware.crio.outputs.config.WsI2COutputConfig;
 import org.wildstang.hardware.crio.outputs.config.WsSolenoidConfig;
+import org.wildstang.hardware.crio.outputs.config.WsTalonConfig;
 import org.wildstang.hardware.crio.outputs.config.WsVictorConfig;
 
 import edu.wpi.first.wpilibj.I2C;
@@ -26,8 +27,8 @@ public enum WSOutputs implements Outputs
    RIGHT_2("Right motor 2",            WSOutputType.VICTOR,    new WsVictorConfig(3, 0.0), true),
    
    //Switch over to a talon
-   SHOOTER("Shooter flywheel Victor",     WSOutputType.VICTOR,    new WsVictorConfig(6, 0.0), true),
-   //SHOOTER("Shooter Flywheel Talon", WSOutputType.TALON, new WsTalonConfig(4, 0.0), true);
+   //SHOOTER("Shooter flywheel Victor",     WSOutputType.VICTOR,    new WsVictorConfig(6, 0.0), true),
+   SHOOTER("Shooter Flywheel Talon", WSOutputType.TALON, new WsTalonConfig(4, 0.0), true),
    
    WINCH_LEFT("Left Winch", WSOutputType.VICTOR, new WsVictorConfig(4, 0.0), true),
    WINCH_RIGHT("Right Winch", WSOutputType.VICTOR, new WsVictorConfig(5, 0.0), true),
