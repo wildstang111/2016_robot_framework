@@ -22,6 +22,7 @@ public class Shooter implements Subsystem
    private boolean hoodPosition = false;
    private boolean currentHoodState, oldHoodState;
    private double flySpeed;
+   private double lowChange, highChange;
    private double targetSpeed;
    private double milsecToMax = 1000;
    private long startTime;
@@ -130,7 +131,7 @@ public class Shooter implements Subsystem
          }
       }
       oldFlySpeed = currentFlySpeed;
-      
+
       if (flyWheelToggle == true)
       {
          flyWheel.set(flySpeed);
@@ -173,13 +174,14 @@ public class Shooter implements Subsystem
       // }
       // }
       ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.SHOOTER_HOOD.getName())).setValue(hoodPosition);
-      SmartDashboard.putNumber("TalonEncoder", flyWheel.getEncVelocity());
+      SmartDashboard.putNumber("TalonEncoderSpeed", flyWheel.getEncVelocity());
       SmartDashboard.putNumber("Fly Wheel Speed", flySpeed);
       // SmartDashboard.putNumber("rightStick", rightSpeed);
       // SmartDashboard.putNumber("speedMod", speedMod);
       SmartDashboard.putBoolean("Fly Wheel Toggle State", flyWheelToggle);
       SmartDashboard.putBoolean("Hood State", hoodPosition);
       SmartDashboard.putNumber("Fly Wheel Current", flyWheel.getOutputCurrent());
+      SmartDashboard.putBoolean("Is fly up to speed?", doesSpeedMatch());
    }
 
    @Override
@@ -194,6 +196,49 @@ public class Shooter implements Subsystem
    {
       // TODO Auto-generated method stub
       return "Shooter";
+   }
+
+   public void toggleShooterSpeed()
+   {
+      if (oldFlySpeed == false && currentFlySpeed == true)
+      {
+         if (flySpeed == .75)
+         {
+            flySpeed = .7;
+         }
+         else if (flySpeed == .7)
+         {
+            flySpeed = .75;
+         }
+         else
+         {
+            flySpeed = .75;
+         }
+      }
+      oldFlySpeed = currentFlySpeed;
+   }
+
+   public boolean doesSpeedMatch()
+   {
+      if (flySpeed == .7)
+      {
+         lowChange = .65;
+         highChange = .75;
+      }
+      else if (flySpeed == .75)
+      {
+         lowChange = .7;
+         highChange = .8;
+      }
+
+      if (flySpeed <= lowChange && flySpeed <= highChange)
+      {
+         return true;
+      }
+      else
+      {
+         return false;
+      }
    }
 
 }
