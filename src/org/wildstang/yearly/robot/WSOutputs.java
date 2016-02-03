@@ -44,7 +44,7 @@ public enum WSOutputs implements Outputs
 //   REAR_LEFT_ROT("Rear left drive",              WSOutputType.VICTOR,    new WsVictorConfig(99, 0.0), true),
 //   REAR_RIGHT_ROT("Rear right drive",            WSOutputType.VICTOR,    new WsVictorConfig(99, 0.0), true),
    
-   LED("LEDs",                               WSOutputType.I2C, new WsI2COutputConfig(I2C.Port.kOnboard, 0x10), true);
+   LED("LEDs",                               WSOutputType.I2C, new WsI2COutputConfig(I2C.Port.kOnboard, 0x10), true),
 
    // Solenoids
    

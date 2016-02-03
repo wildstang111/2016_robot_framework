@@ -29,6 +29,9 @@ public class Climber implements Subsystem
    private boolean pistonhigh;
    private int count = 0;
    private boolean brakePressed;
+   private double winchSpeed;
+   private boolean rightArmTouch;
+   private boolean leftArmTouch;
 
    @Override
    public void inputUpdate(Input source)
@@ -46,6 +49,14 @@ public class Climber implements Subsystem
       {
          // Climb up
          hookButton = ((DigitalInput) source).getValue();
+      }
+      else if (source.getName().equals(WSInputs.LEFT_ARM_TOUCHING.getName()))
+      {
+         leftArmTouch = ((DigitalInput) source).getValue();
+      }
+      else if (source.getName().equals(WSInputs.RIGHT_ARM_TOUCHING.getName()))
+      {
+         rightArmTouch = ((DigitalInput) source).getValue();
       }
    }
 
@@ -140,8 +151,27 @@ public class Climber implements Subsystem
       if(count%50==0){
          System.out.println(winchValue);
       }
-      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_FRONT.getName())).setValue(winchValue);
-      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_BACK.getName())).setValue(winchValue);
+      
+      if(winchValue > 0.75)
+      {
+         winchSpeed = 0.5;
+         ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.HIGHPISTONS.getName())).setValue(false);
+         ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LOWPISTONS.getName())).setValue(false);  
+      }
+      else if(winchValue < -0.75)
+      {
+         winchSpeed = -0.5;
+         ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.HIGHPISTONS.getName())).setValue(false);
+         ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LOWPISTONS.getName())).setValue(false);
+      }
+      
+      
+      else if(winchValue >= -0.75 && winchValue <= 0.75)
+         winchSpeed = 0.0;
+      
+      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_BACK.getName())).setValue(winchSpeed);
+      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_FRONT.getName())).setValue(winchSpeed);
+      
       /*
        * Flips hooks when button pressed
        */
