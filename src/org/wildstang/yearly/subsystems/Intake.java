@@ -12,10 +12,15 @@ package org.wildstang.yearly.subsystems;
  * status of manLeftJoyRollerIn, sensorReading, and rollerMovingIn are printed out
  * 
  * reads MAN_BUTTON_6. MAN_BUTTON_6 = manIntakeNoseControl
- * change intakeNosePnumatic to true and deployIntakePnumatic to false when manIntakeNoseControl is true
+ * changes intakeNosePnumatic to true and deployIntakePnumatic to false when manIntakeNoseControl is true
  * 
  * reads DRV_BUTTON_6. DRV_BUTTON_6 = drvIntakeNoseControl
- * change intakeNosePnumatic to true and deployIntakePnumatic to false when drvIntakeNoseControl is true
+ * changes intakeNosePnumatic to true and deployIntakePnumatic to false when drvIntakeNoseControl is true
+ * 
+ * reads MAN_BUTTON_1. MAN_BUTTON_1 = manRollerInStartNew
+ * toggles rollerMovingIn with manRollerInStartNew & manRollerInStartOld, stops sensorReading from being true
+ * 
+ * Continue...
  */
 
 //expand this and edit if trouble with Ws
@@ -41,8 +46,9 @@ public class Intake implements Subsystem
    private boolean manIntakeNoseControl;
    private boolean drvIntakeNoseControl;
    private boolean manDeployIntakePnumaticControl;
-   private boolean manRollerInOverrideNew;
-   private boolean manRollerInOverrideOld;
+   private boolean manRollerInStartNew;
+   private boolean manRollerInStartOld;
+   private boolean manRollerInStart;
    private double manLeftJoyRollerIn;
 
    @Override
@@ -79,7 +85,7 @@ public class Intake implements Subsystem
       // setting manRollerInOverride to Manipulator button 1
       if (source.getName().equals(WSInputs.MAN_BUTTON_1.getName()))
       {
-         manRollerInOverrideNew = ((DigitalInput) source).getValue();
+         manRollerInOverride = ((DigitalInput) source).getValue();
       }
 
       // setting manDeployIntakePnumaticControl to Manipulator button 8
@@ -97,9 +103,9 @@ public class Intake implements Subsystem
       // asking for below Inputs
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_6.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_6.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_8.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_1.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_2.getName()).addInputListener(this);
-      // Core.getInputManager().getInput(WSInputs.DRV_BUTTON_3.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.MAN_LEFT_JOYSTICK_Y.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.INTAKE_BOLDER_SENSOR.getName()).addInputListener(this);
    }
@@ -132,7 +138,8 @@ public class Intake implements Subsystem
          deployIntakePnumatic = false;
       }
 
-      // changes intakeNosePnumatic to true and deployIntakePnumatic to false when drvIntakeNoseControl is true
+      // changes intakeNosePnumatic to true and deployIntakePnumatic to false
+      // when drvIntakeNoseControl is true
       if (drvIntakeNoseControl == true)
       {
          intakeNosePnumatic = true;
@@ -162,18 +169,22 @@ public class Intake implements Subsystem
       }
 
       // if the sensor is triggered, the roller will not move in unless
-      // manRollerInOverride is pressed
-      if (manRollerInOverrideOld == false && manRollerInOverrideNew == true)
+      // manRollerInStart is true
+      if (manRollerInStartOld == false && manRollerInStartNew == true)
       {
-         if (manRollerInOverride == true)
+         if (manRollerInStart == true)
          {
-            sensorReading = false;
             rollerMovingIn = true;
-
          }
       }
-      manRollerInOverrideOld = manRollerInOverrideNew;
+      manRollerInStartOld = manRollerInStartNew;
 
+      if (manRollerInOverride == true)
+      {
+         rollerMovingIn = true;
+         sensorReading = false;
+      }
+      
       // if sensorReading is true, the roller will stop
       if (sensorReading == true)
       {
