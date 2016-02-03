@@ -30,13 +30,6 @@ public enum WSOutputs implements Outputs
    
    
    
-   WINCH_FRONT("Front Winch",                WSOutputType.VICTOR, new WsVictorConfig(4, 0.0), true),
-   WINCH_BACK("Back Winch",                  WSOutputType.VICTOR, new WsVictorConfig(5, 0.0), true),
-   
-   LOWPISTONS("Lower Pistons",               WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 5, false), true),
-   HIGHPISTONS("Higher Pistons",             WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 6, false), true),
-   WINCH_BRAKE("Stop the winches",             WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(2, 3, false), true),
-   HOOKS("Hooks",                            WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(1, 7, 8, WsDoubleSolenoidState.FORWARD), true),
   
    
 //   FRONT_LEFT_ROT("Front left drive",            WSOutputType.VICTOR,    new WsVictorConfig(99, 0.0), true),
@@ -44,7 +37,7 @@ public enum WSOutputs implements Outputs
 //   REAR_LEFT_ROT("Rear left drive",              WSOutputType.VICTOR,    new WsVictorConfig(99, 0.0), true),
 //   REAR_RIGHT_ROT("Rear right drive",            WSOutputType.VICTOR,    new WsVictorConfig(99, 0.0), true),
    
-   LED("LEDs",                               WSOutputType.I2C, new WsI2COutputConfig(I2C.Port.kOnboard, 0x10), true);
+   LED("LEDs",                               WSOutputType.I2C, new WsI2COutputConfig(I2C.Port.kOnboard, 0x10), true),
 
    // Solenoids
    
@@ -54,7 +47,8 @@ public enum WSOutputs implements Outputs
    LOWER_ARM("Lower Lift Arm", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 5, false), true),
    UPPER_ARM("Upper Lift Arm", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 6, false), true),
    HOOK_EXTENSION("Hook Extenstion", WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(1, 7, 8, WsDoubleSolenoidState.REVERSE), true),
-   SHOOTER_HOOD("Shooter Hood", WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(2, 1, 2, WsDoubleSolenoidState.REVERSE), true);
+   SHOOTER_HOOD("Shooter Hood", WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(2, 1, 2, WsDoubleSolenoidState.REVERSE), true),
+   WINCH_BRAKE("Stop the winches",             WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(2, 3, 4, WsDoubleSolenoidState.FORWARD), true);
 	   
    
    
