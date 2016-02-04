@@ -4,10 +4,8 @@ import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.Input;
 import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.io.inputs.DigitalInput;
-import org.wildstang.framework.io.outputs.AnalogOutput;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.yearly.robot.WSInputs;
-import org.wildstang.yearly.robot.WSOutputs;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
@@ -104,6 +102,7 @@ public class Shooter implements Subsystem
       flyWheel.setF((0.25 * 1023) / (1000 * 1.70666666));
       flyWheel.setP((0.02 * 1023) / 500);
       flyWheel.enableControl();
+      
       // flyWheel.setVoltageRampRate(rampRate);
       // (Ideal Rotations / min) X (1 min / 60 sec) X (1 sec / 10 TvelMeas) X
       // (1024 native units / rotation) =
@@ -162,8 +161,8 @@ public class Shooter implements Subsystem
             flyWheel.set(0);
          }
       }
-      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.SHOOTER.getName())).setValue(leftSpeed
-            * speedMod);
+      //((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.SHOOTER.getName())).setValue(leftSpeed
+        //    * speedMod);
       SmartDashboard.putNumber("TalonEncoder", flyWheel.getEncVelocity());
       SmartDashboard.putNumber("rightStick", rightSpeed);
       SmartDashboard.putNumber("speedMod", speedMod);

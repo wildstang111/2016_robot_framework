@@ -91,8 +91,8 @@ public class Intake implements Subsystem {
 	// does something with variables and Outputs
 
 	// tells status of manLeftJoyRollerIn, sensorReading, and rollerMovingIn
-	System.out.println("manLeftJoyRollerIn=" + manLeftJoyRollerIn + " sensorReading=" + sensorReading
-		+ " rollerMovingIn=" + rollerMovingIn + " intakeNosePnumatic=" + intakeNosePnumatic);
+	//System.out.println("manLeftJoyRollerIn=" + manLeftJoyRollerIn + " sensorReading=" + sensorReading
+	//	+ " rollerMovingIn=" + rollerMovingIn + " intakeNosePnumatic=" + intakeNosePnumatic);
 
 	// toggles intakeNosePnumatic and deployIntakePnumatic to
 	// manIntakeNoseControl
