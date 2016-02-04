@@ -19,6 +19,7 @@ public class Shooter implements Subsystem
    private boolean PID = false;
    private boolean currentFlySpeed, oldFlySpeed;
    private boolean currentFlyState, oldFlyState;
+   private boolean flyHigh;
    private boolean hoodPosition = false;
    private boolean currentHoodState, oldHoodState;
    private double flySpeed;
@@ -205,17 +206,35 @@ public class Shooter implements Subsystem
          if (flySpeed == .75)
          {
             flySpeed = .7;
+            flyHigh = false;
          }
          else if (flySpeed == .7)
          {
             flySpeed = .75;
+            flyHigh = true;
          }
          else
          {
             flySpeed = .75;
+            flyHigh = true;
          }
       }
       oldFlySpeed = currentFlySpeed;
+   }
+   
+   public boolean flySpeed()
+   {
+      return flyHigh;
+   }
+   
+   public boolean hoodPos()
+   {
+      return hoodPosition;
+   }
+   
+   public boolean isOn()
+   {
+      return currentFlyState;
    }
 
    public boolean doesSpeedMatch()
