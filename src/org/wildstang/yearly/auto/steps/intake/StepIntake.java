@@ -1,6 +1,9 @@
 package org.wildstang.yearly.auto.steps.intake;
 
 import org.wildstang.framework.auto.steps.AutoStep;
+import org.wildstang.framework.core.Core;
+import org.wildstang.framework.io.inputs.AnalogInput;
+import org.wildstang.yearly.robot.WSInputs;
 
 public class StepIntake extends AutoStep
 {
@@ -22,7 +25,7 @@ public class StepIntake extends AutoStep
    public void update()
    {
       // TODO Auto-generated method stub
-
+      ((AnalogInput)Core.getInputManager().getInput(WSInputs.MAN_LEFT_JOYSTICK_Y.getName())).setValue(speed);
    }
 
    @Override
