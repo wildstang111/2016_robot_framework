@@ -2,10 +2,11 @@ package org.wildstang.yearly.subsystems;
 
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.Input;
-import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.io.inputs.DigitalInput;
+import org.wildstang.framework.io.outputs.DigitalOutput;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.yearly.robot.WSInputs;
+import org.wildstang.yearly.robot.WSOutputs;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
@@ -16,9 +17,13 @@ public class Shooter implements Subsystem
 {
    private boolean flyWheelToggle = false;
    private boolean PID = false;
-   private boolean currentState, oldState;
-   private double speedMod = 1.0;
-   private double leftSpeed, rightSpeed;
+   private boolean currentFlySpeed, oldFlySpeed;
+   private boolean currentFlyState, oldFlyState;
+   private boolean flyHigh;
+   private boolean hoodPosition = false;
+   private boolean currentHoodState, oldHoodState;
+   private double flySpeed;
+   private double lowChange, highChange;
    private double targetSpeed;
    private double milsecToMax = 1000;
    private long startTime;
@@ -30,47 +35,19 @@ public class Shooter implements Subsystem
    public void inputUpdate(Input source)
    {
       // TODO Auto-generated method stub
-      if (source.getName().equals(WSInputs.DRV_BUTTON_7.getName()))
+      if (source.getName().equals(WSInputs.MAN_BUTTON_3.getName()))
       {
-         // driver button L2
-         currentState = ((DigitalInput) source).getValue();
+         // manipulator button circle
+         currentFlyState = ((DigitalInput) source).getValue();
       }
-      else if (source.getName().equals(WSInputs.MAN_BUTTON_1.getName()))
+      else if (source.getName().equals(WSInputs.MAN_BUTTON_5.getName()))
       {
-         speedMod = 1.0;
-      }
-      else if (source.getName().equals(WSInputs.DRV_BUTTON_2.getName()))
-      {
-         speedMod = .75;
-      }
-      else if (source.getName().equals(WSInputs.MAN_BUTTON_3.getName()))
-      {
-         speedMod = .5;
+         // manipulator button R2
+         currentHoodState = ((DigitalInput) source).getValue();
       }
       else if (source.getName().equals(WSInputs.MAN_BUTTON_4.getName()))
       {
-         speedMod = .25;
-      }
-      else if (source.getName().equals(WSInputs.DRV_BUTTON_5.getName()))
-      {
-         speedMod += 0.02;
-      }
-      else if (source.getName().equals(WSInputs.DRV_BUTTON_6.getName()))
-      {
-         speedMod -= 0.02;
-
-      }
-      else if (source.getName().equals(WSInputs.DRV_THROTTLE.getName()))
-      {
-         leftSpeed = ((AnalogInput) source).getValue();
-      }
-      else if (source.getName().equals(WSInputs.DRV_RIGHT_Y.getName()))
-      {
-         rightSpeed = ((AnalogInput) source).getValue();
-      }
-      else if (source.getName().equals(WSInputs.DRV_BUTTON_8.getName()))
-      {
-         PID = !PID;
+         currentFlySpeed = ((DigitalInput) source).getValue();
       }
    }
 
@@ -84,7 +61,6 @@ public class Shooter implements Subsystem
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_4.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_5.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_6.getName()).addInputListener(this);
-      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_7.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_8.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.DRV_RIGHT_Y.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.DRV_THROTTLE.getName()).addInputListener(this);
@@ -102,19 +78,17 @@ public class Shooter implements Subsystem
       flyWheel.setF((0.25 * 1023) / (1000 * 1.70666666));
       flyWheel.setP((0.02 * 1023) / 500);
       flyWheel.enableControl();
-      
       // flyWheel.setVoltageRampRate(rampRate);
       // (Ideal Rotations / min) X (1 min / 60 sec) X (1 sec / 10 TvelMeas) X
       // (1024 native units / rotation) =
       // (Ideal Rotations / min) X (1.70666666) = Feed Forward constant
-      speedMod = .25;
    }
 
    @Override
    public void update()
    {
       // TODO Auto-generated method stub
-      if (oldState == false && currentState == true)
+      if (oldFlyState == false && currentFlyState == true)
       {
          if (flyWheelToggle == true)
          {
@@ -127,56 +101,92 @@ public class Shooter implements Subsystem
             startTime = System.currentTimeMillis();
          }
       }
-      oldState = currentState;
-      sysTime = System.currentTimeMillis();
-      // targetSpeed = (speedMod * rightSpeed) * 4000;
-      if (flyWheelToggle == true)
+      oldFlyState = currentFlyState;
+
+      if (oldHoodState == false && currentHoodState == true)
       {
-         if (sysTime < startTime + milsecToMax)
+         if (hoodPosition == true)
          {
-            // flyWheel.changeControlMode(TalonControlMode.PercentVbus);
-            flyWheel.set((rightSpeed * speedMod)
-                  * ((sysTime - startTime) / milsecToMax));
+            hoodPosition = false;
+         }
+         else if (hoodPosition == false)
+         {
+            hoodPosition = true;
+         }
+      }
+      oldHoodState = currentHoodState;
+
+      if (oldFlySpeed == false && currentFlySpeed == true)
+      {
+         if (flySpeed == .75)
+         {
+            flySpeed = .7;
+         }
+         else if (flySpeed == .7)
+         {
+            flySpeed = .75;
          }
          else
          {
-            flyWheel.set((rightSpeed * speedMod));
+            flySpeed = .75;
          }
-
       }
+      oldFlySpeed = currentFlySpeed;
+
+      if (flyWheelToggle == true)
+      {
+         flyWheel.set(flySpeed);
+      }
+      else
+      {
+         flyWheel.set(0);
+      }
+
+      // sysTime = System.currentTimeMillis();
+      // targetSpeed = (speedMod * rightSpeed) * 4000;
+      // if (flyWheelToggle == true)
+      // {
+      // if (sysTime < startTime + milsecToMax)
+      // {
+      // // flyWheel.changeControlMode(TalonControlMode.PercentVbus);
+      // flyWheel.set((rightSpeed * speedMod)
+      // * ((sysTime - startTime) / milsecToMax));
+      // }
+      // else
+      // {
+      // flyWheel.set((rightSpeed * speedMod));
+      // }
+      // }
       // else if(PID)
       // {
       // flyWheel.changeControlMode(TalonControlMode.Speed);
       // flyWheel.set(targetSpeed);
       // }
-      else
-      {
-         if (sysTime < startTime + milsecToMax)
-         {
-            flyWheel.set((rightSpeed * speedMod) - (rightSpeed * speedMod)
-                  * ((sysTime - startTime) / milsecToMax));
-         }
-         else
-         {
-            flyWheel.set(0);
-         }
-      }
-      //((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.SHOOTER.getName())).setValue(leftSpeed
-        //    * speedMod);
-      SmartDashboard.putNumber("TalonEncoder", flyWheel.getEncVelocity());
-      SmartDashboard.putNumber("rightStick", rightSpeed);
-      SmartDashboard.putNumber("speedMod", speedMod);
-      SmartDashboard.putBoolean("Toggle", flyWheelToggle);
+      // else
+      // {
+      // if (sysTime < startTime + milsecToMax)
+      // {
+      // flyWheel.set((rightSpeed * speedMod) - (rightSpeed * speedMod)
+      // * ((sysTime - startTime) / milsecToMax));
+      // }
+      // else
+      // {
+      // flyWheel.set(0);
+      // }
+      // }
+      ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.SHOOTER_HOOD.getName())).setValue(hoodPosition);
+      SmartDashboard.putNumber("TalonEncoderSpeed", flyWheel.getEncVelocity());
+      SmartDashboard.putNumber("Fly Wheel Speed", flySpeed);
+      // SmartDashboard.putNumber("rightStick", rightSpeed);
+      // SmartDashboard.putNumber("speedMod", speedMod);
+      SmartDashboard.putBoolean("Fly Wheel Toggle State", flyWheelToggle);
+      SmartDashboard.putBoolean("Hood State", hoodPosition);
+      SmartDashboard.putNumber("Fly Wheel Current", flyWheel.getOutputCurrent());
+      SmartDashboard.putBoolean("Is fly up to speed?", doesSpeedMatch());
    }
 
    @Override
    public void selfTest()
-   {
-      // TODO Auto-generated method stub
-
-   }
-
-   private void getAnalogInVelocity()
    {
       // TODO Auto-generated method stub
 
@@ -187,6 +197,67 @@ public class Shooter implements Subsystem
    {
       // TODO Auto-generated method stub
       return "Shooter";
+   }
+
+   public void toggleShooterSpeed()
+   {
+      if (oldFlySpeed == false && currentFlySpeed == true)
+      {
+         if (flySpeed == .75)
+         {
+            flySpeed = .7;
+            flyHigh = false;
+         }
+         else if (flySpeed == .7)
+         {
+            flySpeed = .75;
+            flyHigh = true;
+         }
+         else
+         {
+            flySpeed = .75;
+            flyHigh = true;
+         }
+      }
+      oldFlySpeed = currentFlySpeed;
+   }
+   
+   public boolean flySpeed()
+   {
+      return flyHigh;
+   }
+   
+   public boolean hoodPos()
+   {
+      return hoodPosition;
+   }
+   
+   public boolean isOn()
+   {
+      return currentFlyState;
+   }
+
+   public boolean doesSpeedMatch()
+   {
+      if (flySpeed == .7)
+      {
+         lowChange = .65;
+         highChange = .75;
+      }
+      else if (flySpeed == .75)
+      {
+         lowChange = .7;
+         highChange = .8;
+      }
+
+      if (flySpeed <= lowChange && flySpeed <= highChange)
+      {
+         return true;
+      }
+      else
+      {
+         return false;
+      }
    }
 
 }
