@@ -12,6 +12,8 @@ import org.wildstang.hardware.crio.outputs.WsSolenoid;
 import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 public class Climber implements Subsystem
 {
    /*
@@ -195,22 +197,22 @@ public class Climber implements Subsystem
       if(winchValue > 0.75 && winchRunning)
       {
          winchSpeed = 0.5;
-         ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.HIGHPISTONS.getName())).setValue(false);
-         ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LOWPISTONS.getName())).setValue(false);  
+         ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.UPPER_ARM.getName())).setValue(false);
+         ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LOWER_ARM.getName())).setValue(false);  
       }
       else if(winchValue < -0.75 && winchRunning)
       {
          winchSpeed = -0.5;
-         ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.HIGHPISTONS.getName())).setValue(false);
-         ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LOWPISTONS.getName())).setValue(false);
+         ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.UPPER_ARM.getName())).setValue(false);
+         ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LOWER_ARM.getName())).setValue(false);
       }
       
       
       else if(winchValue >= -0.75 && winchValue <= 0.75 && winchRunning)
          winchSpeed = 0.0;
       
-      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_BACK.getName())).setValue(winchSpeed);
-      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_FRONT.getName())).setValue(winchSpeed);
+      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_RIGHT.getName())).setValue(winchSpeed);
+      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_LEFT.getName())).setValue(winchSpeed);
       
       /*
        * Flips hooks when button pressed
@@ -237,7 +239,8 @@ public class Climber implements Subsystem
          brakeEngaged = true;
          ((WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.WINCH_BRAKE.getName())).setValue(WsDoubleSolenoidState.FORWARD.ordinal());
       }
-
+      SmartDashboard.putBoolean("Left Arm", leftArmTouch);
+      SmartDashboard.putBoolean("Right Arm", rightArmTouch);
       if (pistonhigh)
       {
          ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.UPPER_ARM.getName())).setValue(true);
