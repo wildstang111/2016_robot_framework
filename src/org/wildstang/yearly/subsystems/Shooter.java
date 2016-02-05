@@ -5,6 +5,8 @@ import org.wildstang.framework.io.Input;
 import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.framework.io.outputs.DigitalOutput;
 import org.wildstang.framework.subsystems.Subsystem;
+import org.wildstang.hardware.crio.outputs.WsDoubleSolenoid;
+import org.wildstang.hardware.crio.outputs.WsDoubleSolenoidState;
 import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
 
@@ -174,7 +176,8 @@ public class Shooter implements Subsystem
       // flyWheel.set(0);
       // }
       // }
-      ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.SHOOTER_HOOD.getName())).setValue(hoodPosition);
+      ((WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.SHOOTER_HOOD.getName())).setValue(new Integer (hoodPosition == true ? 
+            WsDoubleSolenoidState.FORWARD.ordinal() : WsDoubleSolenoidState.REVERSE.ordinal()));
       SmartDashboard.putNumber("TalonEncoderSpeed", flyWheel.getEncVelocity());
       SmartDashboard.putNumber("Fly Wheel Speed", flySpeed);
       // SmartDashboard.putNumber("rightStick", rightSpeed);
