@@ -120,7 +120,8 @@ public class Intake implements Subsystem
    @Override
    public void update()
    {
-      sensorReading = true;
+      // remove after testing
+      sensorReading = false;
       // TODO Auto-generated method stub
 
       // does something with variables and Outputs
