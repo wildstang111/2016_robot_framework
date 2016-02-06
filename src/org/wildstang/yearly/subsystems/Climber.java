@@ -113,7 +113,8 @@ public class Climber implements Subsystem
       Core.getInputManager().getInput(WSInputs.LEFT_ARM_TOUCHING.getName()).addInputListener(this);
       
       //start of match pneumatic positions
-      ((WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.WINCH_BRAKE.getName())).setValue(WsDoubleSolenoidState.FORWARD.ordinal());
+      //default position for 1 way is false, so note that the true position for brake is disengaged.
+      ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.WINCH_BRAKE.getName())).setValue(false);
       ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.UPPER_ARM.getName())).setValue(false);
       ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LOWER_ARM.getName())).setValue(false);
       ((WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.HOOK_EXTENSION.getName())).setValue(WsDoubleSolenoidState.REVERSE.ordinal());
@@ -182,7 +183,7 @@ public class Climber implements Subsystem
          SmartDashboard.putBoolean("arm", arm);
          if (winchGettingInput && brakeEngaged && !arm)
          {
-            ((WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.WINCH_BRAKE.getName())).setValue(WsDoubleSolenoidState.REVERSE.ordinal());
+            ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.WINCH_BRAKE.getName())).setValue(true);
             brakeEngaged = false;
             retractDelay++;
          }
@@ -209,7 +210,7 @@ public class Climber implements Subsystem
             {
                System.out.println("brakes engaged");
                brakeEngaged = true;
-               ((WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.WINCH_BRAKE.getName())).setValue(WsDoubleSolenoidState.FORWARD.ordinal());
+               ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.WINCH_BRAKE.getName())).setValue(false);
             }
 //         }
          // checks whether the driver wants to run the winch or stop the winch
