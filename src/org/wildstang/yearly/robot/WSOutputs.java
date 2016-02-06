@@ -5,14 +5,11 @@ import org.wildstang.framework.core.Outputs;
 import org.wildstang.framework.hardware.OutputConfig;
 import org.wildstang.framework.io.outputs.OutputType;
 import org.wildstang.hardware.crio.outputs.WSOutputType;
-import org.wildstang.hardware.crio.outputs.WsDigitalOutput;
 import org.wildstang.hardware.crio.outputs.WsDoubleSolenoidState;
 import org.wildstang.hardware.crio.outputs.config.WsDoubleSolenoidConfig;
 import org.wildstang.hardware.crio.outputs.config.WsI2COutputConfig;
 import org.wildstang.hardware.crio.outputs.config.WsSolenoidConfig;
 import org.wildstang.hardware.crio.outputs.config.WsVictorConfig;
-import org.wildstang.hardware.crio.outputs.config.WsDigitalOutputConfig;
-
 
 import edu.wpi.first.wpilibj.I2C;
 
@@ -41,14 +38,14 @@ public enum WSOutputs implements Outputs
 
    // Solenoids
    
-   SHIFTER("Shifter double solenoid", WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(1, 1, 2, WsDoubleSolenoidState.FORWARD), true),
-   INTAKE_DEPLOY("Intake deploy", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 3, false), true),
-   INTAKE_FRONT_LOWER("Intake front lower", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 4, false), true),
-   LOWER_ARM("Lower Lift Arm", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 5, false), true),
-   UPPER_ARM("Upper Lift Arm", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 6, false), true),
-   HOOK_EXTENSION("Hook Extenstion", WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(1, 7, 8, WsDoubleSolenoidState.REVERSE), true),
-   SHOOTER_HOOD("Shooter Hood", WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(2, 1, 2, WsDoubleSolenoidState.REVERSE), true),
-   WINCH_BRAKE("Stop the winches",             WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(2, 3, 4, WsDoubleSolenoidState.FORWARD), true);
+   SHIFTER("Shifter double solenoid", WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(1, 0, 1, WsDoubleSolenoidState.FORWARD), true),
+   INTAKE_DEPLOY("Intake deploy", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 2, false), true),
+   INTAKE_FRONT_LOWER("Intake front lower", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 3, false), true),
+   LOWER_ARM("Lower Lift Arm", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 4, false), true),
+   UPPER_ARM("Upper Lift Arm", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 5, false), true),
+   HOOK_EXTENSION("Hook Extenstion", WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(1, 6, 7, WsDoubleSolenoidState.REVERSE), true),
+   SHOOTER_HOOD("Shooter Hood", WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(2, 0, 1, WsDoubleSolenoidState.REVERSE), true),
+   WINCH_BRAKE("Stop the winches",             WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(2, 2, 3, WsDoubleSolenoidState.FORWARD), true);
 	   
    
    

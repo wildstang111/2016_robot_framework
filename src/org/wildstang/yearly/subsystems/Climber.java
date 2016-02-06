@@ -35,12 +35,14 @@ public class Climber implements Subsystem
 
    private int extendDelay = 0;
    private int retractDelay = 0;
-   private boolean brakeEngaged;
+   private boolean brakeEngaged = true;
    private boolean override = false;
    private boolean rightArmTouch;
    private boolean leftArmTouch;
    private boolean displayingLeft;
    private boolean displayingRight;
+   
+   private boolean inLoop = false;
 
    @Override
    public void inputUpdate(Input source)
@@ -49,12 +51,13 @@ public class Climber implements Subsystem
       {
          // Climb down
          liftButton = ((DigitalInput) source).getValue();
+         SmartDashboard.putBoolean("liftButton", liftButton);
       }
       else if (source.getName().equals(WSInputs.MAN_RIGHT_JOYSTICK_Y.getName()))
       {
          // Deadband for winch that allows speed adjustments
-         if (((AnalogInput) source).getValue() < .1
-               || ((AnalogInput) source).getValue() > -.1)
+         if (((AnalogInput) source).getValue() > .1
+               || ((AnalogInput) source).getValue() < -.1)
          {
             winchValue = ((AnalogInput) source).getValue();
             winchGettingInput = true;
@@ -62,12 +65,16 @@ public class Climber implements Subsystem
          else
          {
             winchValue = 0.0;
+            ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_LEFT.getName())).setValue(winchValue);
+            ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_RIGHT.getName())).setValue(winchValue);
+            winchGettingInput = false;
          }
       }
       else if (source.getName().equals(WSInputs.MAN_BUTTON_2.getName()))
       {
          // Climb up
          hookButton = ((DigitalInput) source).getValue();
+         
       }
       else if (source.getName().equals(WSInputs.MAN_BUTTON_9.getName()))
       {
@@ -104,7 +111,12 @@ public class Climber implements Subsystem
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_9.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.RIGHT_ARM_TOUCHING.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.LEFT_ARM_TOUCHING.getName()).addInputListener(this);
-
+      
+      //start of match pneumatic positions
+      ((WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.WINCH_BRAKE.getName())).setValue(WsDoubleSolenoidState.FORWARD.ordinal());
+      ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.UPPER_ARM.getName())).setValue(false);
+      ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LOWER_ARM.getName())).setValue(false);
+      ((WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.HOOK_EXTENSION.getName())).setValue(WsDoubleSolenoidState.REVERSE.ordinal());
    }
 
    @Override
@@ -145,14 +157,16 @@ public class Climber implements Subsystem
          if (!arm)
          {
             arm = true;
-            System.out.println("pistons out");
-
+            ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.UPPER_ARM.getName())).setValue(true);
+            ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LOWER_ARM.getName())).setValue(true);
+            SmartDashboard.putBoolean("liftState", arm);
          }
          else if (arm)
          {
             arm = false;
-            System.out.println("pistons in");
-
+            ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.UPPER_ARM.getName())).setValue(false);
+            ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LOWER_ARM.getName())).setValue(false);
+            SmartDashboard.putBoolean("liftState", arm);
          }
       }
       /*
@@ -163,22 +177,9 @@ public class Climber implements Subsystem
       {
          // checks the delays to see if it is time to either engage the brake or
          // run the winch
-         if (extendDelay == 2 || retractDelay == 2)
-         {
-            if (winchGettingInput && brakeEngaged)
-            {
-               winchRunning = true;
-               System.out.println("Starting winch");
-
-            }
-            else if (!winchGettingInput && !brakeEngaged)
-            {
-               System.out.println("brakes engaged");
-               brakeEngaged = true;
-               ((WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.WINCH_BRAKE.getName())).setValue(WsDoubleSolenoidState.FORWARD.ordinal());
-            }
-         }
-         // checks whether the driver wants to run the winch or stop the winch
+         SmartDashboard.putBoolean("winchGettingInput", winchGettingInput);
+         SmartDashboard.putBoolean("brakeEngaged", brakeEngaged);
+         SmartDashboard.putBoolean("arm", arm);
          if (winchGettingInput && brakeEngaged && !arm)
          {
             ((WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.WINCH_BRAKE.getName())).setValue(WsDoubleSolenoidState.REVERSE.ordinal());
@@ -196,6 +197,23 @@ public class Climber implements Subsystem
             extendDelay = 0;
             retractDelay = 0;
          }
+//         if (extendDelay == 2 || retractDelay == 2)
+//         {
+            if (winchGettingInput && !brakeEngaged)
+            {
+               winchRunning = true;
+               System.out.println("Starting winch");
+
+            }
+            else if (!winchGettingInput && !brakeEngaged)
+            {
+               System.out.println("brakes engaged");
+               brakeEngaged = true;
+               ((WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.WINCH_BRAKE.getName())).setValue(WsDoubleSolenoidState.FORWARD.ordinal());
+            }
+//         }
+         // checks whether the driver wants to run the winch or stop the winch
+         
          // sets the winch speeds, but not if the arm is out
          if (winchRunning && !brakeEngaged && !arm)
          {
@@ -215,13 +233,13 @@ public class Climber implements Subsystem
          {
             ((WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.HOOK_EXTENSION.getName())).setValue(WsDoubleSolenoidState.REVERSE.ordinal());
             hook = false;
-            System.out.println("Hooks in");
+            SmartDashboard.putBoolean("hookState", hook);
          }
          else
          {
             ((WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.HOOK_EXTENSION.getName())).setValue(WsDoubleSolenoidState.FORWARD.ordinal());
             hook = true;
-            System.out.println("Hooks out");
+            SmartDashboard.putBoolean("hookState", hook);
          }
       }
       // engages the brake if the override is pressed
@@ -234,11 +252,6 @@ public class Climber implements Subsystem
       }
       // constantly outputs true to the solenoids (if it should get true) so
       // that they don't just retract instantly
-      if (arm)
-      {
-         ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LOWER_ARM.getName())).setValue(true);
-         ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.UPPER_ARM.getName())).setValue(true);
-      }
       // sets previous values for next cycle
       liftButtonPrev = liftButton;
       hookButtonPrev = hookButton;
