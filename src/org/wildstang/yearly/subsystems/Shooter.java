@@ -7,6 +7,7 @@ import org.wildstang.framework.io.outputs.DigitalOutput;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.hardware.crio.outputs.WsDoubleSolenoid;
 import org.wildstang.hardware.crio.outputs.WsDoubleSolenoidState;
+import org.wildstang.hardware.crio.outputs.WsVictor;
 import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
 
@@ -30,8 +31,8 @@ public class Shooter implements Subsystem
    private double milsecToMax = 1000;
    private long startTime;
    private long sysTime;
-
-   CANTalon flyWheel;
+   
+   WsVictor flyWheel;
 
    @Override
    public void inputUpdate(Input source)
@@ -57,30 +58,12 @@ public class Shooter implements Subsystem
    public void init()
    {
       // TODO Auto-generated method stub
-      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_1.getName()).addInputListener(this);
-      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_2.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_3.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_4.getName()).addInputListener(this);
-      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_5.getName()).addInputListener(this);
-      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_6.getName()).addInputListener(this);
-      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_8.getName()).addInputListener(this);
-      Core.getInputManager().getInput(WSInputs.DRV_RIGHT_Y.getName()).addInputListener(this);
-      Core.getInputManager().getInput(WSInputs.DRV_THROTTLE.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_5.getName()).addInputListener(this);
+      
+      flyWheel = (WsVictor)(Core.getOutputManager().getOutput(WSOutputs.SHOOTER.getName()));
 
-      flyWheel = new CANTalon(1);
-      // flyWheel.changeControlMode(TalonControlMode.Speed);
-      flyWheel.changeControlMode(TalonControlMode.PercentVbus);
-      flyWheel.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-      flyWheel.configNominalOutputVoltage(+0.0f, -0.0f);
-      flyWheel.configPeakOutputVoltage(+12.0f, -12.0f);
-      flyWheel.configEncoderCodesPerRev(256);
-      flyWheel.reverseSensor(false);
-      flyWheel.reverseOutput(true);
-      flyWheel.setProfile(0);
-      flyWheel.setF((0.25 * 1023) / (1000 * 1.70666666));
-      flyWheel.setP((0.02 * 1023) / 500);
-      flyWheel.enableControl();
-      // flyWheel.setVoltageRampRate(rampRate);
       // (Ideal Rotations / min) X (1 min / 60 sec) X (1 sec / 10 TvelMeas) X
       // (1024 native units / rotation) =
       // (Ideal Rotations / min) X (1.70666666) = Feed Forward constant
@@ -137,54 +120,49 @@ public class Shooter implements Subsystem
 
       if (flyWheelToggle == true)
       {
-         flyWheel.set(flySpeed);
+         flyWheel.setValue(flySpeed);
       }
       else
       {
-         flyWheel.set(0);
+         flyWheel.setValue(0);
       }
 
-      // sysTime = System.currentTimeMillis();
-      // targetSpeed = (speedMod * rightSpeed) * 4000;
-      // if (flyWheelToggle == true)
-      // {
-      // if (sysTime < startTime + milsecToMax)
-      // {
-      // // flyWheel.changeControlMode(TalonControlMode.PercentVbus);
-      // flyWheel.set((rightSpeed * speedMod)
-      // * ((sysTime - startTime) / milsecToMax));
-      // }
-      // else
-      // {
-      // flyWheel.set((rightSpeed * speedMod));
-      // }
-      // }
-      // else if(PID)
-      // {
-      // flyWheel.changeControlMode(TalonControlMode.Speed);
-      // flyWheel.set(targetSpeed);
-      // }
-      // else
-      // {
-      // if (sysTime < startTime + milsecToMax)
-      // {
-      // flyWheel.set((rightSpeed * speedMod) - (rightSpeed * speedMod)
-      // * ((sysTime - startTime) / milsecToMax));
-      // }
-      // else
-      // {
-      // flyWheel.set(0);
-      // }
-      // }
+       sysTime = System.currentTimeMillis();
+       //targetSpeed = ???
+       if (flyWheelToggle == true)
+       {
+       if (sysTime < startTime + milsecToMax)
+       {
+       // flyWheel.changeControlMode(TalonControlMode.PercentVbus);
+       flyWheel.setValue((flySpeed)
+       * ((sysTime - startTime) / milsecToMax));
+       }
+       else
+       {
+       flyWheel.setValue(flySpeed);
+       }
+       }
+       else
+       {
+       if (sysTime < startTime + milsecToMax)
+       {
+       flyWheel.setValue((flySpeed) - (flySpeed)
+       * ((sysTime - startTime) / milsecToMax));
+       }
+       else
+       {
+       flyWheel.setValue(0);
+       }
+       }
       ((WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.SHOOTER_HOOD.getName())).setValue(new Integer (hoodPosition == true ? 
             WsDoubleSolenoidState.FORWARD.ordinal() : WsDoubleSolenoidState.REVERSE.ordinal()));
-      SmartDashboard.putNumber("TalonEncoderSpeed", flyWheel.getEncVelocity());
+//      SmartDashboard.putNumber("TalonEncoderSpeed", flyWheel.getEncVelocity());
       SmartDashboard.putNumber("Fly Wheel Speed", flySpeed);
       // SmartDashboard.putNumber("rightStick", rightSpeed);
       // SmartDashboard.putNumber("speedMod", speedMod);
       SmartDashboard.putBoolean("Fly Wheel Toggle State", flyWheelToggle);
       SmartDashboard.putBoolean("Hood State", hoodPosition);
-      SmartDashboard.putNumber("Fly Wheel Current", flyWheel.getOutputCurrent());
+//      SmartDashboard.putNumber("Fly Wheel Current", flyWheel.getOutputCurrent());
       SmartDashboard.putBoolean("Is fly up to speed?", doesSpeedMatch());
    }
 
