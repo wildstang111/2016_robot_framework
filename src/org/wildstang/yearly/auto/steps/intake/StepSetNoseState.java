@@ -7,30 +7,29 @@ import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSSubsystems;
 import org.wildstang.yearly.subsystems.Intake;
 
-public class StepSetIntakeState extends AutoStep
+public class StepSetNoseState extends AutoStep
 {
    private boolean deployed;
-
-   public StepSetIntakeState(boolean setState)
+   public StepSetNoseState(boolean state)
    {
-      this.deployed = setState;
+      this.deployed = state;
    }
-
+   
    @Override
    public void initialize()
    {
       // TODO Auto-generated method stub
-
+      
    }
 
    @Override
    public void update()
    {
       // TODO Auto-generated method stub
-      if(((Intake)Core.getSubsystemManager().getSubsystem(WSSubsystems.INTAKE.getName())).isDeployed() != deployed)
+      if(((Intake)Core.getSubsystemManager().getSubsystem(WSSubsystems.INTAKE.getName())).isNoseDeployed() != deployed)
       {
-      ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_8.getName())).setValue(true);
-      ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_8.getName())).setValue(false);
+      ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_6.getName())).setValue(true);
+      ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_6.getName())).setValue(false);
       }
    }
 
@@ -38,7 +37,7 @@ public class StepSetIntakeState extends AutoStep
    public String toString()
    {
       // TODO Auto-generated method stub
-      return "Intake deployed: " + deployed;
+      return "Nose position is " + deployed;
    }
 
 }
