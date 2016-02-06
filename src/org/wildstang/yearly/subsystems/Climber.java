@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Climber implements Subsystem
 {
    /*
-    * Climber Robot Class Authors: Wallace Butler and Lucas Papaioannou
+    * Climber Robot Class Authors: Wallace Butler and Lucas Papaioannou 
     */
    private boolean arm;
    private boolean liftButton;
