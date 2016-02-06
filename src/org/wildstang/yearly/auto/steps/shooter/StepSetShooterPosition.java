@@ -4,6 +4,7 @@ import org.wildstang.framework.auto.steps.AutoStep;
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.yearly.robot.WSInputs;
+import org.wildstang.yearly.robot.WSSubsystems;
 import org.wildstang.yearly.subsystems.Shooter;
 
 public class StepSetShooterPosition extends AutoStep
@@ -26,10 +27,10 @@ public class StepSetShooterPosition extends AutoStep
    public void update()
    {
       // TODO Auto-generated method stub
-      if((Shooter)Core.getSubsystemManager().getSubsystem("Shooter").hoodPos() == state )
+      if(((Shooter)Core.getSubsystemManager().getSubsystem(WSSubsystems.SHOOTER.getName())).hoodPos() != state)
       {
       ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_5.getName())).setValue(true);
-      ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_LEFT_JOYSTICK_Y.getName())).setValue(false);
+      ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_5.getName())).setValue(false);
       }
    }
 

@@ -22,7 +22,7 @@ public class StepSetIntakeState extends AutoStep
    public void update()
    {
       // TODO Auto-generated method stub
-
+      
    }
 
    @Override
