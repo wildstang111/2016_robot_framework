@@ -16,9 +16,7 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.I2C.Port;
 
 public enum WSInputs implements Inputs {
-//Disable the formatter in this section of code, so it doesn't make the enumeration completely unreadable
-// @formatter:off
-// im.addSensorInput(LIDAR, new WsLIDAR());
+    // im.addSensorInput(LIDAR, new WsLIDAR());
     //
 
     DRV_THROTTLE("Driver throttle", WSInputType.JS_JOYSTICK, new WsJSJoystickInputConfig(0, JoystickConstants.LEFT_JOYSTICK_Y), true), 
@@ -68,9 +66,7 @@ public enum WSInputs implements Inputs {
     //SHOOTER_ENCODER
     // DIO_0_INTAKE_SENSOR("intake sensor", WSInputType.SWITCH, new
     // WsDigitalInputConfig(6, true), true);
-   //Reenable the formatter so that it will format the rest of the code 
-   // @formatter:on
-   
+
     private final String m_name;
     private final InputType m_type;
 
