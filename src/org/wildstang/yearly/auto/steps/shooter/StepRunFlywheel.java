@@ -30,25 +30,25 @@ public class StepRunFlywheel extends AutoStep
       if(speed == 0 && ((Shooter)Core.getSubsystemManager().getSubsystem(WSSubsystems.SHOOTER.getName())).isOn() == true)
       {
          ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_3.getName())).setValue(true);
-         ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_3.getName())).setValue(false);  
+//         ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_3.getName())).setValue(false);  
       }
       
       else if(((Shooter)Core.getSubsystemManager().getSubsystem(WSSubsystems.SHOOTER.getName())).isOn() == false && (speed != 0))
       {
          ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_3.getName())).setValue(true);
-         ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_3.getName())).setValue(false);
+//         ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_3.getName())).setValue(false);
       }
       
       if(speed > .7 && ((Shooter)Core.getSubsystemManager().getSubsystem(WSSubsystems.SHOOTER.getName())).flySpeed() == false)
       {
          ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_4.getName())).setValue(true);
-         ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_4.getName())).setValue(false);
+//         ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_4.getName())).setValue(false);
       }
      
       else if(speed < .7 && speed != 0 && ((Shooter)Core.getSubsystemManager().getSubsystem(WSSubsystems.SHOOTER.getName())).flySpeed() == true)
       {
          ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_4.getName())).setValue(true);
-         ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_4.getName())).setValue(false);
+//         ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_4.getName())).setValue(false);
       }
    }
 

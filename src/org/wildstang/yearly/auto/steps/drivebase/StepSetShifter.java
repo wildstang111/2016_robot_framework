@@ -5,9 +5,6 @@
 package org.wildstang.yearly.auto.steps.drivebase;
 
 import org.wildstang.framework.auto.steps.AutoStep;
-import org.wildstang.framework.core.Core;
-import org.wildstang.yearly.robot.WSSubsystems;
-import org.wildstang.yearly.subsystems.DriveBase;
 
 /**
  *
@@ -15,7 +12,7 @@ import org.wildstang.yearly.subsystems.DriveBase;
  */
 public class StepSetShifter extends AutoStep
 {
-   protected boolean highGear;;
+   protected boolean highGear;
 
    public StepSetShifter(boolean highGear)
    {

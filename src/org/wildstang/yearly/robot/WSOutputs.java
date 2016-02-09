@@ -26,7 +26,7 @@ public enum WSOutputs implements Outputs
    RIGHT_2("Right motor 2",            WSOutputType.VICTOR,    new WsVictorConfig(3, 0.0), true),
    
    //Switch over to a talon
-   //SHOOTER("Shooter flywheel Victor",     WSOutputType.VICTOR,    new WsVictorConfig(6, 0.0), true),
+   SHOOTER("Shooter flywheel Victor",     WSOutputType.VICTOR,    new WsVictorConfig(6, 0.0), true),
    //SHOOTER("Shooter Flywheel Talon", WSOutputType.TALON, new WsTalonConfig(8, 0.0), true),
    
    WINCH_LEFT("Left Winch", WSOutputType.VICTOR, new WsVictorConfig(4, 0.0), true),

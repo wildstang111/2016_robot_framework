@@ -30,7 +30,6 @@ public class StepSetShooterPosition extends AutoStep
       if(((Shooter)Core.getSubsystemManager().getSubsystem(WSSubsystems.SHOOTER.getName())).hoodPos() != state)
       {
       ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_5.getName())).setValue(true);
-      ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_5.getName())).setValue(false);
       }
    }
 
