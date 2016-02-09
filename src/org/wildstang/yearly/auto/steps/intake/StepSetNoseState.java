@@ -29,7 +29,6 @@ public class StepSetNoseState extends AutoStep
       if(((Intake)Core.getSubsystemManager().getSubsystem(WSSubsystems.INTAKE.getName())).isNoseDeployed() != deployed)
       {
       ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_6.getName())).setValue(true);
-      ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_6.getName())).setValue(false);
       }
    }
 
