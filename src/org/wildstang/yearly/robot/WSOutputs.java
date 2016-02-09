@@ -43,7 +43,7 @@ public enum WSOutputs implements Outputs
    INTAKE_FRONT_LOWER("Intake front lower", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 4, false), true),
    LOWER_ARM("Lower Lift Arm", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 5, false), true),
    UPPER_ARM("Upper Lift Arm", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 6, false), true),
-   HOOKS("Hook Extenstion", WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(1, 7, 8, WsDoubleSolenoidState.REVERSE), true),
+   HOOKS("Hook Extenstion", WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(2, 4, 5, WsDoubleSolenoidState.REVERSE), true),
    SHOOTER_HOOD("Shooter Hood", WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(2, 1, 2, WsDoubleSolenoidState.REVERSE), true),
    WINCH_BRAKE("Winch Brakeput", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(2, 3, false), true);	   
    
