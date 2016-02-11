@@ -47,9 +47,12 @@ public class Intake implements Subsystem
    private boolean manNoseControl;
    private boolean drvNoseControl;
    private boolean manDeployPneumaticControl;
+   private boolean intakeLimboCurrentState;
+   private boolean intakeLimboOldState = false;
+   private boolean limboOn;
    private double manLeftJoyRollerIn;
-   private static double rollerInDeadband = .5;
-   private static double rollerOutDeadband = -.5;
+   private static double rollerInDeadband = -.5;
+   private static double rollerOutDeadband = .5;
 
    @Override
    public void inputUpdate(Input source)
@@ -83,7 +86,7 @@ public class Intake implements Subsystem
       }
 
       // setting manRollerInOverride to Manipulator button 1
-      if (source.getName().equals(WSInputs.MAN_BUTTON_1.getName()))
+      if (source.getName().equals(WSInputs.MAN_BUTTON_9.getName()))
       {
          manRollerInOverride = ((DigitalInput) source).getValue();
       }
@@ -92,6 +95,11 @@ public class Intake implements Subsystem
       if (source.getName().equals(WSInputs.MAN_BUTTON_8.getName()))
       {
          manDeployPneumaticControl = ((DigitalInput) source).getValue();
+      }
+      
+      if (source.getName().equals(WSInputs.DRV_BUTTON_2.getName()))
+      {
+         intakeLimboCurrentState = ((DigitalInput) source).getValue();
       }
    }
 
@@ -104,7 +112,7 @@ public class Intake implements Subsystem
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_6.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_6.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_8.getName()).addInputListener(this);
-      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_1.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_9.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_2.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.MAN_LEFT_JOYSTICK_Y.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.INTAKE_BOLDER_SENSOR.getName()).addInputListener(this);
@@ -116,18 +124,21 @@ public class Intake implements Subsystem
       // TODO Auto-generated method stub
 
    }
+  
 
    @Override
    public void update()
    {
+      //testing
+      intakeSensorReading = false;
       
       // TODO Auto-generated method stub
 
       // does something with variables and Outputs
 
-      // tells status of manLeftJoyRollerIn, intakeSensorReading, and rollerMovingIn
-      System.out.println("rollerMovingIn= " + rollerMovingIn + " rollerMovingOut= " + rollerMovingOut 
-            + " manLeftJoyRollerIn= " + manLeftJoyRollerIn);
+      // tells status of certain variables
+      System.out.println("rollerMovingOut= " + rollerMovingOut + " rollerMovingIn= " + rollerMovingIn +
+            " manLeftJoyRollerIn= " + manLeftJoyRollerIn);
 
       //Puts the nose pneumatic in motion when either the drvNoseControl or
       //man nose control are true
@@ -136,7 +147,7 @@ public class Intake implements Subsystem
          nosePneumatic = true;
          rollerMovingIn = false;
          rollerMovingOut = false;
-      } else if (drvNoseControl == false && manNoseControl == false){
+      } else if (drvNoseControl == false && manNoseControl == false && limboOn == false){
          nosePneumatic = false;
       }
 
@@ -146,18 +157,18 @@ public class Intake implements Subsystem
          deployPneumatic = true;
          rollerMovingIn = false;
          rollerMovingOut = false;
-      } else if (manDeployPneumaticControl == false) {
+      } else if (manDeployPneumaticControl == false && limboOn == false) {
          deployPneumatic = false;
       }
 
-      // if you push the left joy stick up, the intake will roll inwards.
-      // if you push the left joy stick down, the intake will roll outwards.
-      if (manLeftJoyRollerIn >= rollerInDeadband)
+      // if you push the left joy stick up, the intake will roll outwards.
+      // if you push the left joy stick down, the intake will roll inwards.
+      if (manLeftJoyRollerIn <= rollerInDeadband)
       {
          rollerMovingOut = false;
          rollerMovingIn = true;
       }
-      else if (manLeftJoyRollerIn <= rollerOutDeadband)
+      else if (manLeftJoyRollerIn >= rollerOutDeadband)
       {
          rollerMovingIn = false;
          rollerMovingOut = true;
@@ -195,17 +206,37 @@ public class Intake implements Subsystem
          ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.FRONT_ROLLER.getName())).setValue(-0.75);
       }
       
+      //When deployPneumatic is true, the deploy solenoid will turn on
       if (deployPneumatic == true) {
          ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_DEPLOY.getName())).setValue(true);
       } else {
          ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_DEPLOY.getName())).setValue(false);
       }
       
+      //When nosePneumatic is true, the nose solenoid will turn on
       if (nosePneumatic == true) {
          ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_FRONT_LOWER.getName())).setValue(true);
       } else {
          ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_FRONT_LOWER.getName())).setValue(false);
       }
+      
+      //Allows for toggling of Limbo
+      if (intakeLimboOldState == false && intakeLimboCurrentState == true)
+      {
+         if (deployPneumatic == true && nosePneumatic == true)
+         {
+            limboOn = false;
+            deployPneumatic = false;
+            nosePneumatic = false;
+         }
+         else if (deployPneumatic == false || nosePneumatic == false)
+         {
+            limboOn = true;
+            deployPneumatic = true;
+            nosePneumatic = true;
+         }
+      }
+      intakeLimboOldState = intakeLimboCurrentState;
 
       /*
        * // buttonPress controls DIO_LED_0 etc. ((DigitalOutput)
