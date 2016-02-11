@@ -34,16 +34,16 @@ public class StepSetShifter extends AutoStep
    @Override
    public void update()
    {
-      if(((DriveBase)Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).shifterstate() != highGear)
+      if(((DriveBase)Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).shifterState() != highGear)
       {
-      ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_8.getName())).setValue(true);
+      ((DigitalInput)Core.getInputManager().getInput(WSInputs.DRV_BUTTON_7.getName())).setValue(true);
       }
    }
 
    @Override
    public String toString()
    {
-      return "Set Shifter State";
+      return "Set Shifter State" + highGear;
    }
 
 }

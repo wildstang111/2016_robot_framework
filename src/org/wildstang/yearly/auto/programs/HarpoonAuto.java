@@ -6,7 +6,10 @@ import org.wildstang.framework.auto.steps.AutoSerialStepGroup;
 import org.wildstang.yearly.auto.steps.drivebase.StepDriveDistanceAtSpeed;
 import org.wildstang.yearly.auto.steps.drivebase.StepQuickTurn;
 import org.wildstang.yearly.auto.steps.intake.StepIntake;
+import org.wildstang.yearly.auto.steps.intake.StepResetIntakeToggle;
 import org.wildstang.yearly.auto.steps.intake.StepSetIntakeState;
+import org.wildstang.yearly.auto.steps.shooter.StepResetFlywheelToggles;
+import org.wildstang.yearly.auto.steps.shooter.StepResetShotToggle;
 import org.wildstang.yearly.auto.steps.shooter.StepRunFlywheel;
 import org.wildstang.yearly.auto.steps.shooter.StepShoot;
 
@@ -21,6 +24,7 @@ public class HarpoonAuto extends AutoProgram
       AutoParallelStepGroup driveToEnd = new AutoParallelStepGroup();
       AutoSerialStepGroup deployAndDrive = new AutoSerialStepGroup();
       deployAndDrive.addStep(new StepSetIntakeState(true));
+      deployAndDrive.addStep(new StepResetIntakeToggle());
       deployAndDrive.addStep(new StepDriveDistanceAtSpeed(276, 1, false));
       driveToEnd.addStep(new StepIntake(-1));
       driveToEnd.addStep(deployAndDrive);
@@ -31,6 +35,7 @@ public class HarpoonAuto extends AutoProgram
       AutoSerialStepGroup crossTheRoad = new AutoSerialStepGroup();
       crossTheRoad.addStep(new StepIntake(0));
       crossTheRoad.addStep(new StepSetIntakeState(false));
+      crossTheRoad.addStep(new StepResetIntakeToggle());
       crossTheRoad.addStep(new StepQuickTurn(90));
       crossTheRoad.addStep(new StepDriveDistanceAtSpeed(32, 1, false));
       crossTheRoad.addStep(new StepSetIntakeState(true));
@@ -41,12 +46,14 @@ public class HarpoonAuto extends AutoProgram
       AutoParallelStepGroup Score = new AutoParallelStepGroup();
       AutoSerialStepGroup gotoGoal = new AutoSerialStepGroup();
       Score.addStep(new StepRunFlywheel(speed));
+      Score.addStep(new StepResetFlywheelToggles());
       gotoGoal.addStep(new StepDriveDistanceAtSpeed(108, 1, true));
       gotoGoal.addStep(new StepQuickTurn(60));
       Score.addStep(gotoGoal);
       addStep(Score);
 
       addStep(new StepShoot());
+      addStep(new StepResetShotToggle());
    }
 
    @Override
