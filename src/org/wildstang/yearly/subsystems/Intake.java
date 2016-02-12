@@ -53,6 +53,10 @@ public class Intake implements Subsystem
    private double manLeftJoyRollerIn;
    private static double rollerInDeadband = -.5;
    private static double rollerOutDeadband = .5;
+   private WsSolenoid frontLowerSolenoid = ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_FRONT_LOWER.getName()));
+   private WsSolenoid deploySolenoid = ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_DEPLOY.getName()));
+   private AnalogOutput frontRoller = ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.FRONT_ROLLER.getName()));
+   
 
    @Override
    public void inputUpdate(Input source)
@@ -138,7 +142,8 @@ public class Intake implements Subsystem
 
       // tells status of certain variables
       System.out.println("rollerMovingOut= " + rollerMovingOut + " rollerMovingIn= " + rollerMovingIn +
-            " manLeftJoyRollerIn= " + manLeftJoyRollerIn);
+            " manLeftJoyRollerIn= " + manLeftJoyRollerIn + " deploySolenoid= " + deploySolenoid.getValue() +
+            " frontLowerSolenoid= " + frontLowerSolenoid.getValue());
 
       //Puts the nose pneumatic in motion when either the drvNoseControl or
       //man nose control are true
@@ -197,27 +202,27 @@ public class Intake implements Subsystem
       // if rollerMovingIn is true, the roller will move inwards
       if (rollerMovingIn == true)
       {
-         ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.FRONT_ROLLER.getName())).setValue(0.75);
+         frontRoller.setValue(0.75);
       }
 
       // if rollerMovingOut is true, the roller will move in reverse
       if (rollerMovingOut == true)
       {
-         ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.FRONT_ROLLER.getName())).setValue(-0.75);
+         frontRoller.setValue(-0.75);
       }
       
       //When deployPneumatic is true, the deploy solenoid will turn on
       if (deployPneumatic == true) {
-         ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_DEPLOY.getName())).setValue(true);
+         deploySolenoid.setValue(true);
       } else {
-         ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_DEPLOY.getName())).setValue(false);
+         deploySolenoid.setValue(false);
       }
       
       //When nosePneumatic is true, the nose solenoid will turn on
       if (nosePneumatic == true) {
-         ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_FRONT_LOWER.getName())).setValue(true);
+         frontLowerSolenoid.setValue(true);
       } else {
-         ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_FRONT_LOWER.getName())).setValue(false);
+         frontLowerSolenoid.setValue(false);
       }
       
       //Allows for toggling of Limbo
