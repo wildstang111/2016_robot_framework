@@ -68,6 +68,13 @@ public class Shooter implements Subsystem, ConfigListener
          }
          // manipulator button R2
       }
+      else if (source.getName().equals(WSInputs.DRV_BUTTON_2.getName()))
+      {
+         if (((DigitalInput) source).getValue() == true)
+         {
+            hoodPosition = false;
+         }
+      }
       else if (source.getName().equals(WSInputs.MAN_BUTTON_4.getName()))
       {
          if (((DigitalInput) source).getValue() == true)
@@ -83,6 +90,7 @@ public class Shooter implements Subsystem, ConfigListener
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_3.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_4.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_6.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_2.getName()).addInputListener(this);
 
       flyWheel = (WsVictor) (Core.getOutputManager().getOutput(WSOutputs.SHOOTER.getName()));
       shooterHood = ((WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.SHOOTER_HOOD.getName()));
