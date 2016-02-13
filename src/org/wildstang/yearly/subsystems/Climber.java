@@ -32,6 +32,7 @@ public class Climber implements Subsystem
    private boolean override = false;
    private boolean rightArmTouch;
    private boolean leftArmTouch;
+   private double rawWinchValue;
 
    @Override
    public void inputUpdate(Input source)
@@ -47,7 +48,7 @@ public class Climber implements Subsystem
       {
 
          winchValue = ((AnalogInput) source).getValue();
-
+         rawWinchValue = ((AnalogInput) source).getValue();
       }
       else if (source.getName().equals(WSInputs.MAN_BUTTON_2.getName()))
       {
@@ -110,7 +111,7 @@ public class Climber implements Subsystem
 
       if (!override)
       {
-         if (winchValue < .1 && winchValue > -.1)
+         if ((winchValue < .1) && (winchValue > -.1))
          {
             winchValue = 0.0;
             if (!brakeEngaged)
@@ -120,7 +121,7 @@ public class Climber implements Subsystem
                stopDelay++;
                if (stopDelay == 3)
                {
-                  ((WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.WINCH_BRAKE.getName())).setValue(WsDoubleSolenoidState.FORWARD.ordinal());
+                  ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.WINCH_BRAKE.getName())).setValue(true);
                   brakeEngaged = true;
                   stopDelay = 0;
                   System.out.println("Brake Engaged");
@@ -129,11 +130,11 @@ public class Climber implements Subsystem
          }
          else
          {
-            if (winchRunning = false)
+            if (!winchRunning)
             {
                brakeEngaged = false;
                System.out.println("Brake Disengaged");
-               ((WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.WINCH_BRAKE.getName())).setValue(WsDoubleSolenoidState.REVERSE.ordinal());
+               ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.WINCH_BRAKE.getName())).setValue(false);
                startDelay++;
                if (startDelay == 3)
                {
@@ -144,16 +145,9 @@ public class Climber implements Subsystem
             }
 
          }
-         if (winchRunning)
-         {
-            ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_LEFT.getName())).setValue(winchValue);
-            ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_RIGHT.getName())).setValue(winchValue);
-         }
-         else
-         {
-            ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_LEFT.getName())).setValue(0);
-            ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_RIGHT.getName())).setValue(0);
-         }
+
+         ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_LEFT.getName())).setValue(winchValue);
+         ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_RIGHT.getName())).setValue(winchValue);
 
       }
 
@@ -172,10 +166,13 @@ public class Climber implements Subsystem
          brakeEngaged = true;
          ((WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.WINCH_BRAKE.getName())).setValue(WsDoubleSolenoidState.FORWARD.ordinal());
       }
-//      SmartDashboard.putDouble("Winch Value", winchValue);
       SmartDashboard.putBoolean("liftState", arm);
-      SmartDashboard.putBoolean("brakeEngaged", brakeEngaged);
       SmartDashboard.putBoolean("hookState", hook);
+      SmartDashboard.putNumber("Winch Value", rawWinchValue);
+      SmartDashboard.putBoolean("Override", override);
+      SmartDashboard.putBoolean("Winch Running", winchRunning);
+      SmartDashboard.putBoolean("brakeEngaged", brakeEngaged);
+//      SmartDashboard.putBoolean("Override", override);
       SmartDashboard.putBoolean("Right Arm", rightArmTouch);
       SmartDashboard.putBoolean("Left Arm", leftArmTouch);
 
