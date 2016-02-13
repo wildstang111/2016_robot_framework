@@ -37,8 +37,9 @@ public class Shooter implements Subsystem, ConfigListener
    private double               expectedLowRateConf;
    private static final String  expectedHighRateKey = ".expectedHighFlywheelRate";
    private static final String  expectedLowRateKey = ".expectedHighFlywheelRate";
-   private static final double  OUTPUT_ADJUST_CAP = 0.5;
-   private static final double  ON_SPEED_FLYWHEEL_DIFF = 100;
+   private double  onSpeedFlyWheelDiff;
+   private static final String  onSpeedDiffKey  = ".onSpeedDiff";
+   private static final int     ON_SPEED_FLYWHEEL_DIFF_DEFAULT = 100;
    private static final double  HIGH_RATE_DEFAULT = 3200;
    private static final double  LOW_RATE_DEFAULT = 2800;
    private static final double  HIGH_DEFAULT   = 0.75;
@@ -56,17 +57,29 @@ public class Shooter implements Subsystem, ConfigListener
       // TODO Auto-generated method stub
       if (source.getName().equals(WSInputs.MAN_BUTTON_3.getName()))
       {
+         if (((DigitalInput) source).getValue() == true)
+         {
+            flyWheelToggle = !flyWheelToggle;
+         }
          // manipulator button circle
-         currentFlyState = ((DigitalInput) source).getValue();
+         //currentFlyState = ((DigitalInput) source).getValue();
       }
       else if (source.getName().equals(WSInputs.MAN_BUTTON_5.getName()))
       {
+         if (((DigitalInput) source).getValue() == true)
+         {  
+            hoodPosition = !hoodPosition;
+         }
          // manipulator button R2
-         currentHoodState = ((DigitalInput) source).getValue();
+         //currentHoodState = ((DigitalInput) source).getValue();
       }
       else if (source.getName().equals(WSInputs.MAN_BUTTON_4.getName()))
       {
-         currentFlySpeed = ((DigitalInput) source).getValue();
+         if (((DigitalInput) source).getValue() == true)
+         {
+            flySpeedToggle = !flySpeedToggle;      
+         }
+         //currentFlySpeed = ((DigitalInput) source).getValue();
       }
    }
 
@@ -91,6 +104,8 @@ public class Shooter implements Subsystem, ConfigListener
             + expectedHighRateKey, HIGH_RATE_DEFAULT);
       expectedLowRateConf = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
             + expectedLowRateKey, LOW_RATE_DEFAULT);
+      onSpeedFlyWheelDiff = Core.getConfigManager().getConfig().getInt(this.getClass().getName()
+            + onSpeedDiffKey, ON_SPEED_FLYWHEEL_DIFF_DEFAULT);
       
       //Need to figure out these values to configure the encoder.
       flyWheelEncoder.setMaxPeriod(0.1);
@@ -98,8 +113,10 @@ public class Shooter implements Subsystem, ConfigListener
       flyWheelEncoder.setDistancePerPulse(5);
       flyWheelEncoder.setReverseDirection(true);
       flyWheelEncoder.setSamplesToAverage(7);
+      
+      flyWheelDiff = 0;
    }
-
+/*
    private boolean calcToggle(boolean oldState, boolean currentState,
          boolean toggle)
    {
@@ -119,29 +136,29 @@ public class Shooter implements Subsystem, ConfigListener
       }
       return newToggle;
    }
-
+*/
   
    @Override
    public void update()
    {
       Integer hoodUpDown;
       double expectedRate;
-      double outputAdjust = 1.0;
+      double outputAdjust = 0.0;
+      double outputAdjustLimit;
       double flyWheelRate = flyWheelEncoder.getRate();
       
-      flyWheelDiff = 0;
 
-      flyWheelToggle = calcToggle(oldFlyState, currentFlyState, flyWheelToggle);
+/*      flyWheelToggle = calcToggle(oldFlyState, currentFlyState, flyWheelToggle);
       oldFlyState = currentFlyState;
 
       hoodPosition = calcToggle(oldHoodState, currentHoodState, hoodPosition);
       oldHoodState = currentHoodState;
-
+*/
       hoodUpDown = hoodPosition ? hoodUp : hoodDown;
-
+/*(
       flySpeedToggle = calcToggle(oldFlySpeed, currentFlySpeed, flySpeedToggle);
       oldFlySpeed = currentFlySpeed;
-      
+*/      
       if (flySpeedToggle == true)
       {
          flySpeed = highFlywheelSpeedConf;
@@ -167,20 +184,22 @@ public class Shooter implements Subsystem, ConfigListener
             flyWheelDiff = Math.abs(flyWheelRate - expectedRate);
             outputAdjust = flyWheelDiff / expectedRate;
             
-            if (flyWheelRate > expectedRate)
+            //Limit the output Adjust to less than half of the expected Rate to temper this a bit.
+            outputAdjustLimit = expectedRate / 2;
+            if (outputAdjust > outputAdjustLimit);
             {
-               //Cap the adjustment
-               outputAdjust = outputAdjust < OUTPUT_ADJUST_CAP ? OUTPUT_ADJUST_CAP : outputAdjust;
+               outputAdjust = outputAdjustLimit;
+            }
             
+            if (flyWheelRate > expectedRate)
+            { 
                //Decrease Speed
-               flySpeed *= outputAdjust;
+               flySpeed -= outputAdjust;
             }
             else if (flyWheelRate < expectedRate)
             {
-               //Cap the output Adjust
-               outputAdjust = outputAdjust > OUTPUT_ADJUST_CAP ? OUTPUT_ADJUST_CAP : outputAdjust;
                //Increase the speed.
-               flySpeed *= (1+outputAdjust);
+               flySpeed += outputAdjust;
             }
             //Cap the fly wheel speed to 1.0.
             flySpeed = flySpeed > 1.0 ? 1.0 : flySpeed < 0.0 ? 0.0 : flySpeed;
@@ -193,14 +212,14 @@ public class Shooter implements Subsystem, ConfigListener
          flyWheel.setValue(0);
       }
 
-      // targetSpeed = ???
-
       shooterHood.setValue(hoodUpDown);
-      SmartDashboard.putNumber("Fly Wheel Speed", flySpeed);
+      
+      SmartDashboard.putString("Flywheel Speed", flySpeedToggle == true ? "High" : "Low");
       SmartDashboard.putNumber("Flywheel Rate", flyWheelRate);
-      SmartDashboard.putBoolean("Fly Wheel Toggle State", flyWheelToggle);
-      SmartDashboard.putBoolean("Hood State", hoodPosition);
-      SmartDashboard.putBoolean("Is fly up to speed?", doesSpeedMatch());
+      SmartDashboard.putNumber("Flywheel Output Adjustment", outputAdjust);
+      SmartDashboard.putBoolean("Flywheel On/Off", flyWheelToggle);
+      SmartDashboard.putString("Hood Positition", hoodPosition == true ? "Up" : "Down");
+      SmartDashboard.putBoolean("Flywheel at Speed", doesSpeedMatch());
    }
 
    @Override
@@ -233,7 +252,7 @@ public class Shooter implements Subsystem, ConfigListener
 
    public boolean doesSpeedMatch()
    {
-      return flyWheelDiff <= ON_SPEED_FLYWHEEL_DIFF ? true : false;
+      return flyWheelDiff <= onSpeedFlyWheelDiff ? true : false;
    }
 
    @Override
@@ -247,8 +266,8 @@ public class Shooter implements Subsystem, ConfigListener
             + expectedHighRateKey, HIGH_RATE_DEFAULT);
       expectedLowRateConf = p_newConfig.getDouble(this.getClass().getName()
             + expectedLowRateKey, LOW_RATE_DEFAULT);
-      
-
+      onSpeedFlyWheelDiff = p_newConfig.getInt(this.getClass().getName()
+            + onSpeedDiffKey, ON_SPEED_FLYWHEEL_DIFF_DEFAULT);
    }
 
 }
