@@ -124,12 +124,10 @@ public class DriveBase implements Subsystem
       // notifyConfigChange(Core.getConfigManager().getConfig());
 
       // Anti-Turbo button
-      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_7.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_5.getName()).addInputListener(this);
       // Shifter Button
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_6.getName()).addInputListener(this);
-      // Super anti-turbo button
-      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_5.getName()).addInputListener(this);
-      // HELLA ANTI TURBO!!! WARNING!!! EXTREMELY SLOW...
+      //Turbo 
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_8.getName()).addInputListener(this);
 
       Core.getInputManager().getInput(WSInputs.MOTION_PROFILE_CONTROL.getName()).addInputListener(this);
@@ -905,11 +903,7 @@ public class DriveBase implements Subsystem
    @Override
    public void inputUpdate(Input source)
    {
-      if (source.getName().equals(WSInputs.DRV_BUTTON_7.getName()))
-      {
-         antiTurboFlag = ((DigitalInput) source).getValue();
-      }
-      else if (source.getName().equals(WSInputs.DRV_BUTTON_6.getName()))
+      if (source.getName().equals(WSInputs.DRV_BUTTON_6.getName()))
       {
          if (((DigitalInput) source).getValue())
          {
@@ -922,7 +916,7 @@ public class DriveBase implements Subsystem
       }
       else if (source.getName().equals(WSInputs.DRV_BUTTON_8.getName()))
       {
-         hellaAntiTurboFlag = ((DigitalInput) source).getValue();
+         turboFlag = ((DigitalInput) source).getValue();
       }
       else if (source.getName().equals(WSInputs.MOTION_PROFILE_CONTROL.getName()))
       {

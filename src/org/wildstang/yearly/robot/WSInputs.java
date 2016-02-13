@@ -6,7 +6,6 @@ import org.wildstang.framework.io.inputs.InputType;
 import org.wildstang.hardware.JoystickConstants;
 import org.wildstang.hardware.crio.inputs.WSInputType;
 import org.wildstang.hardware.crio.inputs.config.WsDigitalInputConfig;
-import org.wildstang.hardware.crio.inputs.config.WsDigitalInputConfig;
 import org.wildstang.hardware.crio.inputs.config.WsI2CInputConfig;
 import org.wildstang.hardware.crio.inputs.config.WsJSButtonInputConfig;
 import org.wildstang.hardware.crio.inputs.config.WsJSJoystickInputConfig;
@@ -27,10 +26,10 @@ public enum WSInputs implements Inputs {
     DRV_BUTTON_2("Driver Limbo", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 1), true), 
     //DRV_BUTTON_3("Driver button 3", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 2), true), 
     //DRV_BUTTON_4("Driver button 4", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 3), true), 
-    DRV_BUTTON_5("Driver Turbo", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 4), true), 
-    DRV_BUTTON_6("Driver Intake Nose Control", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 5), true), 
-    DRV_BUTTON_7("Driver Shift", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 6), true), 
-    DRV_BUTTON_8("Driver Turret Mode", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 7), true),
+    DRV_BUTTON_5("Driver Turret Mode", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 4), true), 
+    DRV_BUTTON_6("Driver Shift", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 5), true), 
+    DRV_BUTTON_7("Driver Intake Nose Control", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 6), true), 
+    DRV_BUTTON_8("Driver Turbo", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 7), true),
 							    
      // This should get deleted, for debug only
    DRV_BUTTON_12("Antiturbo (Driver 8)", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 11), true),
@@ -46,8 +45,8 @@ public enum WSInputs implements Inputs {
     MAN_BUTTON_4("Manip Shot Distance", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 3), true),
     MAN_BUTTON_5("Manip Intake Nose", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 4), true), 
     MAN_BUTTON_6("Manip Shooter Hood", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 5), true), 
-    MAN_BUTTON_7("Manip Shoot", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 6), true), 
-    MAN_BUTTON_8("Manip Deploy Intake", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 7), true), 
+    MAN_BUTTON_7("Manip Deploy Intake", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 6), true), 
+    MAN_BUTTON_8("Manip Shoot", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 7), true), 
     MAN_BUTTON_9("Override", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 8), true), 
     //MAN_BUTTON_10("Manipulator button 10", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 9), true), 
     //MAN_BUTTON_11("Manipulator button 11", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 10), true), 
