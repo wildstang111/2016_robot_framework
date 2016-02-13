@@ -151,7 +151,14 @@ public class Climber implements Subsystem
          ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_RIGHT.getName())).setValue(winchValue);
 
       }
-
+      else
+      {
+         brakeEngaged = true;
+         winchRunning = false;
+         ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.WINCH_BRAKE.getName())).setValue(true);
+         ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_LEFT.getName())).setValue(0.0);
+         ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_RIGHT.getName())).setValue(0.0);
+      }
       if (!hook)
       {
          ((WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.HOOK_EXTENSION.getName())).setValue(WsDoubleSolenoidState.REVERSE.ordinal());
@@ -161,19 +168,13 @@ public class Climber implements Subsystem
          ((WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.HOOK_EXTENSION.getName())).setValue(WsDoubleSolenoidState.FORWARD.ordinal());
       }
 
-      if (override)
-      {
-         System.out.println("override engaged");
-         brakeEngaged = true;
-         ((WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.WINCH_BRAKE.getName())).setValue(WsDoubleSolenoidState.FORWARD.ordinal());
-      }
       SmartDashboard.putBoolean("liftState", arm);
       SmartDashboard.putBoolean("hookState", hook);
       SmartDashboard.putNumber("Winch Value", rawWinchValue);
       SmartDashboard.putBoolean("Override", override);
       SmartDashboard.putBoolean("Winch Running", winchRunning);
       SmartDashboard.putBoolean("brakeEngaged", brakeEngaged);
-//      SmartDashboard.putBoolean("Override", override);
+      // SmartDashboard.putBoolean("Override", override);
       SmartDashboard.putBoolean("Right Arm", rightArmTouch);
       SmartDashboard.putBoolean("Left Arm", leftArmTouch);
 
