@@ -58,8 +58,8 @@ org.wildstang.logger.sender.LogManager.Logger_Enabled=false
 //Shooter
 org.wildstang.yearly.subsystems.Shooter.highSpeedVictorVal=0.75
 org.wildstang.yearly.subsystems.Shooter.lowSpeedVictorVal=0.70
-org.wildstang.yearly.subsystems.Shooter.expectedHighFlywheelRate=3200
-org.wildstang.yearly.subsystems.Shooter.expectedHighFlywheelRate=2800
+org.wildstang.yearly.subsystems.Shooter.expectedHighFlywheelRate=3200.0
+org.wildstang.yearly.subsystems.Shooter.expectedLowFlywheelRate=2800.0
 org.wildstang.yearly.subsystems.Shooter.onSpeedDiff=100
 
 
