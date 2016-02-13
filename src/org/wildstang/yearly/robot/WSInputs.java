@@ -56,8 +56,8 @@ public enum WSInputs implements Inputs {
     //POT("Pot", WSInputType.POT, new WsAnalogInputConfig(0), true), 
     IMU("IMU", WSInputType.I2C, new WsI2CInputConfig(I2C.Port.kOnboard, 0x20), true), 
     MOTION_PROFILE_CONTROL("MotionProfileConfig", WSInputType.MOTION_PROFILE_CONTROL, new WsMotionProfileConfig(), false), 
-    INTAKE_BOLDER_SENSOR("Intake Ball Staging", WSInputType.SWITCH, new WsDigitalInputConfig(8, false), true),
-    INTAKE_BALL_DETECT("Intake ball detection", WSInputType.SWITCH, new WsDigitalInputConfig(9, false), true),
+    INTAKE_BOLDER_SENSOR("Intake Ball Staging", WSInputType.SWITCH, new WsDigitalInputConfig(8, true), true),
+    // INTAKE_BALL_DETECT("Intake ball detection", WSInputType.SWITCH, new WsDigitalInputConfig(9, false), true),
     RIGHT_ARM_TOUCHING("Right Lift arm touching", WSInputType.SWITCH, new WsDigitalInputConfig(7, false), true),
     LEFT_ARM_TOUCHING("Left Lift arm touching", WSInputType.SWITCH, new WsDigitalInputConfig(6, false), true);
     //LEFT_DRIVE_ENCODER
