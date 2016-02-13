@@ -11,37 +11,6 @@ org.wildstang.logger.Logger.logLevel="DEBUG"
 //                                //
 //********************************//
 
-// Intake
-org.wildstang.subsystems.IntakeWheels.intake_turn_scale_factor=0.62
-org.wildstang.subsystems.IntakeWheels.intake_turn_horizontal_radius=0.15
-org.wildstang.subsystems.IntakeWheels.intake_deadband=0.53
-
-//Lift and lift presets
-//Normal Setup Stuff
-org.wildstang.subsystems.Lift.pot_top_voltage=4.02
-org.wildstang.subsystems.Lift.pot_bottom_voltage=2.54
-org.wildstang.subsystems.lift.LiftPreset.top.wanted_voltage=4.02
-org.wildstang.subsystems.lift.LiftPreset.bottom.wanted_voltage=2.54
-org.wildstang.subsystems.lift.LiftPreset.level_four.wanted_voltage=4.120
-//
-org.wildstang.subsystems.Lift.top_slow_down_radius=0.2
-org.wildstang.subsystems.Lift.bottom_slow_down_radius=0.45
-org.wildstang.subsystems.Lift.preset_slow_down_radius=0.4
-org.wildstang.subsystems.Lift.pawl_engage_time_millis=50
-org.wildstang.subsystems.Lift.pawl_disengage_time_millis=50
-org.wildstang.subsystems.Lift.down_acceleration_factor=0.50
-// 5 cycles corresponds to 100ms
-org.wildstang.subsystems.Lift.min_cycles_winch_motor_at_zero=3
-org.wildstang.subsystems.Lift.input_deadband=0.05
-org.wildstang.subsystems.Lift.output_deadband=0.15
-org.wildstang.subsystems.lift.LiftPreset.level_two.wanted_voltage=2.5
-org.wildstang.subsystems.lift.LiftPreset.level_two.hall_effect_index=2
-org.wildstang.subsystems.lift.LiftPreset.level_three.wanted_voltage=2.5
-org.wildstang.subsystems.lift.LiftPreset.level_three.hall_effect_index=3
-org.wildstang.subsystems.lift.LiftPreset.level_four.hall_effect_index=4
-org.wildstang.subsystems.lift.LiftPreset.one_bin.wanted_voltage=2.000
-
-
 //Drive Base
 org.wildstang.subsystems.DriveBase.wheel_diameter=6.0
 org.wildstang.subsystems.DriveBase.right_drive_bias=1.0
@@ -86,6 +55,14 @@ org.wildstang.pid.controller.base.SpeedPidController.DriveBaseSpeedPid.minInput=
 
 org.wildstang.logger.sender.LogManager.Logger_Enabled=false
 
+//Shooter
+org.wildstang.yearly.subsystems.Shooter.highSpeedVictorVal=0.75
+org.wildstang.yearly.subsystems.Shooter.lowSpeedVictorVal=0.70
+org.wildstang.yearly.subsystems.Shooter.expectedHighFlywheelRate=3200
+org.wildstang.yearly.subsystems.Shooter.expectedHighFlywheelRate=2800
+org.wildstang.yearly.subsystems.Shooter.onSpeedDiff=100
+
+
 //********************************//
 //                                //
 //          Autonomous            //
@@ -94,9 +71,6 @@ org.wildstang.logger.sender.LogManager.Logger_Enabled=false
 
 //Sleeper
 org.wildstang.autonomous.programs.AutonomousProgramSleeper.ForceStopAtStep=0
-
-//Safety Precaution
-org.wildstang.autonomous.steps.catapult.AutonomousStepFireCatapult.DisableAutonomousCatapultFire=false
 
 //Testing Programs
 org.wildstang.autonomous.programs.AutonomousProgramDrive.DistanceToDrive=100
@@ -112,50 +86,6 @@ org.wildstang.autonomous.programs.AutonomousProgramDriveAtSpeedForTime.Speed=0.5
 // DRIVE_CONFIGURATIONN
 org.wildstang.autonomous.steps.drivebase.AutonomousStepDriveDistanceAtSpeed.drifting_compensation_factor=0.05
 org.wildstang.autonomous.steps.drivebase.AutonomousStepDriveDistanceAtSpeed.use_comp=false
-
-// Three Tote
-org.wildstang.autonomous.programs.AutonomousProgramThreeTotesStraight.time_to_second_tote=2250
-org.wildstang.autonomous.programs.AutonomousProgramThreeTotesStraight.time_to_third_tote=2500
-org.wildstang.autonomous.programs.AutonomousProgramThreeTotesStraight.drive_speed=.5
-org.wildstang.autonomous.programs.AutonomousProgramThreeTotesStraight.drive_speed_low=.5
-org.wildstang.autonomous.programs.AutonomousProgramThreeTotesStraight.Intake_Duration=1000
-org.wildstang.autonomous.programs.AutonomousProgramThreeTotesStraight.Init_Intake_Duration=750
-org.wildstang.autonomous.programs.AutonomousProgramThreeTotesStraight.Score_Duration=3000
-org.wildstang.autonomous.programs.AutonomousProgramThreeTotesStraight.Score_Speed=1.0
-org.wildstang.autonomous.programs.AutonomousProgramThreeTotesStraight.Back_Duration=1000
-org.wildstang.autonomous.programs.AutonomousProgramThreeTotesStraight.Back_Speed=-0.5
-org.wildstang.autonomous.programs.AutonomousProgramThreeTotesStraight.Tote_Distance_A=35
-org.wildstang.autonomous.programs.AutonomousProgramThreeTotesStraight.Tote_Distance_B=25
-org.wildstang.autonomous.programs.AutonomousProgramThreeTotesStraight.Backup_Distance=30
-
-// Three tote parallel
-org.wildstang.autonomous.programs.AutonomousProgramThreeTotesParallel.drive_speed=.7
-org.wildstang.autonomous.programs.AutonomousProgramThreeTotesParallel.drive_speed_low=.55
-org.wildstang.autonomous.programs.AutonomousProgramThreeTotesParallel.Intake_Duration=800
-org.wildstang.autonomous.programs.AutonomousProgramThreeTotesParallel.Init_Intake_Duration=450
-org.wildstang.autonomous.programs.AutonomousProgramThreeTotesParallel.Turn_Duration=1000
-org.wildstang.autonomous.programs.AutonomousProgramThreeTotesParallel.Zone_Distance=45
-org.wildstang.autonomous.programs.AutonomousProgramThreeTotesParallel.Counter_Speed=0.0
-org.wildstang.autonomous.programs.AutonomousProgramThreeTotesParallel.Backup_Counter_Speed=-0.6
-org.wildstang.autonomous.programs.AutonomousProgramThreeTotesParallel.Tote_Distance_A=32
-org.wildstang.autonomous.programs.AutonomousProgramThreeTotesParallel.Tote_Distance_B=29
-org.wildstang.autonomous.programs.AutonomousProgramThreeTotesParallel.Tote_Distance_A_2=36
-org.wildstang.autonomous.programs.AutonomousProgramThreeTotesParallel.Tote_Distance_B_2=39
-org.wildstang.autonomous.programs.AutonomousProgramThreeTotesParallel.Backup_Distance=-30
-org.wildstang.autonomous.programs.AutonomousProgramThreeTotesParallel.Backup_Speed=-1
-org.wildstang.autonomous.programs.AutonomousProgramThreeTotesParallel.Rise_Time=1500
-org.wildstang.autonomous.programs.AutonomousProgramThreeTotesParallel.Drop_Time=1250
-org.wildstang.autonomous.programs.AutonomousProgramThreeTotesParallel.Drop_Delay=600
-
-// Grab bins from step
-org.wildstang.autonomous.programs.AutonomousProgramBinGrabber.drive_distance=70
-org.wildstang.autonomous.programs.AutonomousProgramBinGrabber.drive_speed=1
-org.wildstang.autonomous.programs.AutonomousProgramBinGrabber.deploy_delay=150
-
-// Knock over bin
-org.wildstang.autonomous.programs.AutonomousProgramKnockOverBin.drive_duration=500
-org.wildstang.autonomous.programs.AutonomousProgramKnockOverBin.drive_speed=0.5
-org.wildstang.autonomous.programs.AutonomousProgramKnockOverBin.bin_tip_time=1000
 
 
 //********************************//
