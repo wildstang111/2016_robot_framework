@@ -59,7 +59,6 @@ public class Shooter implements Subsystem, ConfigListener
             flyWheelToggle = !flyWheelToggle;
          }
          // manipulator button circle
-         // currentFlyState = ((DigitalInput) source).getValue();
       }
       else if (source.getName().equals(WSInputs.MAN_BUTTON_6.getName()))
       {
@@ -68,7 +67,6 @@ public class Shooter implements Subsystem, ConfigListener
             hoodPosition = !hoodPosition;
          }
          // manipulator button R2
-         // currentHoodState = ((DigitalInput) source).getValue();
       }
       else if (source.getName().equals(WSInputs.MAN_BUTTON_4.getName()))
       {
@@ -76,14 +74,12 @@ public class Shooter implements Subsystem, ConfigListener
          {
             flySpeedToggle = !flySpeedToggle;
          }
-         // currentFlySpeed = ((DigitalInput) source).getValue();
       }
    }
 
    @Override
    public void init()
    {
-      // TODO Auto-generated method stub
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_3.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_4.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_6.getName()).addInputListener(this);
@@ -113,37 +109,18 @@ public class Shooter implements Subsystem, ConfigListener
 
       flyWheelDiff = 0;
    }
-   /*
-    * private boolean calcToggle(boolean oldState, boolean currentState, boolean
-    * toggle) { boolean newToggle = currentState; if (false == oldState &&
-    * true == currentState) { if (true == toggle) { startTime =
-    * System.currentTimeMillis(); newToggle = false; } else if (false == toggle)
-    * { startTime = System.currentTimeMillis(); newToggle = true; } } return
-    * newToggle; }
-    */
 
    @Override
    public void update()
    {
-//      System.out.println("update");
       Integer hoodUpDown;
       double expectedRate;
       double outputAdjust = 0.0;
       double outputAdjustLimit;
       double flyWheelRate = flyWheelEncoder.getRate();
 
-      /*
-       * flyWheelToggle = calcToggle(oldFlyState, currentFlyState,
-       * flyWheelToggle); oldFlyState = currentFlyState;
-       * 
-       * hoodPosition = calcToggle(oldHoodState, currentHoodState,
-       * hoodPosition); oldHoodState = currentHoodState;
-       */
       hoodUpDown = hoodPosition ? hoodUp : hoodDown;
-      /*
-       * ( flySpeedToggle = calcToggle(oldFlySpeed, currentFlySpeed,
-       * flySpeedToggle); oldFlySpeed = currentFlySpeed;
-       */
+      
       if (true == flySpeedToggle)
       {
          flySpeed = highFlywheelSpeedConf;
@@ -220,7 +197,6 @@ public class Shooter implements Subsystem, ConfigListener
    @Override
    public String getName()
    {
-      // TODO Auto-generated method stub
       return "Shooter";
    }
 
