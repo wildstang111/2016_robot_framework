@@ -1,14 +1,7 @@
 package org.wildstang.yearly.robot;
 
 import org.wildstang.framework.core.Subsystems;
-import org.wildstang.yearly.subsystems.Climber;
-import org.wildstang.yearly.subsystems.DriveBase;
-import org.wildstang.yearly.subsystems.Intake;
-import org.wildstang.yearly.subsystems.LED;
-import org.wildstang.yearly.subsystems.Monitor;
-import org.wildstang.yearly.subsystems.Shooter;
-//import org.wildstang.yearly.subsystems.SwerveDrive;
-import org.wildstang.yearly.subsystems.Climber;
+import org.wildstang.yearly.subsystems.*;
 
 public enum WSSubsystems implements Subsystems
 {
@@ -17,12 +10,11 @@ public enum WSSubsystems implements Subsystems
    //This keeps the formatter from completely making the enumeration unreadable.
    // @formatter::off
    DRIVE_BASE("Swerve base", DriveBase.class),
-   //LED("LED", LED.class),
+   LED("LED", LED.class),
    MONITOR("Monitor", Monitor.class),
    INTAKE("Intake", Intake.class),
    SHOOTER("Shooter", Shooter.class),
    CLIMBER("Climber", Climber.class);
-   // BUTTONTEST("Test System", ButtonPresetTests.class);
    
    //DO NOT REMOVE THIS COMMENT.  DO NOT PLACE ANY ENUMERATION DEFINITIONS AFTER IT.
    //This keeps the formatter from completely making the enumeration unreadable.

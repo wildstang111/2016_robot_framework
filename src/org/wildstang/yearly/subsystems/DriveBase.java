@@ -9,11 +9,12 @@ import org.wildstang.framework.io.Input;
 import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.framework.io.outputs.AnalogOutput;
-import org.wildstang.framework.io.outputs.DigitalOutput;
 import org.wildstang.framework.motionprofile.ContinuousAccelFilter;
 import org.wildstang.framework.pid.controller.SpeedPidController;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.hardware.crio.inputs.WsMotionProfileControl;
+import org.wildstang.hardware.crio.outputs.WsDoubleSolenoid;
+import org.wildstang.hardware.crio.outputs.WsDoubleSolenoidState;
 //import org.wildstang.framework.pid.inputs.DriveBaseSpeedPidInput;
 //import org.wildstang.framework.pid.outputs.DriveBaseSpeedPidOutput;
 import org.wildstang.yearly.robot.RobotTemplate;
@@ -291,7 +292,8 @@ public class DriveBase implements Subsystem
 
          // Set gear shift output
          // TODO: This is not right! Need to fix with double solenoid
-         ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.SHIFTER.getName())).setValue(highGearFlag);
+         ((WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.SHIFTER.getName())).setValue(new Integer(highGearFlag == true ?
+         WsDoubleSolenoidState.FORWARD.ordinal() : WsDoubleSolenoidState.REVERSE.ordinal()));
          // getOutput(Robot.SHIFTER).set(new Integer(highGearFlag == true ?
          // DoubleSolenoid.Value.kReverse.value :
          // DoubleSolenoid.Value.kForward.value));
