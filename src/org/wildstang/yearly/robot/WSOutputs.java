@@ -30,13 +30,13 @@ public enum WSOutputs implements Outputs
 
    // Solenoids
    
-   SHIFTER("Shifter double solenoid", WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(1, 1, 2, WsDoubleSolenoidState.FORWARD), true),
-   INTAKE_DEPLOY("Intake deploy", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 3, false), true),
-   INTAKE_FRONT_LOWER("Intake front lower", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 4, false), true),
+  // SHIFTER("Shifter double solenoid", WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(1, 1, 2, WsDoubleSolenoidState.FORWARD), true),
+   INTAKE_DEPLOY("Intake deploy", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 2, false), true),
+   INTAKE_FRONT_LOWER("Intake front lower", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 3, false), true),
    LOWER_ARM("Lower Lift Arm", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 5, false), true),
-   UPPER_ARM("Upper Lift Arm", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 6, false), true),
-   HOOK_EXTENSION("Hook Extenstion", WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(1, 7, 8, WsDoubleSolenoidState.REVERSE), true),
-   SHOOTER_HOOD("Shooter Hood", WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(2, 1, 2, WsDoubleSolenoidState.REVERSE), true);
+   UPPER_ARM("Upper Lift Arm", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 6, false), true);
+   // HOOK_EXTENSION("Hook Extenstion", WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(1, 7, 8, WsDoubleSolenoidState.REVERSE), true),
+   // SHOOTER_HOOD("Shooter Hood", WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(2, 1, 2, WsDoubleSolenoidState.REVERSE), true);
 	   
    
    

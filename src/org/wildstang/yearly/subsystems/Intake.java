@@ -49,6 +49,7 @@ public class Intake implements Subsystem
    private boolean intakeLimboNew;
    private boolean intakeLimboOld;
    private boolean limboOn;
+   private boolean shoot;
    private double manLeftJoyRoller;
    private double rollerSpeed;
 
@@ -71,14 +72,19 @@ public class Intake implements Subsystem
          manLeftJoyRoller = ((AnalogInput) source).getValue();
       }
 
+      if (source.getName().equals(WSInputs.MAN_BUTTON_8.getName()))
+      {
+         shoot = ((DigitalInput) source).getValue();
+      }
+
       // sets manNoseControl to Manipulator button 6
-      if (source.getName().equals(WSInputs.MAN_BUTTON_6.getName()))
+      if (source.getName().equals(WSInputs.MAN_BUTTON_5.getName()))
       {
          manNoseControl = ((DigitalInput) source).getValue();
       }
 
       // sets drvNoseControl to Drive Button 6
-      if (source.getName().equals(WSInputs.DRV_BUTTON_6.getName()))
+      if (source.getName().equals(WSInputs.DRV_BUTTON_5.getName()))
       {
          drvNoseControl = ((DigitalInput) source).getValue();
       }
@@ -90,7 +96,7 @@ public class Intake implements Subsystem
       }
 
       // setting manDeployPneumaticControl to Manipulator button 8
-      if (source.getName().equals(WSInputs.MAN_BUTTON_8.getName()))
+      if (source.getName().equals(WSInputs.MAN_BUTTON_7.getName()))
       {
          manDeployPneumaticControl = ((DigitalInput) source).getValue();
       }
@@ -107,8 +113,9 @@ public class Intake implements Subsystem
       // TODO Auto-generated method stub
 
       // asking for below Inputs
-      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_6.getName()).addInputListener(this);
-      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_6.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_5.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_5.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_7.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_8.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_9.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_2.getName()).addInputListener(this);
@@ -131,15 +138,13 @@ public class Intake implements Subsystem
       // does something with variables and Outputs
 
       // tells status of certain variables
-      System.out.println("rollerSpeed= " + rollerSpeed + " manLeftJoyRoller= "
-            + manLeftJoyRoller);
+      // System.out.println("shoot=" + shoot + " rollerSpeed= " + rollerSpeed);
 
       // Puts the nose pneumatic in motion when either the drvNoseControl or
       // man nose control are true
       if (drvNoseControl == true || manNoseControl == true)
       {
          nosePneumatic = true;
-         rollerSpeed = 0.75;
       }
       else
       {
@@ -168,11 +173,10 @@ public class Intake implements Subsystem
          rollerSpeed = -0.75;
       }
       else
-         {
-            rollerSpeed = 0;
-         }
+      {
+         rollerSpeed = 0;
+      }
 
-      // if intakeSensorReading is true, the roller will stop moving unless manRollerInOverride is true
       if (intakeSensorReading == true)
       {
          rollerSpeed = 0;
@@ -183,8 +187,12 @@ public class Intake implements Subsystem
          rollerSpeed = 0.75;
       }
 
-      
-      // Allows for toggling of Limbo
+      if (shoot == true)
+      {
+         rollerSpeed = 0.75;
+      }
+
+      // Allows for toggling of limbo
       if (intakeLimboOld == false && intakeLimboNew == true)
       {
          if (deployPneumatic == true && nosePneumatic == true)
@@ -207,8 +215,8 @@ public class Intake implements Subsystem
       // ((DigitalOutput)Core.getOutputManager().getOutput(WSOutputs.FRONT_ROLLER_LED_2.getName())).setValue(rollerMovingIn);
       // ((DigitalOutput)Core.getOutputManager().getOutput(WSOutputs.Pneumatic_1.getName())).setValue(nosePneumatic);
       // ((DigitalOutput)Core.getOutputManager().getOutput(WSOutputs.Pneumatic_2.getName())).setValue(deployPneumatic);
-      ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_DEPLOY.getName())).setValue(nosePneumatic);
-      ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_FRONT_LOWER.getName())).setValue(deployPneumatic);
+      ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_DEPLOY.getName())).setValue(deployPneumatic);
+      ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_FRONT_LOWER.getName())).setValue(nosePneumatic);
       ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.FRONT_ROLLER.getName())).setValue(rollerSpeed);
 
    }

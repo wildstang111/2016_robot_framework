@@ -291,7 +291,7 @@ public class DriveBase implements Subsystem
 
          // Set gear shift output
          // TODO: This is not right! Need to fix with double solenoid
-         ((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.SHIFTER.getName())).setValue(highGearFlag);
+         //((DigitalOutput) Core.getOutputManager().getOutput(WSOutputs.SHIFTER.getName())).setValue(highGearFlag);
          // getOutput(Robot.SHIFTER).set(new Integer(highGearFlag == true ?
          // DoubleSolenoid.Value.kReverse.value :
          // DoubleSolenoid.Value.kForward.value));

@@ -10,12 +10,12 @@ import org.wildstang.yearly.subsystems.Shooter;
 
 public enum WSSubsystems implements Subsystems
 {
-   DRIVE_BASE("Swerve base", DriveBase.class),
-   LED("LED", LED.class),
+   // DRIVE_BASE("Swerve base", DriveBase.class),
+   // LED("LED", LED.class),
    MONITOR("Monitor", Monitor.class),
-   INTAKE("Intake", Intake.class),
-   SHOOTER("Shooter", Shooter.class),
-   CLIMBER("Climber", Climber.class);
+   INTAKE("Intake", Intake.class);
+   // SHOOTER("Shooter", Shooter.class),
+   // CLIMBER("Climber", Climber.class);
    // BUTTONTEST("Test System", ButtonPresetTests.class);
    private String m_name;
    private Class m_class;
