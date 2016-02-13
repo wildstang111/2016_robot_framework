@@ -32,14 +32,12 @@ public class Climber implements Subsystem
    private boolean override = false;
    private boolean rightArmTouch;
    private boolean leftArmTouch;
-   private boolean inLoop = false;
 
    @Override
    public void inputUpdate(Input source)
    {
       if (source.getName().equals(WSInputs.MAN_BUTTON_1.getName()))
       {
-         // Climb down
          if (((DigitalInput) source).getValue())
          {
             arm = !arm;
@@ -53,7 +51,6 @@ public class Climber implements Subsystem
       }
       else if (source.getName().equals(WSInputs.MAN_BUTTON_2.getName()))
       {
-         // Climb up
          if (((DigitalInput) source).getValue())
          {
             hook = !hook;
@@ -77,9 +74,6 @@ public class Climber implements Subsystem
    @Override
    public void init()
    {
-      /*
-       * Sets default values and calls for inputs
-       */
       System.out.println("init got called");
       Core.getInputManager().getInput(WSInputs.MAN_RIGHT_JOYSTICK_Y.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_1.getName()).addInputListener(this);
@@ -101,22 +95,17 @@ public class Climber implements Subsystem
    {
       if (arm)
       {
-         // ((WsSolenoid)
-         // Core.getOutputManager().getOutput(WSOutputs.WINCH_BRAKE.getName())).setValue(true);
-         // Maybe...?
          winchValue = 0;
          winchRunning = false;
          brakeEngaged = true;
-         ((WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.WINCH_BRAKE.getName())).setValue(WsDoubleSolenoidState.FORWARD.ordinal());
+         ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.WINCH_BRAKE.getName())).setValue(true);
          ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.UPPER_ARM.getName())).setValue(true);
          ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LOWER_ARM.getName())).setValue(true);
-         SmartDashboard.putBoolean("liftState", arm);
       }
       else if (!arm)
       {
          ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.UPPER_ARM.getName())).setValue(false);
          ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LOWER_ARM.getName())).setValue(false);
-         SmartDashboard.putBoolean("liftState", arm);
       }
 
       if (!override)
@@ -152,30 +141,37 @@ public class Climber implements Subsystem
             }
 
          }
-
-         SmartDashboard.putBoolean("brakeEngaged", brakeEngaged);
+         if (winchRunning)
+         {
+            ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_LEFT.getName())).setValue(winchValue);
+            ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_RIGHT.getName())).setValue(winchValue);
+         }
+         else
+         {
+            ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_LEFT.getName())).setValue(0);
+            ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_RIGHT.getName())).setValue(0);
+         }
 
       }
 
       if (!hook)
       {
          ((WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.HOOK_EXTENSION.getName())).setValue(WsDoubleSolenoidState.REVERSE.ordinal());
-         SmartDashboard.putBoolean("hookState", hook);
       }
       else
       {
          ((WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.HOOK_EXTENSION.getName())).setValue(WsDoubleSolenoidState.FORWARD.ordinal());
-         SmartDashboard.putBoolean("hookState", hook);
       }
 
       if (override)
       {
          System.out.println("override engaged");
-
          brakeEngaged = true;
          ((WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.WINCH_BRAKE.getName())).setValue(WsDoubleSolenoidState.FORWARD.ordinal());
       }
-
+      SmartDashboard.putBoolean("liftState", arm);
+      SmartDashboard.putBoolean("brakeEngaged", brakeEngaged);
+      SmartDashboard.putBoolean("hookState", hook);
       SmartDashboard.putBoolean("Right Arm", rightArmTouch);
       SmartDashboard.putBoolean("Left Arm", leftArmTouch);
 
