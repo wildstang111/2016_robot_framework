@@ -29,6 +29,7 @@ import org.wildstang.framework.io.Input;
 import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.framework.io.outputs.AnalogOutput;
+import org.wildstang.framework.io.outputs.DigitalOutput;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.hardware.crio.outputs.WsSolenoid;
 import org.wildstang.yearly.robot.WSInputs;
@@ -39,24 +40,17 @@ public class Intake implements Subsystem
    // add variables here
 
    private boolean intakeSensorReading;
-   private boolean rollerMovingIn;
-   private boolean rollerMovingOut;
    private boolean nosePneumatic;
    private boolean deployPneumatic;
    private boolean manRollerInOverride;
    private boolean manNoseControl;
    private boolean drvNoseControl;
    private boolean manDeployPneumaticControl;
-   private boolean intakeLimboCurrentState;
-   private boolean intakeLimboOldState = false;
+   private boolean intakeLimboNew;
+   private boolean intakeLimboOld;
    private boolean limboOn;
-   private double manLeftJoyRollerIn;
-   private static double rollerInDeadband = -.5;
-   private static double rollerOutDeadband = .5;
-   private WsSolenoid frontLowerSolenoid = ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_FRONT_LOWER.getName()));
-   private WsSolenoid deploySolenoid = ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_DEPLOY.getName()));
-   private AnalogOutput frontRoller = ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.FRONT_ROLLER.getName()));
-   
+   private double manLeftJoyRoller;
+   private double rollerSpeed;
 
    @Override
    public void inputUpdate(Input source)
@@ -74,7 +68,7 @@ public class Intake implements Subsystem
       // setting manLeftJoyRollerIn to the left joystick's y axis
       if (source.getName().equals(WSInputs.MAN_LEFT_JOYSTICK_Y.getName()))
       {
-         manLeftJoyRollerIn = ((AnalogInput) source).getValue();
+         manLeftJoyRoller = ((AnalogInput) source).getValue();
       }
 
       // sets manNoseControl to Manipulator button 6
@@ -100,10 +94,10 @@ public class Intake implements Subsystem
       {
          manDeployPneumaticControl = ((DigitalInput) source).getValue();
       }
-      
+
       if (source.getName().equals(WSInputs.DRV_BUTTON_2.getName()))
       {
-         intakeLimboCurrentState = ((DigitalInput) source).getValue();
+         intakeLimboNew = ((DigitalInput) source).getValue();
       }
    }
 
@@ -128,31 +122,27 @@ public class Intake implements Subsystem
       // TODO Auto-generated method stub
 
    }
-  
 
    @Override
    public void update()
    {
-      //testing
-      intakeSensorReading = false;
-      
       // TODO Auto-generated method stub
 
       // does something with variables and Outputs
 
       // tells status of certain variables
-      System.out.println("rollerMovingOut= " + rollerMovingOut + " rollerMovingIn= " + rollerMovingIn +
-            " manLeftJoyRollerIn= " + manLeftJoyRollerIn + " deploySolenoid= " + deploySolenoid.getValue() +
-            " frontLowerSolenoid= " + frontLowerSolenoid.getValue());
+      System.out.println("rollerSpeed= " + rollerSpeed + " manLeftJoyRoller= "
+            + manLeftJoyRoller);
 
-      //Puts the nose pneumatic in motion when either the drvNoseControl or
-      //man nose control are true
+      // Puts the nose pneumatic in motion when either the drvNoseControl or
+      // man nose control are true
       if (drvNoseControl == true || manNoseControl == true)
       {
          nosePneumatic = true;
-         rollerMovingIn = false;
-         rollerMovingOut = false;
-      } else if (drvNoseControl == false && manNoseControl == false && limboOn == false){
+         rollerSpeed = 0.75;
+      }
+      else
+      {
          nosePneumatic = false;
       }
 
@@ -160,106 +150,67 @@ public class Intake implements Subsystem
       if (manDeployPneumaticControl == true)
       {
          deployPneumatic = true;
-         rollerMovingIn = false;
-         rollerMovingOut = false;
-      } else if (manDeployPneumaticControl == false && limboOn == false) {
+         rollerSpeed = 0;
+      }
+      else
+      {
          deployPneumatic = false;
       }
 
       // if you push the left joy stick up, the intake will roll outwards.
       // if you push the left joy stick down, the intake will roll inwards.
-      if (manLeftJoyRollerIn <= rollerInDeadband)
+      if (manLeftJoyRoller <= -0.5)
       {
-         rollerMovingOut = false;
-         rollerMovingIn = true;
+         rollerSpeed = 0.75;
       }
-      else if (manLeftJoyRollerIn >= rollerOutDeadband)
+      else if (manLeftJoyRoller >= 0.5)
       {
-         rollerMovingIn = false;
-         rollerMovingOut = true;
-      } else {
-         if (manRollerInOverride == false && manLeftJoyRollerIn < .5 && manLeftJoyRollerIn > -.5) {
-            rollerMovingIn = false;
-            rollerMovingOut = false;
+         rollerSpeed = -0.75;
+      }
+      else
+         {
+            rollerSpeed = 0;
          }
-      }
 
-      
+      // if intakeSensorReading is true, the roller will stop moving unless manRollerInOverride is true
+      if (intakeSensorReading == true)
+      {
+         rollerSpeed = 0;
+      }
 
       if (manRollerInOverride == true)
       {
-         rollerMovingIn = true;
-         intakeSensorReading = false;
-      }
-      
-      // if intakeSensorReading is true, the roller will stop moving in
-      if (intakeSensorReading == true)
-      {
-         rollerMovingIn = false;
-         rollerMovingOut = false;
+         rollerSpeed = 0.75;
       }
 
-      // if rollerMovingIn is true, the roller will move inwards
-      if (rollerMovingIn == true)
-      {
-         frontRoller.setValue(0.75);
-      }
-
-      // if rollerMovingOut is true, the roller will move in reverse
-      if (rollerMovingOut == true)
-      {
-         frontRoller.setValue(-0.75);
-      }
       
-      //When deployPneumatic is true, the deploy solenoid will turn on
-      if (deployPneumatic == true) {
-         deploySolenoid.setValue(true);
-      } else {
-         deploySolenoid.setValue(false);
-      }
-      
-      //When nosePneumatic is true, the nose solenoid will turn on
-      if (nosePneumatic == true) {
-         frontLowerSolenoid.setValue(true);
-      } else {
-         frontLowerSolenoid.setValue(false);
-      }
-      
-      //Allows for toggling of Limbo
-      if (intakeLimboOldState == false && intakeLimboCurrentState == true)
+      // Allows for toggling of Limbo
+      if (intakeLimboOld == false && intakeLimboNew == true)
       {
          if (deployPneumatic == true && nosePneumatic == true)
          {
-            limboOn = false;
             deployPneumatic = false;
             nosePneumatic = false;
          }
          else if (deployPneumatic == false || nosePneumatic == false)
          {
-            limboOn = true;
             deployPneumatic = true;
             nosePneumatic = true;
          }
       }
-      intakeLimboOldState = intakeLimboCurrentState;
+      intakeLimboOld = intakeLimboNew;
 
-      /*
-       * // buttonPress controls DIO_LED_0 etc. ((DigitalOutput)
-       * Core.getOutputManager().getOutput(WSOutputs.DIO_LED_0.getName())).
-       * setValue(manLeftJoyRollerIn >= .5); ((DigitalOutput)
-       * Core.getOutputManager().getOutput(WSOutputs.SENSOR_LED_1.getName())).
-       * setValue(intakeSensorReading); ((DigitalOutput)
-       * Core.getOutputManager().getOutput(WSOutputs.FRONT_ROLLER_LED_2.
-       * getName())).setValue(rollerMovingIn); // ((DigitalOutput)
-       * Core.getOutputManager().getOutput(WSOutputs.Pneumatic_1.getName())).
-       * setValue(nosePneumatic); // ((DigitalOutput)
-       * Core.getOutputManager().getOutput(WSOutputs.Pneumatic_2.getName())).
-       * setValue(deployPneumatic); ((DigitalOutput)
-       * Core.getOutputManager().getOutput(WSOutputs.Pneumatic_1_LED.getName())
-       * ).setValue(nosePneumatic); ((DigitalOutput)
-       * Core.getOutputManager().getOutput(WSOutputs.Pneumatic_2_LED.getName())
-       * ).setValue(deployPneumatic);
-       */
+      // buttonPress controls DIO_LED_0 etc.
+      // ((DigitalOutput)Core.getOutputManager().getOutput(WSOutputs.DIO_LED_0.getName())).setValue(manLeftJoyRollerIn
+      // >= .5);
+      // ((DigitalOutput)Core.getOutputManager().getOutput(WSOutputs.SENSOR_LED_1.getName())).setValue(intakeSensorReading);
+      // ((DigitalOutput)Core.getOutputManager().getOutput(WSOutputs.FRONT_ROLLER_LED_2.getName())).setValue(rollerMovingIn);
+      // ((DigitalOutput)Core.getOutputManager().getOutput(WSOutputs.Pneumatic_1.getName())).setValue(nosePneumatic);
+      // ((DigitalOutput)Core.getOutputManager().getOutput(WSOutputs.Pneumatic_2.getName())).setValue(deployPneumatic);
+      ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_DEPLOY.getName())).setValue(nosePneumatic);
+      ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_FRONT_LOWER.getName())).setValue(deployPneumatic);
+      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.FRONT_ROLLER.getName())).setValue(rollerSpeed);
+
    }
 
    @Override
