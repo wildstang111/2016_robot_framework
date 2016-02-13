@@ -132,6 +132,7 @@ public class Climber implements Subsystem
          {
             if (!winchRunning)
             {
+               winchValue = 0.0;
                brakeEngaged = false;
                System.out.println("Brake Disengaged");
                ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.WINCH_BRAKE.getName())).setValue(false);
