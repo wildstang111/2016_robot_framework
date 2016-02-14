@@ -39,6 +39,7 @@ public class HarpoonAuto extends AutoProgram
       crossTheRoad.addStep(new StepQuickTurn(90));
       crossTheRoad.addStep(new StepDriveDistanceAtSpeed(32, 1, false));
       crossTheRoad.addStep(new StepSetIntakeState(true));
+      crossTheRoad.addStep(new StepResetIntakeToggle());
       crossTheRoad.addStep(new StepDriveDistanceAtSpeed(80.5, 1, true));
       addStep(crossTheRoad);
 
@@ -46,14 +47,18 @@ public class HarpoonAuto extends AutoProgram
       AutoParallelStepGroup Score = new AutoParallelStepGroup();
       AutoSerialStepGroup gotoGoal = new AutoSerialStepGroup();
       Score.addStep(new StepRunFlywheel(speed));
-      Score.addStep(new StepResetFlywheelToggles());
+//      Score.addStep(new StepResetFlywheelToggles());
       gotoGoal.addStep(new StepDriveDistanceAtSpeed(108, 1, true));
+      gotoGoal.addStep(new StepResetFlywheelToggles());
       gotoGoal.addStep(new StepQuickTurn(60));
       Score.addStep(gotoGoal);
       addStep(Score);
 
       addStep(new StepShoot());
       addStep(new StepResetShotToggle());
+      
+      addStep(new StepRunFlywheel(0));
+      addStep(new StepResetFlywheelToggles());
    }
 
    @Override

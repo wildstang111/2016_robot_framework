@@ -6,7 +6,11 @@ import org.wildstang.framework.auto.steps.AutoSerialStepGroup;
 import org.wildstang.framework.auto.steps.control.AutoStepDelay;
 import org.wildstang.yearly.auto.steps.drivebase.StepDriveDistanceAtSpeed;
 import org.wildstang.yearly.auto.steps.drivebase.StepQuickTurn;
+import org.wildstang.yearly.auto.steps.intake.StepResetIntakeToggle;
 import org.wildstang.yearly.auto.steps.intake.StepSetIntakeState;
+import org.wildstang.yearly.auto.steps.shooter.StepResetFlywheelToggles;
+import org.wildstang.yearly.auto.steps.shooter.StepResetShooterPositionToggle;
+import org.wildstang.yearly.auto.steps.shooter.StepResetShotToggle;
 import org.wildstang.yearly.auto.steps.shooter.StepRunFlywheel;
 import org.wildstang.yearly.auto.steps.shooter.StepSetShooterPosition;
 import org.wildstang.yearly.auto.steps.shooter.StepShoot;
@@ -26,15 +30,17 @@ public class OneBallMoatRampart extends AutoProgram
       // TODO Auto-generated method stub
       AutoParallelStepGroup crossDefense = new AutoParallelStepGroup();
       AutoSerialStepGroup crossSeries = new AutoSerialStepGroup();
-      // Drive to low bar and cross low bar
+      // Drive to defense and cross
       crossSeries.addStep(new StepDriveDistanceAtSpeed(52.5, 1, false));
       crossSeries.addStep(new StepDriveDistanceAtSpeed(80.5, 1, true));
       crossDefense.addStep(crossSeries);
       // Wait 1 second before deploying intake
       crossDefense.addStep(new AutoStepDelay(1000));
       crossDefense.addStep(new StepSetIntakeState(true));
+      crossDefense.addStep(new StepResetIntakeToggle());
       addStep(crossDefense);
-
+      addStep(new StepResetIntakeToggle());
+      
       AutoParallelStepGroup findGoal = new AutoParallelStepGroup();
       AutoSerialStepGroup gotoGoal = new AutoSerialStepGroup();
       // add in 4 different cases for driving waypoints based on defense
@@ -42,6 +48,7 @@ public class OneBallMoatRampart extends AutoProgram
       findGoal.addStep(new StepRunFlywheel(speed));
       findGoal.addStep(new StepSetShooterPosition(true));
       findGoal.addStep(new StepSetIntakeState(false));
+      
       switch (defensePosition)
       {
       // set different drive instructions based on the distance of the
@@ -72,11 +79,18 @@ public class OneBallMoatRampart extends AutoProgram
             gotoGoal.addStep(new StepDriveDistanceAtSpeed(Math.abs(dist5), 1, true));
             gotoGoal.addStep(new StepQuickTurn(-90 * (dist5 / Math.abs(dist5))));
          }
+         gotoGoal.addStep(new StepResetFlywheelToggles());
+         gotoGoal.addStep(new StepResetShooterPositionToggle());
+         gotoGoal.addStep(new StepResetIntakeToggle());
       }
       findGoal.addStep(gotoGoal);
       addStep(findGoal);
 
       addStep(new StepShoot());
+      addStep(new StepResetShotToggle());
+      
+      addStep(new StepRunFlywheel(0));
+      addStep(new StepResetFlywheelToggles());
 
    }
 

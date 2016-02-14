@@ -28,11 +28,15 @@ public class TwoBall extends AutoProgram
       AutoSerialStepGroup gotoGoal = new AutoSerialStepGroup("Go to goal");
       // Start shooter to get to speed
       beginAuto.addStep(new StepRunFlywheel(speed));
-      beginAuto.addStep(new StepResetFlywheelToggles());
+//      beginAuto.addStep(new StepResetFlywheelToggles());
       beginAuto.addStep(new StepSetShooterPosition(true));
-      beginAuto.addStep(new StepResetShooterPositionToggle());
+//      beginAuto.addStep(new StepResetShooterPositionToggle());
       // Drive to point in line with goal
       gotoGoal.addStep(new StepDriveDistanceAtSpeed(-71.25, 1, true));
+      //reset functions for tasks in the parallel group go after first serial step to ensure that the commands 
+      //do not overlap. As long as they are reset before the next call to the function it should be fine.
+      gotoGoal.addStep(new StepSetShooterPosition(true));
+      gotoGoal.addStep(new StepResetShooterPositionToggle());
       // Turn to face goal
       gotoGoal.addStep(new StepQuickTurn(90));
       beginAuto.addStep(gotoGoal);
@@ -46,16 +50,18 @@ public class TwoBall extends AutoProgram
       AutoSerialStepGroup gotoLowBar = new AutoSerialStepGroup("Go to low bar");
       // Stop flywheel
       leaveCourtyard.addStep(new StepRunFlywheel(0));
-      leaveCourtyard.addStep(new StepResetFlywheelToggles());
+//      leaveCourtyard.addStep(new StepResetFlywheelToggles());
       leaveCourtyard.addStep(new StepSetShooterPosition(false));
-      leaveCourtyard.addStep(new StepResetShooterPositionToggle());
+//      leaveCourtyard.addStep(new StepResetShooterPositionToggle());
       // Drive to point in line with low bar
       gotoLowBar.addStep(new StepDriveDistanceAtSpeed(-19, 1, true));
+      gotoLowBar.addStep(new StepResetFlywheelToggles());
+      gotoLowBar.addStep(new StepResetShooterPositionToggle());
       // Turn to face low bar
       gotoLowBar.addStep(new StepQuickTurn(-60));
       // lower intake
-      leaveCourtyard.addStep(new StepSetIntakeState(true));
-      leaveCourtyard.addStep(new StepResetIntakeToggle());
+      gotoLowBar.addStep(new StepSetIntakeState(true));
+      gotoLowBar.addStep(new StepResetIntakeToggle());
       // Drive to low bar
       gotoLowBar.addStep(new StepDriveDistanceAtSpeed(-108, 1, false));
       leaveCourtyard.addStep(gotoLowBar);
@@ -88,9 +94,10 @@ public class TwoBall extends AutoProgram
       AutoSerialStepGroup gotoGoalTwo = new AutoSerialStepGroup("Go to goal again");
       // Start shooter to get to speed
       shootTwo.addStep(new StepRunFlywheel(speed));
-      shootTwo.addStep(new StepResetFlywheelToggles());
+//      shootTwo.addStep(new StepResetFlywheelToggles());
       // Cross low bar
       gotoGoalTwo.addStep(new StepDriveDistanceAtSpeed(80.5, 1, true));
+      gotoGoalTwo.addStep(new StepResetFlywheelToggles());
       // Retract intake
       gotoGoalTwo.addStep(new StepSetIntakeState(false));
       gotoGoalTwo.addStep(new StepResetIntakeToggle());
@@ -107,6 +114,9 @@ public class TwoBall extends AutoProgram
       // Shoot
       addStep(new StepShoot());
       addStep(new StepResetShotToggle());
+      
+      addStep(new StepRunFlywheel(0));
+      addStep(new StepResetFlywheelToggles());
    }
 
    @Override
