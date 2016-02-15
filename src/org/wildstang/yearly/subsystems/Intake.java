@@ -142,7 +142,7 @@ public class Intake implements Subsystem
 
       // Puts the nose pneumatic in motion when either the drvNoseControl or
       // man nose control are true
-      if (drvNoseControl == true || manNoseControl == true)
+      if (true == drvNoseControl || true == manNoseControl)
       {
          nosePneumatic = true;
       }
@@ -152,7 +152,7 @@ public class Intake implements Subsystem
       }
 
       // toggles deployPneumatic to manDeployPneumaticControl
-      if (manDeployPneumaticControl == true)
+      if (true == manDeployPneumaticControl)
       {
          deployPneumatic = true;
          rollerSpeed = 0;
@@ -177,34 +177,26 @@ public class Intake implements Subsystem
          rollerSpeed = 0;
       }
 
-      if (intakeSensorReading == true)
+      if (true == intakeSensorReading)
       {
          rollerSpeed = 0;
       }
 
-      if (manRollerInOverride == true)
+      if (true == manRollerInOverride)
       {
          rollerSpeed = 0.75;
       }
 
-      if (shoot == true)
+      if (true == shoot)
       {
          rollerSpeed = 0.75;
       }
 
       // Allows for toggling of limbo
-      if (intakeLimboOld == false && intakeLimboNew == true)
+      if (false == intakeLimboOld && true == intakeLimboNew)
       {
-         if (deployPneumatic == true && nosePneumatic == true)
-         {
             deployPneumatic = false;
             nosePneumatic = false;
-         }
-         else if (deployPneumatic == false || nosePneumatic == false)
-         {
-            deployPneumatic = true;
-            nosePneumatic = true;
-         }
       }
       intakeLimboOld = intakeLimboNew;
 

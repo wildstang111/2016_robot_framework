@@ -10,7 +10,7 @@ public enum WSSubsystems implements Subsystems
    //This keeps the formatter from completely making the enumeration unreadable.
    // @formatter::off
    MONITOR("Monitor", Monitor.class),
-   INTAKE("Intake", Intake.class);
+   INTAKE("Intake", Intake.class),
    SHOOTER("Shooter", Shooter.class),
    CLIMBER("Climber", Climber.class);
    
