@@ -33,7 +33,6 @@ public class Climber implements Subsystem
    private boolean override = false;
    private boolean rightArmTouch;
    private boolean leftArmTouch;
-   private double rawWinchValue;
 
    private WsSolenoid brake;
    private WsDoubleSolenoid hooks;
@@ -56,7 +55,6 @@ public class Climber implements Subsystem
       {
 
          winchValue = ((AnalogInput) source).getValue();
-         rawWinchValue = ((AnalogInput) source).getValue();
       }
       else if (source.getName().equals(WSInputs.MAN_BUTTON_2.getName()))
       {
@@ -68,7 +66,8 @@ public class Climber implements Subsystem
       }
       else if (source.getName().equals(WSInputs.MAN_BUTTON_9.getName()))
       {
-         override = ((DigitalInput) source).getValue();
+         if (((DigitalInput) source).getValue())
+         override = true;
       }
       else if (source.getName().equals(WSInputs.LEFT_ARM_TOUCHING.getName()))
       {
@@ -167,6 +166,7 @@ public class Climber implements Subsystem
       }
       else
       {
+         winchValue = 0.0;
          brakeEngaged = true;
          winchRunning = false;
          brake.setValue(true);
@@ -184,7 +184,7 @@ public class Climber implements Subsystem
 
       SmartDashboard.putBoolean("liftState", arm);
       SmartDashboard.putBoolean("hookState", hook);
-      SmartDashboard.putNumber("Winch Value", rawWinchValue);
+      SmartDashboard.putNumber("Winch Value", winchValue);
       SmartDashboard.putBoolean("Override", override);
       SmartDashboard.putBoolean("Winch Running", winchRunning);
       SmartDashboard.putBoolean("brakeEngaged", brakeEngaged);
