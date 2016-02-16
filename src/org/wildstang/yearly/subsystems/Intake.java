@@ -35,6 +35,8 @@ import org.wildstang.hardware.crio.outputs.WsSolenoid;
 import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 public class Intake implements Subsystem
 {
    // add variables here
@@ -50,6 +52,9 @@ public class Intake implements Subsystem
    private boolean intakeLimboOld;
    private boolean limboOn;
    private boolean shoot;
+   private WsSolenoid intakeDeploy;
+   private WsSolenoid intakeFrontLower;
+   private AnalogOutput frontRoller;
    private double manLeftJoyRoller;
    private double rollerSpeed;
 
@@ -112,6 +117,10 @@ public class Intake implements Subsystem
    {
       // TODO Auto-generated method stub
 
+      intakeDeploy = ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_DEPLOY.getName()));
+      intakeFrontLower = ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_FRONT_LOWER.getName()));
+      frontRoller = ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.FRONT_ROLLER.getName()));
+      
       // asking for below Inputs
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_5.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_5.getName()).addInputListener(this);
@@ -200,11 +209,6 @@ public class Intake implements Subsystem
             deployPneumatic = false;
             nosePneumatic = false;
          }
-         else if (deployPneumatic == false || nosePneumatic == false)
-         {
-            deployPneumatic = true;
-            nosePneumatic = true;
-         }
       }
       intakeLimboOld = intakeLimboNew;
 
@@ -215,10 +219,12 @@ public class Intake implements Subsystem
       // ((DigitalOutput)Core.getOutputManager().getOutput(WSOutputs.FRONT_ROLLER_LED_2.getName())).setValue(rollerMovingIn);
       // ((DigitalOutput)Core.getOutputManager().getOutput(WSOutputs.Pneumatic_1.getName())).setValue(nosePneumatic);
       // ((DigitalOutput)Core.getOutputManager().getOutput(WSOutputs.Pneumatic_2.getName())).setValue(deployPneumatic);
-      ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_DEPLOY.getName())).setValue(deployPneumatic);
-      ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_FRONT_LOWER.getName())).setValue(nosePneumatic);
-      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.FRONT_ROLLER.getName())).setValue(rollerSpeed);
-
+      intakeDeploy.setValue(deployPneumatic);
+      intakeFrontLower.setValue(nosePneumatic);
+      frontRoller.setValue(rollerSpeed);
+      SmartDashboard.putBoolean("deployPneumatic=", deployPneumatic);
+      SmartDashboard.putBoolean("nosePneumatic=", nosePneumatic);
+      SmartDashboard.putNumber("rollerSpeed=", rollerSpeed);
    }
 
    @Override
