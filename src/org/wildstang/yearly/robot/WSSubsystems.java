@@ -1,7 +1,10 @@
 package org.wildstang.yearly.robot;
 
 import org.wildstang.framework.core.Subsystems;
-import org.wildstang.yearly.subsystems.*;
+import org.wildstang.yearly.subsystems.Climber;
+import org.wildstang.yearly.subsystems.Intake;
+import org.wildstang.yearly.subsystems.Monitor;
+import org.wildstang.yearly.subsystems.Shooter;
 
 public enum WSSubsystems implements Subsystems
 {

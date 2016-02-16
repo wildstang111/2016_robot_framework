@@ -33,7 +33,7 @@ public class Shooter implements Subsystem, ConfigListener
    private double expectedHighRateConf;
    private double expectedLowRateConf;
    private static final String expectedHighRateKey = ".expectedHighFlywheelRate";
-   private static final String expectedLowRateKey = ".expectedHighFlywheelRate";
+   private static final String expectedLowRateKey = ".expectedLowFlywheelRate";
    private double onSpeedFlyWheelDiff;
    private static final String onSpeedDiffKey = ".onSpeedDiff";
    private static final int ON_SPEED_FLYWHEEL_DIFF_DEFAULT = 100;
