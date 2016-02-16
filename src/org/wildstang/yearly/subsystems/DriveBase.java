@@ -116,6 +116,8 @@ public class DriveBase implements Subsystem
       // Load the config parameters
       // notifyConfigChange(Core.getConfigManager().getConfig());
       
+      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_5.getName()).addInputListener(this);
+      //Turbo 
       // Initialize the drive base encoders
       // leftDriveEncoder = new Encoder(0, 1, true, EncodingType.k4X);
       // leftDriveEncoder.reset();
@@ -880,12 +882,7 @@ public class DriveBase implements Subsystem
    @Override
    public void inputUpdate(Input source)
    {
-      System.out.println("dbinput update");
-      if (source.getName().equals(WSInputs.DRV_BUTTON_7.getName()))
-      {
-         antiTurboFlag = ((DigitalInput) source).getValue();
-      }
-      else if (source.getName().equals(WSInputs.DRV_BUTTON_6.getName()))
+      if (source.getName().equals(WSInputs.DRV_BUTTON_6.getName()))
       {
          if (((DigitalInput) source).getValue())
          {
@@ -898,7 +895,7 @@ public class DriveBase implements Subsystem
       }
       else if (source.getName().equals(WSInputs.DRV_BUTTON_8.getName()))
       {
-         hellaAntiTurboFlag = ((DigitalInput) source).getValue();
+         turboFlag = ((DigitalInput) source).getValue();
       }
       else if (source.getName().equals(WSInputs.MOTION_PROFILE_CONTROL.getName()))
       {
