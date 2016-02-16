@@ -29,7 +29,6 @@ import org.wildstang.framework.io.Input;
 import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.framework.io.outputs.AnalogOutput;
-import org.wildstang.framework.io.outputs.DigitalOutput;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.hardware.crio.outputs.WsSolenoid;
 import org.wildstang.yearly.robot.WSInputs;
@@ -232,6 +231,16 @@ public class Intake implements Subsystem
    {
       // TODO Auto-generated method stub
       return null;
+   }
+   
+   public boolean isDeployed()
+   {
+      return deployPneumatic;
+   }
+
+   public boolean isNoseDeployed()
+   {
+      return nosePneumatic;
    }
 
 }

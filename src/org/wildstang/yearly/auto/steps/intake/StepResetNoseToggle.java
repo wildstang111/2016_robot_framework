@@ -2,37 +2,35 @@ package org.wildstang.yearly.auto.steps.intake;
 
 import org.wildstang.framework.auto.steps.AutoStep;
 import org.wildstang.framework.core.Core;
-import org.wildstang.framework.io.inputs.AnalogInput;
+import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.yearly.robot.WSInputs;
 
-public class StepIntake extends AutoStep
+public class StepResetNoseToggle extends AutoStep
 {
-   private int speed;
 
-   public StepIntake(int runningSpeed)
+   public StepResetNoseToggle()
    {
-      this.speed = runningSpeed;
    }
-
+   
    @Override
    public void initialize()
    {
       // TODO Auto-generated method stub
-
+      
    }
 
    @Override
    public void update()
    {
       // TODO Auto-generated method stub
-      ((AnalogInput)Core.getInputManager().getInput(WSInputs.MAN_LEFT_JOYSTICK_Y.getName())).setValue(speed);
+      ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_6.getName())).setValue(false);
    }
 
    @Override
    public String toString()
    {
       // TODO Auto-generated method stub
-      return "Running intake at: " + speed;
+      return "Nose toggle reset";
    }
 
 }

@@ -22,7 +22,6 @@ import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
 
 //import edu.wpi.first.wpilibj.Encoder;
-//import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -70,12 +69,9 @@ public class DriveBase implements Subsystem
    private static boolean strafeReverseDirectionFlag = false;
    private static boolean turboFlag = false;
    private static boolean highGearFlag = false; // default to low gear
-   // private static DoubleSolenoid.Value shifterFlag =
-   // DoubleSolenoid.Value.kForward; // Default to low gear
    private static boolean quickTurnFlag = false;
    // private static Encoder leftDriveEncoder;
    // private static Encoder rightDriveEncoder;
-   // private static Gyro driveHeadingGyro;
    private static ContinuousAccelFilter continuousAccelerationFilter;
    // Set low gear top speed to 8.5 ft/ second = 102 inches / second = 2.04
    // inches/ 20 ms
@@ -114,24 +110,14 @@ public class DriveBase implements Subsystem
    private double overriddenThrottle, overriddenHeading, overriddenStrafe;
    private boolean driveOverrideEnabled = false;
 
-   private String m_name;
-
    public DriveBase()
    {
-      m_name = "Six Wheel";
-
+      System.out.println("dbDrive Base");
       // Load the config parameters
       // notifyConfigChange(Core.getConfigManager().getConfig());
-
-      // Anti-Turbo button
+      
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_5.getName()).addInputListener(this);
-      // Shifter Button
-      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_6.getName()).addInputListener(this);
       //Turbo 
-      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_8.getName()).addInputListener(this);
-
-      Core.getInputManager().getInput(WSInputs.MOTION_PROFILE_CONTROL.getName()).addInputListener(this);
-
       // Initialize the drive base encoders
       // leftDriveEncoder = new Encoder(0, 1, true, EncodingType.k4X);
       // leftDriveEncoder.reset();
@@ -147,12 +133,12 @@ public class DriveBase implements Subsystem
       // driveSpeedPidOutput = new DriveBaseSpeedPidOutput();
       // driveSpeedPid = new SpeedPidController(driveSpeedPidInput,
       // driveSpeedPidOutput, "DriveBaseSpeedPid");
-      init();
    }
 
    @Override
    public void init()
    {
+      System.out.println("dbinit");
       driveBaseThrottleValue = 0.0;
       driveBaseHeadingValue = 0.0;
       antiTurboFlag = false;
@@ -168,22 +154,18 @@ public class DriveBase implements Subsystem
       // continuousAccelerationFilter = new ContinuousAccelFilter(0, 0, 0);
       // Zero out all motor values left over from autonomous
 
-      // TODO: Need a way to reset outputs
-      // OutputManager.getInstance().getOutput(Robot.LEFT_DRIVE_SPEED).set(new
-      // Double(0.0));
-      // OutputManager.getInstance().getOutput(Robot.RIGHT_DRIVE_SPEED).set(new
-      // Double(0.0));
-      // OutputManager.getInstance().getOutput(Robot.STRAFE_DRIVE_SPEED).set(new
-      // Double(0.0));
-      // OutputManager.getInstance().getOutput(Robot.STRAFE_DRIVE_SPEED).update();
-      // OutputManager.getInstance().getOutput(Robot.LEFT_DRIVE_SPEED).update();
-      // OutputManager.getInstance().getOutput(Robot.RIGHT_DRIVE_SPEED).update();
-      // InputManager.getInstance().getOiInput(Robot.DRIVER_JOYSTICK).set(JoystickAxisEnum.DRIVER_THROTTLE,
-      // new Double(0.0));
-      // InputManager.getInstance().getOiInput(Robot.DRIVER_JOYSTICK).set(JoystickAxisEnum.DRIVER_HEADING,
-      // new Double(0.0));
-      // InputManager.getInstance().getOiInput(Robot.DRIVER_JOYSTICK).update();
-      // notifyConfigChange();
+   // Anti-Turbo button
+      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_7.getName()).addInputListener(this);
+      // Shifter Button
+      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_6.getName()).addInputListener(this);
+      // Super anti-turbo button
+      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_5.getName()).addInputListener(this);
+      // HELLA ANTI TURBO!!! WARNING!!! EXTREMELY SLOW...
+      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_8.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.DRV_THROTTLE.getName()).addInputListener(this);
+      
+      
 
       // Clear encoders
       // resetLeftEncoder();
@@ -210,11 +192,13 @@ public class DriveBase implements Subsystem
          distance_moved += this.deltaPosition;
          // distance_remaining = this.distance_to_move - currentProfileX;
          distance_remaining = this.distance_to_move - distance_moved;
-         // Logger.getLogger().debug(this.getClass().getName(),
-         // "AccelFilter", "distance_left: " + distance_remaining + " p: " +
-         // continuousAccelerationFilter.getCurrPos()+ " v: " +
-         // continuousAccelerationFilter.getCurrVel() + " a: " +
-         // continuousAccelerationFilter.getCurrAcc() );
+         if (s_log.isLoggable(Level.FINER))
+         {
+            s_log.finer( "AccelFilter: distance_left: " + distance_remaining +
+                  " p: " + continuousAccelerationFilter.getCurrPos()+ " v: " +
+                  continuousAccelerationFilter.getCurrVel() + " a: " +
+                  continuousAccelerationFilter.getCurrAcc() );
+         }
          continuousAccelerationFilter.calculateSystem(distance_remaining, currentProfileV, goal_velocity, MAX_ACCELERATION_DRIVE_PROFILE, MAX_SPEED_INCHES_LOWGEAR, deltaTime);
          deltaProfilePosition = continuousAccelerationFilter.getCurrPos()
                - currentProfileX;
@@ -257,8 +241,7 @@ public class DriveBase implements Subsystem
       else
       {
          // We are in manual control
-         // heading, throttle and strafe values have been updated by
-         // inputUpdate
+         // heading and throttle values have been updated by inputUpdate
          // or direct setter methods
 
          // TODO: These need to be moved to inputUpdate
@@ -289,12 +272,8 @@ public class DriveBase implements Subsystem
          SmartDashboard.putBoolean("Quickturn", quickTurnFlag);
 
          // Set gear shift output
-         // TODO: This is not right! Need to fix with double solenoid
          ((WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.SHIFTER.getName())).setValue(new Integer(highGearFlag == true ?
          WsDoubleSolenoidState.FORWARD.ordinal() : WsDoubleSolenoidState.REVERSE.ordinal()));
-         // getOutput(Robot.SHIFTER).set(new Integer(highGearFlag == true ?
-         // DoubleSolenoid.Value.kReverse.value :
-         // DoubleSolenoid.Value.kForward.value));
       }
 
       // SmartDashboard.putNumber("Left encoder count: ",
@@ -929,10 +908,12 @@ public class DriveBase implements Subsystem
       else if (source.getName().equals(WSInputs.DRV_THROTTLE.getName()))
       {
          throttleValue = ((AnalogInput) Core.getInputManager().getInput(WSInputs.DRV_THROTTLE.getName())).getValue();
+         SmartDashboard.putNumber("throttleValue", throttleValue);
       }
       else if (source.getName().equals(WSInputs.DRV_HEADING.getName()))
       {
          headingValue = ((AnalogInput) Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).getValue();
+         SmartDashboard.putNumber("heading value", headingValue);
       }
 
    }
@@ -945,7 +926,7 @@ public class DriveBase implements Subsystem
    @Override
    public String getName()
    {
-      return m_name;
+      return "Drive Base";
    }
 
    public double getSpeedError()
@@ -973,5 +954,10 @@ public class DriveBase implements Subsystem
    public void setShifter(boolean highGear)
    {
       highGearFlag = highGear;
+   }
+   
+   public boolean shifterState()
+   {
+      return highGearFlag;
    }
 }

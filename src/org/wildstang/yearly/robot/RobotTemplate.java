@@ -6,24 +6,30 @@
 /*----------------------------------------------------------------------------*/
 package org.wildstang.yearly.robot;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.wildstang.framework.auto.AutoManager;
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.logger.StateLogger;
 import org.wildstang.framework.timer.ProfilingTimer;
 import org.wildstang.hardware.crio.RoboRIOInputFactory;
 import org.wildstang.hardware.crio.RoboRIOOutputFactory;
-import org.wildstang.yearly.auto.programs.*;
-
 
 import com.ni.vision.NIVision.Image;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
-
-import java.io.*;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 //import edu.wpi.first.wpilibj.Watchdog;
 
@@ -148,7 +154,7 @@ public class RobotTemplate extends IterativeRobot
       startloggingState();
 
       // 2. Add Auto programs
-      AutoManager.getInstance().addProgram(new OneBallMoatRampart());
+//      AutoManager.getInstance().addProgram(new OneBallMoatRampart());
 
       s_log.logp(Level.ALL, this.getClass().getName(), "robotInit", "Startup Completed");
       startupTimer.endTimingSection();

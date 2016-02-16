@@ -1,38 +1,38 @@
-package org.wildstang.yearly.auto.steps.intake;
+package org.wildstang.yearly.auto.steps.drivebase;
 
 import org.wildstang.framework.auto.steps.AutoStep;
 import org.wildstang.framework.core.Core;
-import org.wildstang.framework.io.inputs.AnalogInput;
+import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.yearly.robot.WSInputs;
 
-public class StepIntake extends AutoStep
+public class StepSetAntiTurbo extends AutoStep
 {
-   private int speed;
-
-   public StepIntake(int runningSpeed)
+   private boolean antiTurbo;
+   
+   public StepSetAntiTurbo(boolean state)
    {
-      this.speed = runningSpeed;
+      this.antiTurbo = state;
    }
 
    @Override
    public void initialize()
    {
       // TODO Auto-generated method stub
-
+      
    }
 
    @Override
    public void update()
    {
       // TODO Auto-generated method stub
-      ((AnalogInput)Core.getInputManager().getInput(WSInputs.MAN_LEFT_JOYSTICK_Y.getName())).setValue(speed);
+      ((DigitalInput)Core.getInputManager().getInput(WSInputs.DRV_BUTTON_8.getName())).setValue(antiTurbo);
    }
 
    @Override
    public String toString()
    {
       // TODO Auto-generated method stub
-      return "Running intake at: " + speed;
+      return "Anti turbo state: " + antiTurbo;
    }
 
 }
