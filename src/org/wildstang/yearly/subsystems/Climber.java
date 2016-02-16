@@ -4,7 +4,6 @@ import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.Input;
 import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.io.inputs.DigitalInput;
-import org.wildstang.framework.io.outputs.AnalogOutput;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.hardware.crio.outputs.WsDoubleSolenoid;
 import org.wildstang.hardware.crio.outputs.WsDoubleSolenoidState;
@@ -113,7 +112,7 @@ public class Climber implements Subsystem
          winchRunning = false;
          brakeEngaged = true;
          brake.setValue(true);
-         lowerArm.setValue(true);
+         upperArm.setValue(true);
          lowerArm.setValue(true);
       }
       else if (!arm)
