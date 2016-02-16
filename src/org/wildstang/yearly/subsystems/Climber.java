@@ -9,6 +9,7 @@ import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.hardware.crio.outputs.WsDoubleSolenoid;
 import org.wildstang.hardware.crio.outputs.WsDoubleSolenoidState;
 import org.wildstang.hardware.crio.outputs.WsSolenoid;
+import org.wildstang.hardware.crio.outputs.WsVictor;
 import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
 
@@ -33,6 +34,13 @@ public class Climber implements Subsystem
    private boolean rightArmTouch;
    private boolean leftArmTouch;
    private double rawWinchValue;
+
+   private WsSolenoid brake;
+   private WsDoubleSolenoid hooks;
+   private WsSolenoid lowerArm;
+   private WsSolenoid upperArm;
+   private WsVictor leftWinch;
+   private WsVictor rightWinch;
 
    @Override
    public void inputUpdate(Input source)
@@ -82,6 +90,12 @@ public class Climber implements Subsystem
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_9.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.RIGHT_ARM_TOUCHING.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.LEFT_ARM_TOUCHING.getName()).addInputListener(this);
+      brake = ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.WINCH_BRAKE.getName()));
+      hooks = (WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.HOOK_EXTENSION.getName());
+      lowerArm = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LOWER_ARM.getName());
+      upperArm = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.UPPER_ARM.getName());
+      leftWinch = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.WINCH_LEFT.getName());
+      rightWinch = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.WINCH_RIGHT.getName());
    }
 
    @Override
@@ -99,14 +113,14 @@ public class Climber implements Subsystem
          winchValue = 0;
          winchRunning = false;
          brakeEngaged = true;
-         ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.WINCH_BRAKE.getName())).setValue(true);
-         ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.UPPER_ARM.getName())).setValue(true);
-         ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LOWER_ARM.getName())).setValue(true);
+         brake.setValue(true);
+         lowerArm.setValue(true);
+         lowerArm.setValue(true);
       }
       else if (!arm)
       {
-         ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.UPPER_ARM.getName())).setValue(false);
-         ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LOWER_ARM.getName())).setValue(false);
+         upperArm.setValue(false);
+         lowerArm.setValue(false);
       }
 
       if (!override)
@@ -121,7 +135,7 @@ public class Climber implements Subsystem
                stopDelay++;
                if (stopDelay == 3)
                {
-                  ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.WINCH_BRAKE.getName())).setValue(true);
+                  brake.setValue(true);
                   brakeEngaged = true;
                   stopDelay = 0;
                   System.out.println("Brake Engaged");
@@ -135,7 +149,7 @@ public class Climber implements Subsystem
                winchValue = 0.0;
                brakeEngaged = false;
                System.out.println("Brake Disengaged");
-               ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.WINCH_BRAKE.getName())).setValue(false);
+               brake.setValue(false);
                startDelay++;
                if (startDelay == 3)
                {
@@ -147,25 +161,25 @@ public class Climber implements Subsystem
 
          }
 
-         ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_LEFT.getName())).setValue(winchValue);
-         ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_RIGHT.getName())).setValue(winchValue);
+         leftWinch.setValue(winchValue);
+         rightWinch.setValue(winchValue);
 
       }
       else
       {
          brakeEngaged = true;
          winchRunning = false;
-         ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.WINCH_BRAKE.getName())).setValue(true);
-         ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_LEFT.getName())).setValue(0.0);
-         ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.WINCH_RIGHT.getName())).setValue(0.0);
+         brake.setValue(true);
+         rightWinch.setValue(0.0);
+         leftWinch.setValue(0.0);
       }
       if (!hook)
       {
-         ((WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.HOOK_EXTENSION.getName())).setValue(WsDoubleSolenoidState.REVERSE.ordinal());
+         hooks.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
       }
       else
       {
-         ((WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.HOOK_EXTENSION.getName())).setValue(WsDoubleSolenoidState.FORWARD.ordinal());
+         hooks.setValue(WsDoubleSolenoidState.FORWARD.ordinal());
       }
 
       SmartDashboard.putBoolean("liftState", arm);
