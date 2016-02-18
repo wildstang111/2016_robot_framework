@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="lib/NetworkTables.jar"/>
-	<classpathentry kind="lib" path="lib/WPILib.jar"/>
 	<classpathentry kind="lib" path="lib/cglib-nodep-2.2.2.jar"/>
 	<classpathentry kind="lib" path="lib/easymock-3.3.1.jar"/>
 	<classpathentry kind="lib" path="lib/hamcrest-core-1.3.jar"/>
@@ -13,5 +11,7 @@
 	<classpathentry kind="lib" path="lib/powermock-easymock-1.6.2-full.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Core-Framework"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="var" path="WPILIB_HOME/java/current/lib/WPILib.jar" sourcepath="/WPILIB_HOME/java/current/lib/WPILib-sources.jar"/>
+	<classpathentry kind="var" path="WPILIB_HOME/java/current/lib/NetworkTables.jar" sourcepath="/WPILIB_HOME/java/current/lib/NetworkTables-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
