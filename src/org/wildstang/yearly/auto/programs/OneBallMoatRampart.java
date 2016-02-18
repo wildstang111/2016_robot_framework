@@ -37,7 +37,6 @@ public class OneBallMoatRampart extends AutoProgram
       // Wait 1 second before deploying intake
       crossDefense.addStep(new AutoStepDelay(1000));
       crossDefense.addStep(new StepSetIntakeState(true));
-      crossDefense.addStep(new StepResetIntakeToggle());
       addStep(crossDefense);
       addStep(new StepResetIntakeToggle());
       
