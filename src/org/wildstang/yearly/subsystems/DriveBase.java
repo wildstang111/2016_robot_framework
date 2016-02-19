@@ -112,7 +112,6 @@ public class DriveBase implements Subsystem
 
    public DriveBase()
    {
-      System.out.println("dbDrive Base");
       // Load the config parameters
       // notifyConfigChange(Core.getConfigManager().getConfig());
       
@@ -154,13 +153,12 @@ public class DriveBase implements Subsystem
       // continuousAccelerationFilter = new ContinuousAccelFilter(0, 0, 0);
       // Zero out all motor values left over from autonomous
 
-   // Anti-Turbo button
-      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_7.getName()).addInputListener(this);
+   
       // Shifter Button
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_6.getName()).addInputListener(this);
       // Super anti-turbo button
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_5.getName()).addInputListener(this);
-      // HELLA ANTI TURBO!!! WARNING!!! EXTREMELY SLOW...
+      // Turbo
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_8.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.DRV_THROTTLE.getName()).addInputListener(this);
@@ -371,7 +369,7 @@ public class DriveBase implements Subsystem
 
       // Taking into account Anti-Turbo
       double new_throttle = tValue;
-      // why the hell does this use true == ...
+      
       if (true == superAntiTurboFlag)
       {
          new_throttle *= SUPER_ANTITURBO_FACTOR;
@@ -398,7 +396,7 @@ public class DriveBase implements Subsystem
       if (highGearFlag)
       {
          // We are in high gear, see if the turbo button is pressed
-         if (turboFlag == true)
+         if (true == turboFlag)
          {
             // We are in turbo mode, don't cap the output
          }
