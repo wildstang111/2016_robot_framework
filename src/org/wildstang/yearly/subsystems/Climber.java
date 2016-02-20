@@ -114,6 +114,14 @@ public class Climber implements Subsystem
          brake.setValue(true);
          upperArm.setValue(true);
          lowerArm.setValue(true);
+         if (!hook)
+         {
+            hooks.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
+         }
+         else
+         {
+            hooks.setValue(WsDoubleSolenoidState.FORWARD.ordinal());
+         }
       }
       else if (!arm)
       {
@@ -172,15 +180,7 @@ public class Climber implements Subsystem
          rightWinch.setValue(0.0);
          leftWinch.setValue(0.0);
       }
-      if (!hook)
-      {
-         hooks.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
-      }
-      else
-      {
-         hooks.setValue(WsDoubleSolenoidState.FORWARD.ordinal());
-      }
-
+      
       SmartDashboard.putBoolean("liftState", arm);
       SmartDashboard.putBoolean("hookState", hook);
       SmartDashboard.putNumber("Winch Value", winchValue);
@@ -190,7 +190,6 @@ public class Climber implements Subsystem
       // SmartDashboard.putBoolean("Override", override);
       SmartDashboard.putBoolean("Right Arm", rightArmTouch);
       SmartDashboard.putBoolean("Left Arm", leftArmTouch);
-
    }
 
    @Override
