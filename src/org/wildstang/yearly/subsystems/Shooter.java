@@ -187,7 +187,7 @@ public class Shooter implements Subsystem, ConfigListener
 
       SmartDashboard.putString("Flywheel Speed", flySpeedToggle ? "High"
             : "Low");
-      SmartDashboard.putNumber("Flywheel Rate", flyWheelRate);
+//      SmartDashboard.putNumber("Flywheel Rate", flyWheelRate);
       SmartDashboard.putNumber("Flywheel Output Adjustment", outputAdjust);
       SmartDashboard.putString("Flywheel", flyWheelToggle ? "On" : "Off");
       SmartDashboard.putString("Hood Positition", hoodPosition ? "Up"
