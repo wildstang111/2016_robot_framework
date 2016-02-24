@@ -108,15 +108,31 @@ public class Climber implements Subsystem
    {
       if (arm)
       {
+//         protectIntake();
+//         resetIntakeToggle();
+//         winchValue = 0;
+//         winchRunning = false;
+//         brakeEngaged = true;
+//         brake.setValue(true);
+         upperArm.setValue(true);
+         lowerArm.setValue(true);
+         if (!hook)
+         {
+            hooks.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
+         }
+         else
+         {
+            hooks.setValue(WsDoubleSolenoidState.FORWARD.ordinal());
+         }
+      }
+      else if (!arm)
+      {
+//         protectIntake();
+//         resetIntakeToggle();
          winchValue = 0;
          winchRunning = false;
          brakeEngaged = true;
          brake.setValue(true);
-         upperArm.setValue(true);
-         lowerArm.setValue(true);
-      }
-      else if (!arm)
-      {
          upperArm.setValue(false);
          lowerArm.setValue(false);
       }
@@ -156,11 +172,21 @@ public class Climber implements Subsystem
                   System.out.println("Winch Started");
                }
             }
-
          }
 
-         leftWinch.setValue(winchValue);
-         rightWinch.setValue(winchValue);
+         if(arm && winchValue > 0)
+         {
+            upperArm.setValue(false);
+            lowerArm.setValue(false);
+            leftWinch.setValue(winchValue);
+            rightWinch.setValue(winchValue);
+         }
+         else
+         {
+            leftWinch.setValue(winchValue);
+            rightWinch.setValue(winchValue);
+         }
+
 
       }
       else
@@ -172,15 +198,7 @@ public class Climber implements Subsystem
          rightWinch.setValue(0.0);
          leftWinch.setValue(0.0);
       }
-      if (!hook)
-      {
-         hooks.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
-      }
-      else
-      {
-         hooks.setValue(WsDoubleSolenoidState.FORWARD.ordinal());
-      }
-
+      
       SmartDashboard.putBoolean("liftState", arm);
       SmartDashboard.putBoolean("hookState", hook);
       SmartDashboard.putNumber("Winch Value", winchValue);
@@ -190,7 +208,6 @@ public class Climber implements Subsystem
       // SmartDashboard.putBoolean("Override", override);
       SmartDashboard.putBoolean("Right Arm", rightArmTouch);
       SmartDashboard.putBoolean("Left Arm", leftArmTouch);
-
    }
 
    @Override
@@ -199,5 +216,18 @@ public class Climber implements Subsystem
       // TODO Auto-generated method stub
       return null;
    }
+   
+//   public void protectIntake()
+//   {
+//      if(((Intake)Core.getSubsystemManager().getSubsystem(WSSubsystems.INTAKE.getName())).isDeployed() != true)
+//      {
+//      ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_8.getName())).setValue(true);
+//      }
+//   }
+//   
+//   public void resetIntakeToggle()
+//   {
+//      ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_8.getName())).setValue(false);
+//   }
 
 }

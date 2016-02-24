@@ -175,7 +175,7 @@ public class Shooter implements Subsystem, ConfigListener
 //            // Cap the fly wheel speed to 1.0.
 //            flySpeed = flySpeed > 1.0 ? 1.0 : flySpeed < 0.0 ? 0.0 : flySpeed;
 
-            flyWheel.setValue(flySpeed);
+            flyWheel.setValue(-flySpeed);
          }
       }
       else
@@ -187,7 +187,7 @@ public class Shooter implements Subsystem, ConfigListener
 
       SmartDashboard.putString("Flywheel Speed", flySpeedToggle ? "High"
             : "Low");
-//      SmartDashboard.putNumber("Flywheel Rate", flyWheelRate);
+      SmartDashboard.putNumber("Flywheel Rate", flyWheelRate);
       SmartDashboard.putNumber("Flywheel Output Adjustment", outputAdjust);
       SmartDashboard.putString("Flywheel", flyWheelToggle ? "On" : "Off");
       SmartDashboard.putString("Hood Positition", hoodPosition ? "Up"
