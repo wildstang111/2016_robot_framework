@@ -25,7 +25,7 @@ public enum WSInputs implements Inputs {
     //DRV_BUTTON_1("Driver button 1", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 0), true), 
     DRV_BUTTON_2("Driver Limbo", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 1), true), 
     //DRV_BUTTON_3("Driver button 3", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 2), true), 
-    //DRV_BUTTON_4("Driver button 4", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 3), true), 
+    DRV_BUTTON_4("Driver button 4", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 3), true), 
     DRV_BUTTON_5("Driver Turret Mode", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 4), true), 
     DRV_BUTTON_6("Driver Shift", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 5), true), 
     DRV_BUTTON_7("Driver Intake Nose Control", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 6), true), 
