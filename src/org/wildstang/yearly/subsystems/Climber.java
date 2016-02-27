@@ -11,6 +11,7 @@ import org.wildstang.hardware.crio.outputs.WsSolenoid;
 import org.wildstang.hardware.crio.outputs.WsVictor;
 import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
+import org.wildstang.yearly.robot.WSSubsystems;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -217,17 +218,17 @@ public class Climber implements Subsystem
       return null;
    }
    
-//   public void protectIntake()
-//   {
-//      if(((Intake)Core.getSubsystemManager().getSubsystem(WSSubsystems.INTAKE.getName())).isDeployed() != true)
-//      {
-//      ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_8.getName())).setValue(true);
-//      }
-//   }
-//   
-//   public void resetIntakeToggle()
-//   {
-//      ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_8.getName())).setValue(false);
-//   }
+   public void protectIntake()
+   {
+      if(((Intake)Core.getSubsystemManager().getSubsystem(WSSubsystems.INTAKE.getName())).isDeployed() != true)
+      {
+      ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_8.getName())).setValue(true);
+      }
+   }
+   
+   public void resetIntakeToggle()
+   {
+      ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_8.getName())).setValue(false);
+   }
 
 }
