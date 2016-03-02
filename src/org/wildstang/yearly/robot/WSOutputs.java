@@ -24,6 +24,7 @@ public enum WSOutputs implements Outputs
    WINCH_LEFT("Left Winch", WSOutputType.VICTOR, new WsVictorConfig(4, 0.0), getLogging()),
    WINCH_RIGHT("Right Winch", WSOutputType.VICTOR, new WsVictorConfig(5, 0.0), getLogging()),
    FRONT_ROLLER("Front intake roller",     WSOutputType.VICTOR,    new WsVictorConfig(7, 0.0), getLogging()),
+   FRONT_ROLLER_2("Front intake roller2",     WSOutputType.VICTOR,    new WsVictorConfig(8, 0.0), getLogging()),
    
    LED("LEDs", WSOutputType.I2C, new WsI2COutputConfig(I2C.Port.kOnboard, 0x10), getLogging()),
 

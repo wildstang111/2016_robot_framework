@@ -48,7 +48,7 @@ public class DriveBase implements Subsystem
    private static double HEADING_LOW_GEAR_ACCEL_FACTOR = 0.500;
    private static double THROTTLE_HIGH_GEAR_ACCEL_FACTOR = 0.125;
    private static double HEADING_HIGH_GEAR_ACCEL_FACTOR = 0.250;
-//   private static double TICKS_PER_ROTATION = 360.0;
+//   private static double TICKS_PER_ROTATION = 360.0;  //USDigital
    private static double TICKS_PER_ROTATION = 256.0;
    private static double WHEEL_DIAMETER = 6;
    private static double MAX_HIGH_GEAR_PERCENT = 0.80;
@@ -95,8 +95,8 @@ public class DriveBase implements Subsystem
    private double previousLeftPositionSinceLastReset = 0.0;
    private static double pidSpeedValue = 0.0;
    private static SpeedPidController driveSpeedPid;
-   // private static DriveBaseSpeedPidInput driveSpeedPidInput;
-   // private static DriveBaseSpeedPidOutput driveSpeedPidOutput;
+//    private static DriveBaseSpeedPidInput driveSpeedPidInput;
+//    private static DriveBaseSpeedPidOutput driveSpeedPidOutput;
    private double deltaPosition = 0.0;
    private double deltaTime = 0.0;
    private double deltaPosError = 0.0;
@@ -171,8 +171,8 @@ public class DriveBase implements Subsystem
       
 
       // Clear encoders
-      // resetleftEncoder();
-      // resetRightEncoder();
+       resetLeftEncoder();
+       resetRightEncoder();
 
       // Clear overrides
       overriddenHeading = overriddenThrottle = overriddenStrafe = 0.0;
@@ -297,7 +297,7 @@ public class DriveBase implements Subsystem
        this.getRightEncoderValue());
        SmartDashboard.putNumber("Right Distance: ",
        this.getRightDistance());
-      // SmartDashboard.putNumber("Left Distance: ", this.getLeftDistance());
+       SmartDashboard.putNumber("Left Distance: ", this.getLeftDistance());
       // SmartDashboard.putNumber("Gyro angle", this.getGyroAngle());
    }
 
@@ -740,12 +740,12 @@ public class DriveBase implements Subsystem
 
    public void resetLeftEncoder()
    {
-       leftDriveEncoder.reset();
+//       leftDriveEncoder.reset();
    }
 
    public void resetRightEncoder()
    {
-       rightDriveEncoder.reset();
+//       rightDriveEncoder.reset();
    }
 
    // public Gyro getGyro()

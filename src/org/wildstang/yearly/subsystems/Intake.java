@@ -54,6 +54,7 @@ public class Intake implements Subsystem
    private WsSolenoid intakeDeploy;
    private WsSolenoid intakeFrontLower;
    private AnalogOutput frontRoller;
+   private AnalogOutput frontRoller2;
    private double manLeftJoyRoller;
    private double rollerSpeed;
 
@@ -119,6 +120,7 @@ public class Intake implements Subsystem
       intakeDeploy = ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_DEPLOY.getName()));
       intakeFrontLower = ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_FRONT_LOWER.getName()));
       frontRoller = ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.FRONT_ROLLER.getName()));
+      frontRoller2 = ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.FRONT_ROLLER_2.getName()));
       
       // asking for below Inputs
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_5.getName()).addInputListener(this);
@@ -174,30 +176,30 @@ public class Intake implements Subsystem
       // if you push the left joy stick down, the intake will roll inwards.
       if (manLeftJoyRoller <= -0.5)
       {
-         rollerSpeed = 0.75;
+         rollerSpeed = 1;
       }
       else if (manLeftJoyRoller >= 0.5)
       {
-         rollerSpeed = -0.75;
+         rollerSpeed = -1;
       }
       else
       {
          rollerSpeed = 0;
       }
 
-      if (intakeSensorReading == true)
-      {
-         rollerSpeed = 0;
-      }
+//      if (intakeSensorReading == true)
+//      {
+//         rollerSpeed = 0;
+//      }
 
       if (manRollerInOverride == true)
       {
-         rollerSpeed = 0.75;
+         rollerSpeed = 1;
       }
 
       if (shoot == true)
       {
-         rollerSpeed = 0.75;
+         rollerSpeed = -1;
       }
 
       // Allows for toggling of limbo
@@ -221,6 +223,7 @@ public class Intake implements Subsystem
       intakeDeploy.setValue(deployPneumatic);
       intakeFrontLower.setValue(nosePneumatic);
       frontRoller.setValue(rollerSpeed);
+      frontRoller2.setValue(-rollerSpeed);
       SmartDashboard.putBoolean("deployPneumatic=", deployPneumatic);
       SmartDashboard.putBoolean("nosePneumatic=", nosePneumatic);
       SmartDashboard.putNumber("rollerSpeed=", rollerSpeed);
@@ -230,7 +233,7 @@ public class Intake implements Subsystem
    public String getName()
    {
       // TODO Auto-generated method stub
-      return null;
+      return "Intake";
    }
    
    public boolean isDeployed()

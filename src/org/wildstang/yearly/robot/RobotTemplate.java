@@ -26,6 +26,7 @@ import org.wildstang.framework.logger.StateLogger;
 import org.wildstang.framework.timer.ProfilingTimer;
 import org.wildstang.hardware.crio.RoboRIOInputFactory;
 import org.wildstang.hardware.crio.RoboRIOOutputFactory;
+import org.wildstang.yearly.auto.programs.MotionProfileTest;
 
 import com.ni.vision.NIVision.Image;
 
@@ -158,6 +159,7 @@ public class RobotTemplate extends IterativeRobot
 
       // 2. Add Auto programs
 //      AutoManager.getInstance().addProgram(new OneBallMoatRampart());
+      AutoManager.getInstance().addProgram(new MotionProfileTest());
 
       s_log.logp(Level.ALL, this.getClass().getName(), "robotInit", "Startup Completed");
       startupTimer.endTimingSection();
@@ -295,6 +297,7 @@ public class RobotTemplate extends IterativeRobot
       {
          SmartDashboard.putString("Exception thrown", e.toString());
          exceptionThrown = true;
+         throw e;
       }
       finally
       {
