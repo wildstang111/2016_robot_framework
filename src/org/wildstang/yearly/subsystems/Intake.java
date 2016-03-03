@@ -44,12 +44,12 @@ public class Intake implements Subsystem
    private boolean nosePneumatic;
    private boolean deployPneumatic;
    private boolean manRollerInOverride;
-   private boolean manNoseControl;
-   private boolean drvNoseControl;
-   private boolean manDeployPneumaticControl;
+   private boolean manNoseControl = false;
+   private boolean drvNoseControl = false;
+   private boolean manDeployPneumaticControl = false;
    private boolean intakeLimboNew;
    private boolean intakeLimboOld;
-   private boolean limboOn;
+   private boolean limboOn = false;
    private boolean shoot;
    private WsSolenoid intakeDeploy;
    private WsSolenoid intakeFrontLower;
@@ -85,13 +85,19 @@ public class Intake implements Subsystem
       // sets manNoseControl to Manipulator button 6
       if (source.getName().equals(WSInputs.MAN_BUTTON_5.getName()))
       {
-         manNoseControl = ((DigitalInput) source).getValue();
+         if (((DigitalInput) source).getValue() == true)
+         {
+            manNoseControl = !manNoseControl;
+         }
       }
 
       // sets drvNoseControl to Drive Button 6
       if (source.getName().equals(WSInputs.DRV_BUTTON_5.getName()))
       {
-         drvNoseControl = ((DigitalInput) source).getValue();
+         if (((DigitalInput) source).getValue() == true)
+         {
+            manNoseControl = !manNoseControl;
+         }
       }
 
       // setting manRollerInOverride to Manipulator button 1
@@ -103,12 +109,18 @@ public class Intake implements Subsystem
       // setting manDeployPneumaticControl to Manipulator button 8
       if (source.getName().equals(WSInputs.MAN_BUTTON_7.getName()))
       {
-         manDeployPneumaticControl = ((DigitalInput) source).getValue();
+         if (((DigitalInput) source).getValue() == true)
+         {
+            manDeployPneumaticControl = !manDeployPneumaticControl;
+         }
       }
 
       if (source.getName().equals(WSInputs.DRV_BUTTON_2.getName()))
       {
-         intakeLimboNew = ((DigitalInput) source).getValue();
+         if (((DigitalInput) source).getValue() == true)
+         {
+            limboOn = !limboOn;
+         }
       }
    }
 
@@ -152,14 +164,15 @@ public class Intake implements Subsystem
 
       // Puts the nose pneumatic in motion when either the drvNoseControl or
       // man nose control are true
-      if (drvNoseControl == true || manNoseControl == true)
-      {
-         nosePneumatic = true;
-      }
-      else
-      {
-         nosePneumatic = false;
-      }
+//      if (drvNoseControl == true || manNoseControl == true)
+//      {
+//         nosePneumatic = true;
+//      }
+//      else
+//      {
+//         nosePneumatic = false;
+//      }
+      nosePneumatic = manNoseControl;
 
       // toggles deployPneumatic to manDeployPneumaticControl
       if (manDeployPneumaticControl == true)
@@ -176,11 +189,11 @@ public class Intake implements Subsystem
       // if you push the left joy stick down, the intake will roll inwards.
       if (manLeftJoyRoller <= -0.5)
       {
-         rollerSpeed = 1;
+         rollerSpeed = -1;
       }
       else if (manLeftJoyRoller >= 0.5)
       {
-         rollerSpeed = -1;
+         rollerSpeed = 1;
       }
       else
       {
@@ -203,15 +216,17 @@ public class Intake implements Subsystem
       }
 
       // Allows for toggling of limbo
-      if (intakeLimboOld == false && intakeLimboNew == true)
+      if (limboOn)
       {
-         if (deployPneumatic == true && nosePneumatic == true)
+         if (deployPneumatic == false)
          {
-            deployPneumatic = false;
-            nosePneumatic = false;
+            deployPneumatic = true;
+         }
+         if(nosePneumatic == false)
+         {
+            nosePneumatic = true;
          }
       }
-      intakeLimboOld = intakeLimboNew;
 
       // buttonPress controls DIO_LED_0 etc.
       // ((DigitalOutput)Core.getOutputManager().getOutput(WSOutputs.DIO_LED_0.getName())).setValue(manLeftJoyRollerIn

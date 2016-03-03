@@ -48,7 +48,6 @@ public class DriveBase implements Subsystem
    private static double HEADING_LOW_GEAR_ACCEL_FACTOR = 0.500;
    private static double THROTTLE_HIGH_GEAR_ACCEL_FACTOR = 0.125;
    private static double HEADING_HIGH_GEAR_ACCEL_FACTOR = 0.250;
-//   private static double TICKS_PER_ROTATION = 360.0;  //USDigital
    private static double TICKS_PER_ROTATION = 256.0;
    private static double WHEEL_DIAMETER = 6;
    private static double MAX_HIGH_GEAR_PERCENT = 0.80;
@@ -95,8 +94,8 @@ public class DriveBase implements Subsystem
    private double previousLeftPositionSinceLastReset = 0.0;
    private static double pidSpeedValue = 0.0;
    private static SpeedPidController driveSpeedPid;
-//    private static DriveBaseSpeedPidInput driveSpeedPidInput;
-//    private static DriveBaseSpeedPidOutput driveSpeedPidOutput;
+   // private static DriveBaseSpeedPidInput driveSpeedPidInput;
+   // private static DriveBaseSpeedPidOutput driveSpeedPidOutput;
    private double deltaPosition = 0.0;
    private double deltaTime = 0.0;
    private double deltaPosError = 0.0;
@@ -112,20 +111,20 @@ public class DriveBase implements Subsystem
 
    private double overriddenThrottle, overriddenHeading, overriddenStrafe;
    private boolean driveOverrideEnabled = false;
-
+   private boolean isDriveFlipped = false;
+   
    public DriveBase()
    {
-      System.out.println("dbDrive Base");
       // Load the config parameters
       // notifyConfigChange(Core.getConfigManager().getConfig());
       
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_5.getName()).addInputListener(this);
       //Turbo 
       // Initialize the drive base encoders
-      // leftDriveEncoder = new Encoder(0, 1, true, EncodingType.k4X);
-      // leftDriveEncoder.reset();
-      // rightDriveEncoder = new Encoder(2, 3, false, EncodingType.k4X);
-      // rightDriveEncoder.reset();
+       leftDriveEncoder = new Encoder(0, 1, true, EncodingType.k4X);
+       leftDriveEncoder.reset();
+       rightDriveEncoder = new Encoder(2, 3, false, EncodingType.k4X);
+       rightDriveEncoder.reset();
 
       // Initialize the gyro
       // @TODO: Get the correct port
@@ -157,14 +156,16 @@ public class DriveBase implements Subsystem
       // continuousAccelerationFilter = new ContinuousAccelFilter(0, 0, 0);
       // Zero out all motor values left over from autonomous
 
-   // Anti-Turbo button
-      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_7.getName()).addInputListener(this);
+   
       // Shifter Button
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_6.getName()).addInputListener(this);
       // Super anti-turbo button
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_5.getName()).addInputListener(this);
-      // HELLA ANTI TURBO!!! WARNING!!! EXTREMELY SLOW...
+      // Turbo
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_8.getName()).addInputListener(this);
+      //Flip Drive
+      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_4.getName()).addInputListener(this);
+      //Drive
       Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.DRV_THROTTLE.getName()).addInputListener(this);
       
@@ -177,23 +178,11 @@ public class DriveBase implements Subsystem
       // Clear overrides
       overriddenHeading = overriddenThrottle = overriddenStrafe = 0.0;
       driveOverrideEnabled = false;
-      
-      leftDriveEncoder = new Encoder(0, 1, true, EncodingType.k4X);
-      rightDriveEncoder = new Encoder(2, 3, false, EncodingType.k4X);
-      
-      leftDriveEncoder.setDistancePerPulse(5);
-      leftDriveEncoder.setSamplesToAverage(7);
-      
-      rightDriveEncoder.setDistancePerPulse(5);
-      rightDriveEncoder.setSamplesToAverage(7);
    }
 
    @Override
    public void update()
    {
-      double rightDist = rightDriveEncoder.getDistance();
-      double leftDist = leftDriveEncoder.getDistance();
-      
       updateSpeedAndAccelerationCalculations();
       if (true == motionProfileActive)
       {
@@ -386,7 +375,7 @@ public class DriveBase implements Subsystem
 
       // Taking into account Anti-Turbo
       double new_throttle = tValue;
-      // why the hell does this use true == ...
+      
       if (true == superAntiTurboFlag)
       {
          new_throttle *= SUPER_ANTITURBO_FACTOR;
@@ -413,7 +402,7 @@ public class DriveBase implements Subsystem
       if (highGearFlag)
       {
          // We are in high gear, see if the turbo button is pressed
-         if (turboFlag == true)
+         if (true == turboFlag)
          {
             // We are in turbo mode, don't cap the output
          }
@@ -545,12 +534,13 @@ public class DriveBase implements Subsystem
          // is banana
          angularPower = Math.abs(driveBaseThrottleValue)
                * driveBaseHeadingValue * HEADING_SENSITIVITY;
+         
       }
 
       SmartDashboard.putNumber("Angular power", angularPower);
 
-      rightMotorSpeed = driveBaseThrottleValue - angularPower;
-      leftMotorSpeed = driveBaseThrottleValue + angularPower;
+      rightMotorSpeed = driveBaseThrottleValue + angularPower;
+      leftMotorSpeed = driveBaseThrottleValue - angularPower;
 
       if (true == quickTurnFlag)
       {
@@ -559,8 +549,16 @@ public class DriveBase implements Subsystem
          driveBaseThrottleValue = 0.0f;
 
          // Quick turn does not take throttle into account
-         leftMotorSpeed += driveBaseHeadingValue;
-         rightMotorSpeed -= driveBaseHeadingValue;
+         if(isDriveFlipped)
+         {
+         leftMotorSpeed -= driveBaseHeadingValue;
+         rightMotorSpeed += driveBaseHeadingValue;
+         }
+         else
+         {
+            leftMotorSpeed = -(leftMotorSpeed -= driveBaseHeadingValue);
+            rightMotorSpeed = -(rightMotorSpeed += driveBaseHeadingValue);
+         }
 
          if (superAntiTurboFlag)
          {
@@ -663,6 +661,7 @@ public class DriveBase implements Subsystem
 
       SmartDashboard.putNumber("LeftDriveSpeed", leftMotorSpeed);
       SmartDashboard.putNumber("RightDriveSpeed", rightMotorSpeed);
+      SmartDashboard.putBoolean("DriveFlip", isDriveFlipped);
 
       Config config = Core.getConfigManager().getConfig();
       double right_drive_bias = config.getDouble(this.getClass().getName()
@@ -670,15 +669,25 @@ public class DriveBase implements Subsystem
       double left_drive_bias = config.getDouble(this.getClass().getName()
             + ".left_drive_bias", 1.0);
 
+      double leftFlipped = leftMotorSpeed * (isDriveFlipped ? -1:1);
+      double rightFlipped = rightMotorSpeed * (isDriveFlipped ? -1:1);
+      
       // Update Outputs
-      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.LEFT_2.getName())).setValue(leftMotorSpeed
+      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.LEFT_2.getName())).setValue(leftFlipped
             * left_drive_bias);
-      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.LEFT_1.getName())).setValue(leftMotorSpeed
+      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.LEFT_1.getName())).setValue(leftFlipped
             * left_drive_bias);
-      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.RIGHT_1.getName())).setValue(rightMotorSpeed
+      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.RIGHT_1.getName())).setValue(rightFlipped
             * right_drive_bias);
-      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.RIGHT_2.getName())).setValue(rightMotorSpeed
+      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.RIGHT_2.getName())).setValue(rightFlipped
             * right_drive_bias);
+      
+      
+      
+      // ((AnalogOutput)
+      // Core.getOutputManager().getOutput(WSOutputs.STRAFE_DRIVE_1.getName())).setValue(strafeMotorSpeed);
+      // ((AnalogOutput)
+      // Core.getOutputManager().getOutput(WSOutputs.STRAFE_DRIVE_2.getName())).setValue(strafeMotorSpeed);
    }
 
    public void checkAutoQuickTurn()
@@ -740,12 +749,12 @@ public class DriveBase implements Subsystem
 
    public void resetLeftEncoder()
    {
-//       leftDriveEncoder.reset();
+       leftDriveEncoder.reset();
    }
 
    public void resetRightEncoder()
    {
-//       rightDriveEncoder.reset();
+       rightDriveEncoder.reset();
    }
 
    // public Gyro getGyro()
@@ -908,6 +917,12 @@ public class DriveBase implements Subsystem
       {
          turboFlag = ((DigitalInput) source).getValue();
       }
+      else if (source.getName().equals(WSInputs.DRV_BUTTON_4.getName())){
+         if (((DigitalInput) source).getValue() == true)
+         {
+            isDriveFlipped = !isDriveFlipped;
+         }
+      }
       else if (source.getName().equals(WSInputs.MOTION_PROFILE_CONTROL.getName()))
       {
          motionProfileActive = ((WsMotionProfileControl) source).getProfileEnabled();
@@ -924,6 +939,7 @@ public class DriveBase implements Subsystem
       else if (source.getName().equals(WSInputs.DRV_HEADING.getName()))
       {
          headingValue = ((AnalogInput) Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).getValue();
+         headingValue *= -1;
          SmartDashboard.putNumber("heading value", headingValue);
       }
 
