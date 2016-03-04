@@ -27,6 +27,7 @@ import org.wildstang.framework.timer.ProfilingTimer;
 import org.wildstang.hardware.crio.RoboRIOInputFactory;
 import org.wildstang.hardware.crio.RoboRIOOutputFactory;
 import org.wildstang.yearly.auto.programs.MotionProfileTest;
+import org.wildstang.yearly.subsystems.DriveBase;
 
 import com.ni.vision.NIVision.Image;
 
@@ -266,6 +267,10 @@ public class RobotTemplate extends IterativeRobot
       m_core.setAutoManager(null);
 
       Core.getSubsystemManager().init();
+      
+      DriveBase driveBase = ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName()));
+      
+      driveBase.stopStraightMoveWithMotionProfile();
 
       periodTimer.startTimingSection();
    }

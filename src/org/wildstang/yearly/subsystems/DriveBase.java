@@ -20,6 +20,8 @@ import org.wildstang.hardware.crio.outputs.WsDoubleSolenoidState;
 import org.wildstang.yearly.robot.RobotTemplate;
 import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
+import org.wildstang.yearly.robot.WsDriveBaseSpeedPidInput;
+import org.wildstang.yearly.robot.WsDriveBaseSpeedPidOutput;
 
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.Encoder;
@@ -94,8 +96,8 @@ public class DriveBase implements Subsystem
    private double previousLeftPositionSinceLastReset = 0.0;
    private static double pidSpeedValue = 0.0;
    private static SpeedPidController driveSpeedPid;
-   // private static DriveBaseSpeedPidInput driveSpeedPidInput;
-   // private static DriveBaseSpeedPidOutput driveSpeedPidOutput;
+    private static WsDriveBaseSpeedPidInput driveSpeedPidInput;
+    private static WsDriveBaseSpeedPidOutput driveSpeedPidOutput;
    private double deltaPosition = 0.0;
    private double deltaTime = 0.0;
    private double deltaPosError = 0.0;
@@ -131,10 +133,10 @@ public class DriveBase implements Subsystem
       // driveHeadingGyro = new Gyro(1);
 
       continuousAccelerationFilter = new ContinuousAccelFilter(0, 0, 0);
-      // driveSpeedPidInput = new DriveBaseSpeedPidInput();
-      // driveSpeedPidOutput = new DriveBaseSpeedPidOutput();
-      // driveSpeedPid = new SpeedPidController(driveSpeedPidInput,
-      // driveSpeedPidOutput, "DriveBaseSpeedPid");
+       driveSpeedPidInput = new WsDriveBaseSpeedPidInput();
+       driveSpeedPidOutput = new WsDriveBaseSpeedPidOutput();
+       driveSpeedPid = new SpeedPidController(driveSpeedPidInput,
+       driveSpeedPidOutput, "DriveBaseSpeedPid");
    }
 
    @Override
@@ -153,7 +155,7 @@ public class DriveBase implements Subsystem
       motionProfileActive = false;
       // previousTime = Timer.getFPGATimestamp();
       currentProfileX = 0.0;
-      // continuousAccelerationFilter = new ContinuousAccelFilter(0, 0, 0);
+       continuousAccelerationFilter = new ContinuousAccelFilter(0, 0, 0);
       // Zero out all motor values left over from autonomous
 
    
@@ -183,6 +185,8 @@ public class DriveBase implements Subsystem
    @Override
    public void update()
    {
+//      System.out.println("Motion Profile " + motionProfileActive);
+      System.out.println("Override " + driveOverrideEnabled);
       updateSpeedAndAccelerationCalculations();
       if (true == motionProfileActive)
       {
@@ -194,7 +198,7 @@ public class DriveBase implements Subsystem
          // Update system to get feed forward terms
          deltaPosError = this.deltaPosition - (deltaProfilePosition);
          distance_moved += this.deltaPosition;
-         // distance_remaining = this.distance_to_move - currentProfileX;
+//          distance_remaining = this.distance_to_move - currentProfileX;
          distance_remaining = this.distance_to_move - distance_moved;
          if (s_log.isLoggable(Level.FINER))
          {
@@ -538,6 +542,8 @@ public class DriveBase implements Subsystem
       }
 
       SmartDashboard.putNumber("Angular power", angularPower);
+      
+      if(!isDriveFlipped) angularPower *= -1;
 
       rightMotorSpeed = driveBaseThrottleValue + angularPower;
       leftMotorSpeed = driveBaseThrottleValue - angularPower;
@@ -681,13 +687,6 @@ public class DriveBase implements Subsystem
             * right_drive_bias);
       ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.RIGHT_2.getName())).setValue(rightFlipped
             * right_drive_bias);
-      
-      
-      
-      // ((AnalogOutput)
-      // Core.getOutputManager().getOutput(WSOutputs.STRAFE_DRIVE_1.getName())).setValue(strafeMotorSpeed);
-      // ((AnalogOutput)
-      // Core.getOutputManager().getOutput(WSOutputs.STRAFE_DRIVE_2.getName())).setValue(strafeMotorSpeed);
    }
 
    public void checkAutoQuickTurn()
@@ -824,7 +823,8 @@ public class DriveBase implements Subsystem
       this.distance_remaining = 0.0;
       this.goal_velocity = 0.0;
       motionProfileActive = false;
-      overrideHeadingValue(0.0);
+//      overrideHeadingValue(0.0);
+      disableDriveOverride();
    }
 
    public void disableSpeedPidControl()
