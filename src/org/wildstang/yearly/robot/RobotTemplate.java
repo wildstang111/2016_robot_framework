@@ -26,10 +26,13 @@ import org.wildstang.framework.logger.StateLogger;
 import org.wildstang.framework.timer.ProfilingTimer;
 import org.wildstang.hardware.crio.RoboRIOInputFactory;
 import org.wildstang.hardware.crio.RoboRIOOutputFactory;
+import org.wildstang.yearly.auto.programs.MotionProfileTest;
+import org.wildstang.yearly.subsystems.DriveBase;
 
 import com.ni.vision.NIVision.Image;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 //import edu.wpi.first.wpilibj.Watchdog;
 
@@ -49,6 +52,8 @@ public class RobotTemplate extends IterativeRobot
    private StateLogger m_stateLogger = null;
    private Core m_core = null;
    private static Logger s_log = Logger.getLogger(RobotTemplate.class.getName());
+   
+   private boolean exceptionThrown = false;
 
    static boolean teleopPerodicCalled = false;
 
@@ -57,7 +62,7 @@ public class RobotTemplate extends IterativeRobot
       Writer outputWriter = null;
 
       outputWriter = getFileWriter();
-      // outputWriter = getNetworkWriter("10.1.11.12", 17654);
+//       outputWriter = getNetworkWriter("10.1.11.12", 17654);
 
       m_stateLogger.setWriter(outputWriter);
       m_stateLogger.start();
@@ -151,10 +156,11 @@ public class RobotTemplate extends IterativeRobot
       // 1. Add subsystems
       m_core.createSubsystems(WSSubsystems.values());
 
-      startloggingState();
+//      startloggingState();
 
       // 2. Add Auto programs
 //      AutoManager.getInstance().addProgram(new OneBallMoatRampart());
+      AutoManager.getInstance().addProgram(new MotionProfileTest());
 
       s_log.logp(Level.ALL, this.getClass().getName(), "robotInit", "Startup Completed");
       startupTimer.endTimingSection();
@@ -261,12 +267,17 @@ public class RobotTemplate extends IterativeRobot
       m_core.setAutoManager(null);
 
       Core.getSubsystemManager().init();
+      
+      DriveBase driveBase = ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName()));
+      
+      driveBase.stopStraightMoveWithMotionProfile();
 
       periodTimer.startTimingSection();
    }
 
    public void teleopPeriodic()
    {
+      try{
       teleopPerodicCalled = true;
 
       long cycleStartTime = System.currentTimeMillis();
@@ -286,6 +297,17 @@ public class RobotTemplate extends IterativeRobot
       // System.out.println("Cycle time: " + cycleLength);
       lastCycleTime = cycleEndTime;
       // Watchdog.getInstance().feed();
+      }
+      catch(Throwable e)
+      {
+         SmartDashboard.putString("Exception thrown", e.toString());
+         exceptionThrown = true;
+         throw e;
+      }
+      finally
+      {
+         SmartDashboard.putBoolean("ExceptionThrown", exceptionThrown);
+      }
    }
 
    /**

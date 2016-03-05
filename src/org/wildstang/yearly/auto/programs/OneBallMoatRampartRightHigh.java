@@ -15,14 +15,14 @@ import org.wildstang.yearly.auto.steps.shooter.StepRunFlywheel;
 import org.wildstang.yearly.auto.steps.shooter.StepSetShooterPosition;
 import org.wildstang.yearly.auto.steps.shooter.StepShoot;
 
-public class OneBallMoatRampart extends AutoProgram
+public class OneBallMoatRampartRightHigh extends AutoProgram
 {
    private double speed;
    private int defensePosition;
-   protected final double dist2 = 91.78;
-   protected final double dist3 = 38.59;
-   protected final double dist4 = -15.12;
-   protected final double dist5 = -67.27;
+//   protected final double dist2 = 91.78;
+   protected final double dist3 = 104;
+   protected final double dist4 = 52;
+   protected final double dist5 = 0;
 
    @Override
    protected void defineSteps()
@@ -54,12 +54,12 @@ public class OneBallMoatRampart extends AutoProgram
       // defense from the center goal, to drive to perpendicular, rotate to
       // face, and shoot
 
-         case (2):
-         {
-            gotoGoal.addStep(new StepQuickTurn(90 * (dist2 / Math.abs(dist2))));
-            gotoGoal.addStep(new StepDriveDistanceAtSpeed(Math.abs(dist2), 1, true));
-            gotoGoal.addStep(new StepQuickTurn(-90 * (dist2 / Math.abs(dist2))));
-         }
+//         case (2):
+//         {
+//            gotoGoal.addStep(new StepQuickTurn(90 * (dist2 / Math.abs(dist2))));
+//            gotoGoal.addStep(new StepDriveDistanceAtSpeed(Math.abs(dist2), 1, true));
+//            gotoGoal.addStep(new StepQuickTurn(-90 * (dist2 / Math.abs(dist2))));
+//         }
          case (3):
          {
             gotoGoal.addStep(new StepQuickTurn(90 * (dist3 / Math.abs(dist3))));
@@ -74,16 +74,30 @@ public class OneBallMoatRampart extends AutoProgram
          }
          case (5):
          {
-            gotoGoal.addStep(new StepQuickTurn(90 * (dist5 / Math.abs(dist5))));
-            gotoGoal.addStep(new StepDriveDistanceAtSpeed(Math.abs(dist5), 1, true));
-            gotoGoal.addStep(new StepQuickTurn(-90 * (dist5 / Math.abs(dist5))));
+//            gotoGoal.addStep(new StepQuickTurn(90 * (dist5 / Math.abs(dist5))));
+//            gotoGoal.addStep(new StepDriveDistanceAtSpeed(Math.abs(dist5), 1, true));
+//            gotoGoal.addStep(new StepQuickTurn(-90 * (dist5 / Math.abs(dist5))));
          }
          gotoGoal.addStep(new StepResetFlywheelToggles());
          gotoGoal.addStep(new StepResetShooterPositionToggle());
          gotoGoal.addStep(new StepResetIntakeToggle());
       }
+      
       findGoal.addStep(gotoGoal);
       addStep(findGoal);
+      
+      //Should be positioned in front of the right-most defense now.
+      //Drive forward to in line with right goal
+      addStep(new StepDriveDistanceAtSpeed(160, 1, true));
+      
+      //rotate to face low goal
+      addStep(new StepQuickTurn(-60));
+      
+      //Ram into goal wall
+      addStep(new StepDriveDistanceAtSpeed(40, .5, true));
+      
+      //Should be flush to goal at this point, so back up to a valid shot position and shoot
+      addStep(new StepDriveDistanceAtSpeed(-40, .5, true));
 
       addStep(new StepShoot());
       addStep(new StepResetShotToggle());

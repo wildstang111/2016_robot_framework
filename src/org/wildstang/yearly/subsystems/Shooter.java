@@ -39,8 +39,8 @@ public class Shooter implements Subsystem, ConfigListener
    private static final int ON_SPEED_FLYWHEEL_DIFF_DEFAULT = 100;
    private static final double HIGH_RATE_DEFAULT = 3200;
    private static final double LOW_RATE_DEFAULT = 2800;
-   private static final double HIGH_DEFAULT = 0.75;
-   private static final double LOW_DEFAULT = 0.70;
+   private static final double HIGH_DEFAULT = 0.8;
+   private static final double LOW_DEFAULT = 0.7;
    private static final Integer hoodUp = new Integer(WsDoubleSolenoidState.FORWARD.ordinal());
    private static final Integer hoodDown = new Integer(WsDoubleSolenoidState.REVERSE.ordinal());
 
@@ -175,7 +175,7 @@ public class Shooter implements Subsystem, ConfigListener
 //            // Cap the fly wheel speed to 1.0.
 //            flySpeed = flySpeed > 1.0 ? 1.0 : flySpeed < 0.0 ? 0.0 : flySpeed;
 
-            flyWheel.setValue(flySpeed);
+            flyWheel.setValue(-flySpeed);
          }
       }
       else
