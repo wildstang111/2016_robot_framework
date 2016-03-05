@@ -13,5 +13,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="var" path="WPILIB_HOME/java/current/lib/WPILib.jar" sourcepath="/WPILIB_HOME/java/current/lib/WPILib-sources.jar"/>
 	<classpathentry kind="var" path="WPILIB_HOME/java/current/lib/NetworkTables.jar" sourcepath="/WPILIB_HOME/java/current/lib/NetworkTables-sources.jar"/>
+	<classpathentry kind="lib" path="lib/opencv-2411.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
