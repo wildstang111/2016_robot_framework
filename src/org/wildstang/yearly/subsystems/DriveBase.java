@@ -687,6 +687,7 @@ public class DriveBase implements Subsystem
             * right_drive_bias);
       ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.RIGHT_2.getName())).setValue(rightFlipped
             * right_drive_bias);
+      
    }
 
    public void checkAutoQuickTurn()

@@ -115,6 +115,14 @@ public class Climber implements Subsystem
          {
          upperArm.setValue(true);
          lowerArm.setValue(true);
+         if (!hook)
+         {
+            hooks.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
+         }
+         else
+         {
+            hooks.setValue(WsDoubleSolenoidState.FORWARD.ordinal());
+         }
          }
          if (!hook)
          {

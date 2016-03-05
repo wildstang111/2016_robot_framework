@@ -2,8 +2,10 @@ package org.wildstang.yearly.subsystems;
 
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.Input;
+import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.hardware.crio.outputs.WsI2COutput;
+import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -27,25 +29,30 @@ public class LED implements Subsystem
    boolean m_antiTurbo;
    boolean m_turbo;
    boolean m_normal;
+   boolean m_shooter;
+   boolean m_intake;
 
    /*
     * | Function | Cmd | PL 1 | PL 2 |
-    * --------------------------------------------------------- | Shoot | 0x05 |
-    * 0x13 | 0x14 | | Climb | 0x06 | 0x11 | 0x12 | | Autonomous | 0x02 | 0x11 |
-    * 0x12 | | Red Alliance | 0x04 | 0x52 | 0x01 | | Blue Alliance | 0x04 | 0x47
-    * | 0x01 |
+    * | Shoot | 0x05 | 0x13 | 0x14 |
+    * | Climb | 0x06 | 0x11 | 0x12 |
+    * | Autonomous | 0x02 | 0x11 | 0x12 |
+    * | Red Alliance | 0x04 | 0x52 | 0x01 |
+    * | Blue Alliance | 0x04 | 0x47 | 0x01 |
     * 
     * Send sequence once, no spamming the Arduino.
     */
 
    // Reused commands from year to year
-   LedCmd autoCmd = new LedCmd(0x02, 0x11, 0x12);
+   LedCmd autoCmd = new LedCmd(0x02, 0x13, 0x14);
    LedCmd redCmd = new LedCmd(0x04, 0x52, 0x01);
-   LedCmd blueCmd = new LedCmd(0x04, 0x47, 0x01);
-
-   // New commands each year
-   LedCmd turboCmd = new LedCmd(0x05, 0x13, 0x14);
-   LedCmd antiturboCmd = new LedCmd(0x06, 0x11, 0x12);
+   LedCmd blueCmd = new LedCmd(0x47, 0x34, 0x26);
+   LedCmd shooter = new LedCmd(0x03, 0x21, 0x12);
+   LedCmd intake = new LedCmd(0x11, 0x57, 0x49);
+ // *Defaults to alliance*  LedCmd disabled = new LedCmd(0x33, 0x55, 0x59);
+   
+   LedCmd turboCmd = new LedCmd(0x05, 0x20, 0x32);
+   LedCmd antiturboCmd = new LedCmd(0x06, 0x09, 0x08);
    LedCmd normalCmd = new LedCmd(0x07, 0x11, 0x12);
 
    public LED()
@@ -58,14 +65,15 @@ public class LED implements Subsystem
    {
       autoDataSent = false;
       disableDataSent = false;
-
-//      Core.getInputManager().getInput(SwerveInputs.ANTI_TURBO.getName()).addInputListener(this);
-//      Core.getInputManager().getInput(SwerveInputs.TURBO.getName()).addInputListener(this);
-//      Core.getInputManager().getInput(SwerveInputs.DRV_BUTTON_2.getName()).addInputListener(this);
-
       m_ledOutput = (WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName());
+  
+      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_5.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_8.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_6.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_7.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_8.getName()).addInputListener(this);
    }
-
+  
    @Override
    public void update()
    {
@@ -73,14 +81,15 @@ public class LED implements Subsystem
       boolean isRobotEnabled = DriverStation.getInstance().isEnabled();
       boolean isRobotTeleop = DriverStation.getInstance().isOperatorControl();
       boolean isRobotAuton = DriverStation.getInstance().isAutonomous();
+      
       DriverStation.Alliance alliance = DriverStation.getInstance().getAlliance();
 
       m_normal = !(m_antiTurbo || m_turbo);
       
-//      if (isRobotEnabled)
-//      {
-//         if (isRobotTeleop)
-//         {
+      if (isRobotEnabled)
+      {
+         if (isRobotTeleop)
+         {
             if (m_newDataAvailable)
             {
                if (m_antiTurbo)
@@ -95,72 +104,92 @@ public class LED implements Subsystem
                {
                   m_ledOutput.setValue(normalCmd.getBytes());
                }
+               
+               if (m_shooter)
+               {
+                 m_ledOutput.setValue(shooter.getBytes());
+               }
+               
+               if (m_intake)
+               {
+                 m_ledOutput.setValue(intake.getBytes());
+               }
+               
+               }
                m_newDataAvailable = false;
             }
                SmartDashboard.putBoolean("Turbo", m_turbo);
                SmartDashboard.putBoolean("Antiturbo", m_antiTurbo);
+               SmartDashboard.putBoolean("Shooter", m_shooter);
+               SmartDashboard.putBoolean("Intake", m_intake);
+         }
+         else if (isRobotAuton)
+         {
+            if (!autoDataSent)
+            {
+               m_ledOutput.setValue(autoCmd.getBytes());
+               autoDataSent = true;
+            }
+         }
+   
+   else
+      {
+         switch (alliance)
+         {
+            case Red:
+            {
+               if (!disableDataSent)
+               {
+                  m_ledOutput.setValue(redCmd.getBytes());
+                  disableDataSent = true;
+               }
+            }
+               break;
 
-//         }
-//         else if (isRobotAuton)
-//         {
-//            // --------------------------------------------------------------
-//            // Handle Autonomous signalling here
-//            // --------------------------------------------------------------
-//            // One send and one send only.
-//            // Don't take time in auto sending LED cmds.
-//            if (!autoDataSent)
-//            {
-//               m_ledOutput.setValue(autoCmd.getBytes());
-//               autoDataSent = true;
-//            }
-//         }
-//      }
-//      else
-//      {
-//         // ------------------------------------------------------------------
-//         // Handle Disabled signalling here
-//         // ------------------------------------------------------------------
-//         switch (alliance)
-//         {
-//            case Red:
-//            {
-//               if (!disableDataSent)
-//               {
-//                  m_ledOutput.setValue(redCmd.getBytes());
-//                  disableDataSent = true;
-//               }
-//            }
-//               break;
-//
-//            case Blue:
-//            {
-//               if (!disableDataSent)
-//               {
-//                  m_ledOutput.setValue(blueCmd.getBytes());
-//                  disableDataSent = true;
-//               }
-//            }
-//               break;
-//            default:
-//            {
-//               disableDataSent = false;
-//            }
-//               break;
-//         }
-//      }
-   }
+            case Blue:
+            {
+               if (!disableDataSent)
+               {
+                  m_ledOutput.setValue(blueCmd.getBytes());
+                  disableDataSent = true;
+               }
+            }
+               break;
+               default:
+            {
+               disableDataSent = false;
+            }
+               break;
+         }
+      }
+    }
 
    @Override
    public void inputUpdate(Input source)
    {
-//      if (source.getName().equals(SwerveInputs.ANTI_TURBO.getName()))
-//      {
-//         m_antiTurbo = ((DigitalInput) source).getValue();
-//      }
-//      else if (source.getName().equals(SwerveInputs.TURBO.getName()))
-//      {
-//         m_turbo = ((DigitalInput) source).getValue();
-//      }
+      if (source.getName().equals(WSInputs.DRV_BUTTON_5.getName()))
+      {
+         m_antiTurbo = ((DigitalInput) source).getValue();
+      }
+      else if (source.getName().equals(WSInputs.DRV_BUTTON_8.getName()))
+      {
+         m_turbo = ((DigitalInput) source).getValue();
+      }
+      
+      if (source.getName().equals(WSInputs.MAN_BUTTON_6.getName()))
+      {
+        m_shooter = ((DigitalInput) source).getValue();
+      }
+     
+      if (source.getName().equals(WSInputs.MAN_BUTTON_7.getName()))
+      {
+        m_intake = ((DigitalInput) source).getValue();
+      }
+      
+      if (source.getName().equals(WSInputs.MAN_BUTTON_8.getName()))
+      {
+        m_shooter = ((DigitalInput) source).getValue();
+      }
       
       m_newDataAvailable = true;
    }
