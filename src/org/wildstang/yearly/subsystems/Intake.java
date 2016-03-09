@@ -257,9 +257,10 @@ public class Intake implements Subsystem
       intakeFrontLower.setValue(nosePneumatic);
       frontRoller.setValue(rollerSpeed);
       frontRoller2.setValue(-rollerSpeed);
-      SmartDashboard.putBoolean("deployPneumatic=", deployPneumatic);
-      SmartDashboard.putBoolean("nosePneumatic=", nosePneumatic);
+      SmartDashboard.putBoolean("Intake deployPneumatic=", deployPneumatic);
+      SmartDashboard.putBoolean("Intake nosePneumatic=", nosePneumatic);
       SmartDashboard.putNumber("rollerSpeed=", rollerSpeed);
+      SmartDashboard.putBoolean("Intake staged=", intakeSensorReading);
    }
    
    public void notifyConfigChange(Config p_newConfig)
