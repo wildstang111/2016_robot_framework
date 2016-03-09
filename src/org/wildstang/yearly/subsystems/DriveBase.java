@@ -62,8 +62,8 @@ public class DriveBase implements Subsystem
    private static double QUICK_TURN_CAP;
    private static double QUICK_TURN_ANTITURBO;
    private static boolean ACCELERATION_ENABLED = false;
-   private static double SUPER_ANTITURBO_FACTOR = 0.50;
-   private static double HELLA_ANTITURBO_FACTOR = 0.25;
+   private static double SUPER_ANTITURBO_FACTOR = 0.35;
+   private static double HELLA_ANTITURBO_FACTOR = 0.125;
    private static double driveBaseThrottleValue = 0.0;
    private static double driveBaseHeadingValue = 0.0;
    private static double driveBaseStrafeValue = 0.0;
@@ -142,7 +142,6 @@ public class DriveBase implements Subsystem
    @Override
    public void init()
    {
-      System.out.println("dbinit");
       driveBaseThrottleValue = 0.0;
       driveBaseHeadingValue = 0.0;
       antiTurboFlag = false;

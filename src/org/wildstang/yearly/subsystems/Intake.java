@@ -1,5 +1,7 @@
 package org.wildstang.yearly.subsystems;
 
+import org.wildstang.framework.config.Config;
+
 /* Please edit!!!
  * This program does all these things
  * reads INTAKE_BOLDER_SENSOR. INTAKE_BOLDER_SENSOR = intakeSensorReading.
@@ -57,6 +59,17 @@ public class Intake implements Subsystem
    private AnalogOutput frontRoller2;
    private double manLeftJoyRoller;
    private double rollerSpeed;
+   
+   
+   private double intakeSpeedIn;
+   private double intakeSpeedOut;
+   private double temp;
+   private static final String intakeSpeedKey = ".intakeSpeedVictor";
+   private static final double INTAKE_DEFAULT = 1;
+   private static final String intakeSpeedInKey = ".intakeSpeedIn";
+   private static final double INTAKE_IN_DEFAULT = -1;
+   private static final String intakeSpeedOutKey = ".intakeSpeedOut";
+   private static final double INTAKE_OUT_DEFAULT = 1;
 
    @Override
    public void inputUpdate(Input source)
@@ -134,6 +147,11 @@ public class Intake implements Subsystem
       frontRoller = ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.FRONT_ROLLER.getName()));
       frontRoller2 = ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.FRONT_ROLLER_2.getName()));
       
+      intakeSpeedIn = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
+                      + intakeSpeedInKey, INTAKE_IN_DEFAULT);
+      intakeSpeedOut = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
+                       + intakeSpeedOutKey, INTAKE_OUT_DEFAULT);
+      
       // asking for below Inputs
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_5.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_5.getName()).addInputListener(this);
@@ -189,11 +207,11 @@ public class Intake implements Subsystem
       // if you push the left joy stick down, the intake will roll inwards.
       if (manLeftJoyRoller <= -0.5)
       {
-         rollerSpeed = -1;
+         rollerSpeed = intakeSpeedIn;
       }
       else if (manLeftJoyRoller >= 0.5)
       {
-         rollerSpeed = 1;
+         rollerSpeed = intakeSpeedOut;
       }
       else
       {
@@ -207,12 +225,12 @@ public class Intake implements Subsystem
 
       if (manRollerInOverride == true)
       {
-         rollerSpeed = 1;
+         rollerSpeed = intakeSpeedIn;
       }
 
       if (shoot == true)
       {
-         rollerSpeed = -1;
+         rollerSpeed = intakeSpeedOut;
       }
 
       // Allows for toggling of limbo
@@ -242,6 +260,16 @@ public class Intake implements Subsystem
       SmartDashboard.putBoolean("deployPneumatic=", deployPneumatic);
       SmartDashboard.putBoolean("nosePneumatic=", nosePneumatic);
       SmartDashboard.putNumber("rollerSpeed=", rollerSpeed);
+   }
+   
+   public void notifyConfigChange(Config p_newConfig)
+   {
+      intakeSpeedIn = p_newConfig.getDouble(this.getClass().getName()
+            + intakeSpeedInKey, INTAKE_IN_DEFAULT);
+
+      intakeSpeedOut = p_newConfig.getDouble(this.getClass().getName()
+            + intakeSpeedOutKey, INTAKE_OUT_DEFAULT);
+
    }
 
    @Override
