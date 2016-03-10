@@ -16,14 +16,15 @@ public class StepResetShooterPositionToggle extends AutoStep
    public void initialize()
    {
       // TODO Auto-generated method stub
-
+      ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_6.getName())).setValue(false);
+      setFinished(true);
    }
 
    @Override
    public void update()
    {
       // TODO Auto-generated method stub
-      ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_5.getName())).setValue(false);
+     
    }
 
    @Override

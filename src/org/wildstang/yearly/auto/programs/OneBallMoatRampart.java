@@ -4,8 +4,10 @@ import org.wildstang.framework.auto.AutoProgram;
 import org.wildstang.framework.auto.steps.AutoParallelStepGroup;
 import org.wildstang.framework.auto.steps.AutoSerialStepGroup;
 import org.wildstang.framework.auto.steps.control.AutoStepDelay;
-import org.wildstang.yearly.auto.steps.drivebase.StepDriveDistanceAtSpeed;
 import org.wildstang.yearly.auto.steps.drivebase.StepQuickTurn;
+import org.wildstang.yearly.auto.steps.drivebase.StepStartDriveUsingMotionProfile;
+import org.wildstang.yearly.auto.steps.drivebase.StepStopDriveUsingMotionProfile;
+import org.wildstang.yearly.auto.steps.drivebase.StepWaitForDriveMotionProfile;
 import org.wildstang.yearly.auto.steps.intake.StepResetIntakeToggle;
 import org.wildstang.yearly.auto.steps.intake.StepSetIntakeState;
 import org.wildstang.yearly.auto.steps.shooter.StepResetFlywheelToggles;
@@ -31,8 +33,12 @@ public class OneBallMoatRampart extends AutoProgram
       AutoParallelStepGroup crossDefense = new AutoParallelStepGroup();
       AutoSerialStepGroup crossSeries = new AutoSerialStepGroup();
       // Drive to defense and cross
-      crossSeries.addStep(new StepDriveDistanceAtSpeed(52.5, 1, false));
-      crossSeries.addStep(new StepDriveDistanceAtSpeed(80.5, 1, true));
+      crossSeries.addStep(new StepStartDriveUsingMotionProfile(52.5, 0));
+      crossSeries.addStep(new StepWaitForDriveMotionProfile()); 
+      crossSeries.addStep(new StepStopDriveUsingMotionProfile());
+      crossSeries.addStep(new StepStartDriveUsingMotionProfile(80.5, 0));
+      crossSeries.addStep(new StepWaitForDriveMotionProfile()); 
+      crossSeries.addStep(new StepStopDriveUsingMotionProfile());
       crossDefense.addStep(crossSeries);
       // Wait 1 second before deploying intake
       crossDefense.addStep(new AutoStepDelay(1000));
@@ -57,25 +63,33 @@ public class OneBallMoatRampart extends AutoProgram
          case (2):
          {
             gotoGoal.addStep(new StepQuickTurn(90 * (dist2 / Math.abs(dist2))));
-            gotoGoal.addStep(new StepDriveDistanceAtSpeed(Math.abs(dist2), 1, true));
+            gotoGoal.addStep(new StepStartDriveUsingMotionProfile(Math.abs(dist2), 0));
+            gotoGoal.addStep(new StepWaitForDriveMotionProfile()); 
+            gotoGoal.addStep(new StepStopDriveUsingMotionProfile());
             gotoGoal.addStep(new StepQuickTurn(-90 * (dist2 / Math.abs(dist2))));
          }
          case (3):
          {
             gotoGoal.addStep(new StepQuickTurn(90 * (dist3 / Math.abs(dist3))));
-            gotoGoal.addStep(new StepDriveDistanceAtSpeed(Math.abs(dist3), 1, true));
+            gotoGoal.addStep(new StepStartDriveUsingMotionProfile(Math.abs(dist3), 0));
+            gotoGoal.addStep(new StepWaitForDriveMotionProfile()); 
+            gotoGoal.addStep(new StepStopDriveUsingMotionProfile());
             gotoGoal.addStep(new StepQuickTurn(-90 * (dist3 / Math.abs(dist3))));
          }
          case (4):
          {
             gotoGoal.addStep(new StepQuickTurn(90 * (dist4 / Math.abs(dist4))));
-            gotoGoal.addStep(new StepDriveDistanceAtSpeed(Math.abs(dist4), 1, true));
+            gotoGoal.addStep(new StepStartDriveUsingMotionProfile(Math.abs(dist4), 0));
+            gotoGoal.addStep(new StepWaitForDriveMotionProfile()); 
+            gotoGoal.addStep(new StepStopDriveUsingMotionProfile());
             gotoGoal.addStep(new StepQuickTurn(-90 * (dist4 / Math.abs(dist4))));
          }
          case (5):
          {
             gotoGoal.addStep(new StepQuickTurn(90 * (dist5 / Math.abs(dist5))));
-            gotoGoal.addStep(new StepDriveDistanceAtSpeed(Math.abs(dist5), 1, true));
+            gotoGoal.addStep(new StepStartDriveUsingMotionProfile(Math.abs(dist5), 0));
+            gotoGoal.addStep(new StepWaitForDriveMotionProfile()); 
+            gotoGoal.addStep(new StepStopDriveUsingMotionProfile());
             gotoGoal.addStep(new StepQuickTurn(-90 * (dist5 / Math.abs(dist5))));
          }
          gotoGoal.addStep(new StepResetFlywheelToggles());

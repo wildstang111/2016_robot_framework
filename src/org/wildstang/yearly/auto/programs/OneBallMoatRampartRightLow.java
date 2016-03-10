@@ -6,6 +6,9 @@ import org.wildstang.framework.auto.steps.AutoSerialStepGroup;
 import org.wildstang.framework.auto.steps.control.AutoStepDelay;
 import org.wildstang.yearly.auto.steps.drivebase.StepDriveDistanceAtSpeed;
 import org.wildstang.yearly.auto.steps.drivebase.StepQuickTurn;
+import org.wildstang.yearly.auto.steps.drivebase.StepStartDriveUsingMotionProfile;
+import org.wildstang.yearly.auto.steps.drivebase.StepStopDriveUsingMotionProfile;
+import org.wildstang.yearly.auto.steps.drivebase.StepWaitForDriveMotionProfile;
 import org.wildstang.yearly.auto.steps.intake.StepIntake;
 import org.wildstang.yearly.auto.steps.intake.StepResetIntakeToggle;
 import org.wildstang.yearly.auto.steps.intake.StepSetIntakeState;
@@ -28,8 +31,12 @@ public class OneBallMoatRampartRightLow extends AutoProgram
       AutoParallelStepGroup crossDefense = new AutoParallelStepGroup();
       AutoSerialStepGroup crossSeries = new AutoSerialStepGroup();
       // Drive to defense and cross
-      crossSeries.addStep(new StepDriveDistanceAtSpeed(52.5, 1, false));
-      crossSeries.addStep(new StepDriveDistanceAtSpeed(80.5, 1, true));
+      crossSeries.addStep(new StepStartDriveUsingMotionProfile(52.5, 0));
+      crossSeries.addStep(new StepWaitForDriveMotionProfile()); 
+      crossSeries.addStep(new StepStopDriveUsingMotionProfile());
+      crossSeries.addStep(new StepStartDriveUsingMotionProfile(80.5, 0));
+      crossSeries.addStep(new StepWaitForDriveMotionProfile()); 
+      crossSeries.addStep(new StepStopDriveUsingMotionProfile());
       crossDefense.addStep(crossSeries);
       // Wait 1 second before deploying intake
       crossDefense.addStep(new AutoStepDelay(1000));
@@ -60,13 +67,17 @@ public class OneBallMoatRampartRightLow extends AutoProgram
          case (3):
          {
             gotoGoal.addStep(new StepQuickTurn(90 * (dist3 / Math.abs(dist3))));
-            gotoGoal.addStep(new StepDriveDistanceAtSpeed(Math.abs(dist3), 1, true));
+            gotoGoal.addStep(new StepStartDriveUsingMotionProfile(Math.abs(dist3), 0));
+            gotoGoal.addStep(new StepWaitForDriveMotionProfile()); 
+            gotoGoal.addStep(new StepStopDriveUsingMotionProfile());
             gotoGoal.addStep(new StepQuickTurn(-90 * (dist3 / Math.abs(dist3))));
          }
          case (4):
          {
             gotoGoal.addStep(new StepQuickTurn(90 * (dist4 / Math.abs(dist4))));
-            gotoGoal.addStep(new StepDriveDistanceAtSpeed(Math.abs(dist4), 1, true));
+            gotoGoal.addStep(new StepStartDriveUsingMotionProfile(Math.abs(dist4), 0));
+            gotoGoal.addStep(new StepWaitForDriveMotionProfile()); 
+            gotoGoal.addStep(new StepStopDriveUsingMotionProfile());
             gotoGoal.addStep(new StepQuickTurn(-90 * (dist4 / Math.abs(dist4))));
          }
          case (5):
@@ -86,12 +97,18 @@ public class OneBallMoatRampartRightLow extends AutoProgram
       //Should be positioned in front of the right-most defense now.
       //Drive forward to in line with right goal
       addStep(new StepDriveDistanceAtSpeed(160, 1, true));
+      addStep(new StepStartDriveUsingMotionProfile(160, 0));
+      addStep(new StepWaitForDriveMotionProfile()); 
+      addStep(new StepStopDriveUsingMotionProfile());
       
       //rotate to face low goal
       addStep(new StepQuickTurn(120));
       
       //Ram into goal wall
-      addStep(new StepDriveDistanceAtSpeed(-40, .5, true));
+//      addStep(new StepDriveDistanceAtSpeed(-40, .5, true));
+      addStep(new StepStartDriveUsingMotionProfile(-40, 0));
+      addStep(new StepWaitForDriveMotionProfile()); 
+      addStep(new StepStopDriveUsingMotionProfile());
       
       //Outtake into low goal, because unsure if enough space to shoot properly
       addStep(new StepIntake(-1));
@@ -108,7 +125,7 @@ public class OneBallMoatRampartRightLow extends AutoProgram
    public String toString()
    {
       // TODO Auto-generated method stub
-      return "One Ball Moat or Rampart";
+      return "One Ball D Right Low";
    }
 
 }

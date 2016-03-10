@@ -57,6 +57,8 @@ public class Intake implements Subsystem
    private AnalogOutput frontRoller2;
    private double manLeftJoyRoller;
    private double rollerSpeed;
+   private boolean AutoIntakeOverride = false;
+   private double OverrideValue;
 
    @Override
    public void inputUpdate(Input source)
@@ -85,19 +87,19 @@ public class Intake implements Subsystem
       // sets manNoseControl to Manipulator button 6
       if (source.getName().equals(WSInputs.MAN_BUTTON_5.getName()))
       {
-         if (((DigitalInput) source).getValue() == true)
-         {
-            manNoseControl = !manNoseControl;
-         }
+//         if (((DigitalInput) source).getValue() == true)
+//         {
+            manNoseControl = ((DigitalInput) source).getValue();
+//         }
       }
 
       // sets drvNoseControl to Drive Button 6
       if (source.getName().equals(WSInputs.DRV_BUTTON_5.getName()))
       {
-         if (((DigitalInput) source).getValue() == true)
-         {
-            manNoseControl = !manNoseControl;
-         }
+//         if (((DigitalInput) source).getValue() == true)
+//         {
+            manNoseControl = ((DigitalInput) source).getValue();
+//         }
       }
 
       // setting manRollerInOverride to Manipulator button 1
@@ -200,10 +202,10 @@ public class Intake implements Subsystem
          rollerSpeed = 0;
       }
 
-//      if (intakeSensorReading == true)
-//      {
-//         rollerSpeed = 0;
-//      }
+      if (intakeSensorReading == true && rollerSpeed < 0)
+      {
+         rollerSpeed = 0;
+      }
 
       if (manRollerInOverride == true)
       {
@@ -235,10 +237,19 @@ public class Intake implements Subsystem
       // ((DigitalOutput)Core.getOutputManager().getOutput(WSOutputs.FRONT_ROLLER_LED_2.getName())).setValue(rollerMovingIn);
       // ((DigitalOutput)Core.getOutputManager().getOutput(WSOutputs.Pneumatic_1.getName())).setValue(nosePneumatic);
       // ((DigitalOutput)Core.getOutputManager().getOutput(WSOutputs.Pneumatic_2.getName())).setValue(deployPneumatic);
+      
       intakeDeploy.setValue(deployPneumatic);
       intakeFrontLower.setValue(nosePneumatic);
+      if(AutoIntakeOverride)
+      {
+      frontRoller.setValue(OverrideValue);
+      frontRoller2.setValue(-OverrideValue);
+      }
+      else
+      {
       frontRoller.setValue(rollerSpeed);
       frontRoller2.setValue(-rollerSpeed);
+      }
       SmartDashboard.putBoolean("deployPneumatic=", deployPneumatic);
       SmartDashboard.putBoolean("nosePneumatic=", nosePneumatic);
       SmartDashboard.putNumber("rollerSpeed=", rollerSpeed);
@@ -259,6 +270,14 @@ public class Intake implements Subsystem
    public boolean isNoseDeployed()
    {
       return nosePneumatic;
+   }
+   public void setIntakeOverrideOn(boolean state)
+   {
+      AutoIntakeOverride = state;
+   }
+   public void IntakeValue(double value)
+   {
+      OverrideValue = value;
    }
 
 }

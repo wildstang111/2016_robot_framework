@@ -115,6 +115,8 @@ public class DriveBase implements Subsystem
    private boolean driveOverrideEnabled = false;
    private boolean isDriveFlipped = false;
    
+   private boolean firstRun = true;
+   
    public DriveBase()
    {
       // Load the config parameters
@@ -127,6 +129,7 @@ public class DriveBase implements Subsystem
        leftDriveEncoder.reset();
        rightDriveEncoder = new Encoder(2, 3, false, EncodingType.k4X);
        rightDriveEncoder.reset();
+       
 
       // Initialize the gyro
       // @TODO: Get the correct port
@@ -162,7 +165,7 @@ public class DriveBase implements Subsystem
       // Shifter Button
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_6.getName()).addInputListener(this);
       // Super anti-turbo button
-      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_5.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_7.getName()).addInputListener(this);
       // Turbo
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_8.getName()).addInputListener(this);
       //Flip Drive
@@ -186,7 +189,15 @@ public class DriveBase implements Subsystem
    public void update()
    {
 //      System.out.println("Motion Profile " + motionProfileActive);
-      System.out.println("Override " + driveOverrideEnabled);
+//      System.out.println("Override " + driveOverrideEnabled);
+      
+//      if(firstRun = true)
+//      {
+//         leftDriveEncoder.reset();
+//         rightDriveEncoder.reset();
+//         firstRun = false;
+//         if(!DriverStation.getInstance().isAutonomous()) stopStraightMoveWithMotionProfile();
+//      }
       updateSpeedAndAccelerationCalculations();
       if (true == motionProfileActive)
       {

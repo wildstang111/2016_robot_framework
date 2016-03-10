@@ -4,8 +4,10 @@ import org.wildstang.framework.auto.AutoProgram;
 import org.wildstang.framework.auto.steps.AutoParallelStepGroup;
 import org.wildstang.framework.auto.steps.AutoSerialStepGroup;
 import org.wildstang.framework.auto.steps.control.AutoStepDelay;
-import org.wildstang.yearly.auto.steps.drivebase.StepDriveDistanceAtSpeed;
 import org.wildstang.yearly.auto.steps.drivebase.StepQuickTurn;
+import org.wildstang.yearly.auto.steps.drivebase.StepStartDriveUsingMotionProfile;
+import org.wildstang.yearly.auto.steps.drivebase.StepStopDriveUsingMotionProfile;
+import org.wildstang.yearly.auto.steps.drivebase.StepWaitForDriveMotionProfile;
 import org.wildstang.yearly.auto.steps.intake.StepIntake;
 import org.wildstang.yearly.auto.steps.intake.StepResetIntakeToggle;
 import org.wildstang.yearly.auto.steps.intake.StepSetIntakeState;
@@ -32,7 +34,10 @@ public class TwoBall extends AutoProgram
       beginAuto.addStep(new StepSetShooterPosition(true));
 //      beginAuto.addStep(new StepResetShooterPositionToggle());
       // Drive to point in line with goal
-      gotoGoal.addStep(new StepDriveDistanceAtSpeed(-71.25, 1, true));
+//      gotoGoal.addStep(new StepDriveDistanceAtSpeed(-71.25, 1, true));
+      gotoGoal.addStep(new StepStartDriveUsingMotionProfile(-71.25, 0));
+      gotoGoal.addStep(new StepWaitForDriveMotionProfile()); 
+      gotoGoal.addStep(new StepStopDriveUsingMotionProfile());
       //reset functions for tasks in the parallel group go after first serial step to ensure that the commands 
       //do not overlap. As long as they are reset before the next call to the function it should be fine.
       gotoGoal.addStep(new StepSetShooterPosition(true));
@@ -54,7 +59,10 @@ public class TwoBall extends AutoProgram
       leaveCourtyard.addStep(new StepSetShooterPosition(false));
 //      leaveCourtyard.addStep(new StepResetShooterPositionToggle());
       // Drive to point in line with low bar
-      gotoLowBar.addStep(new StepDriveDistanceAtSpeed(-19, 1, true));
+//      gotoLowBar.addStep(new StepDriveDistanceAtSpeed(-19, 1, true));
+      gotoLowBar.addStep(new StepStartDriveUsingMotionProfile(-19, 0));
+      gotoLowBar.addStep(new StepWaitForDriveMotionProfile()); 
+      gotoLowBar.addStep(new StepStopDriveUsingMotionProfile());
       gotoLowBar.addStep(new StepResetFlywheelToggles());
       gotoLowBar.addStep(new StepResetShooterPositionToggle());
       // Turn to face low bar
@@ -63,12 +71,18 @@ public class TwoBall extends AutoProgram
       gotoLowBar.addStep(new StepSetIntakeState(true));
       gotoLowBar.addStep(new StepResetIntakeToggle());
       // Drive to low bar
-      gotoLowBar.addStep(new StepDriveDistanceAtSpeed(-108, 1, false));
+//      gotoLowBar.addStep(new StepDriveDistanceAtSpeed(-108, 1, false));
+      gotoLowBar.addStep(new StepStartDriveUsingMotionProfile(-108, 0));
+      gotoLowBar.addStep(new StepWaitForDriveMotionProfile()); 
+      gotoLowBar.addStep(new StepStopDriveUsingMotionProfile());
       leaveCourtyard.addStep(gotoLowBar);
       addStep(leaveCourtyard);
 
       // Cross low bar
-      addStep(new StepDriveDistanceAtSpeed(-80.5, 1, true));
+//      addStep(new StepDriveDistanceAtSpeed(-80.5, 1, true));
+      addStep(new StepStartDriveUsingMotionProfile(-80.5, 0));
+      addStep(new StepWaitForDriveMotionProfile()); 
+      addStep(new StepStopDriveUsingMotionProfile());
       // Turn to face ball
       addStep(new StepQuickTurn(-21));
 
@@ -77,7 +91,10 @@ public class TwoBall extends AutoProgram
       // Intake ball
       grabBall.addStep(new StepIntake(1));
       // Drive to ball
-      gotoBall.addStep(new StepDriveDistanceAtSpeed(-56, 1, true));
+//      gotoBall.addStep(new StepDriveDistanceAtSpeed(-56, 1, true));
+      gotoBall.addStep(new StepStartDriveUsingMotionProfile(-56, 0));
+      gotoBall.addStep(new StepWaitForDriveMotionProfile()); 
+      gotoBall.addStep(new StepStopDriveUsingMotionProfile());
       // Wait while ball is collected
       gotoBall.addStep(new AutoStepDelay(1000));
       grabBall.addStep(gotoBall);
@@ -86,7 +103,10 @@ public class TwoBall extends AutoProgram
       // Stop intake
       addStep(new StepIntake(0));
       // Drive to low bar
-      addStep(new StepDriveDistanceAtSpeed(56, 1, true));
+//      addStep(new StepDriveDistanceAtSpeed(56, 1, true));
+      addStep(new StepStartDriveUsingMotionProfile(56, 0));
+      addStep(new StepWaitForDriveMotionProfile()); 
+      addStep(new StepStopDriveUsingMotionProfile());
       // Turn to face low bar
       addStep(new StepQuickTurn(21));
 
@@ -96,7 +116,10 @@ public class TwoBall extends AutoProgram
       shootTwo.addStep(new StepRunFlywheel(speed));
 //      shootTwo.addStep(new StepResetFlywheelToggles());
       // Cross low bar
-      gotoGoalTwo.addStep(new StepDriveDistanceAtSpeed(80.5, 1, true));
+//      gotoGoalTwo.addStep(new StepDriveDistanceAtSpeed(80.5, 1, true));
+      gotoGoalTwo.addStep(new StepStartDriveUsingMotionProfile(80.5, 0));
+      gotoGoalTwo.addStep(new StepWaitForDriveMotionProfile()); 
+      gotoGoalTwo.addStep(new StepStopDriveUsingMotionProfile());
       gotoGoalTwo.addStep(new StepResetFlywheelToggles());
       // Retract intake
       gotoGoalTwo.addStep(new StepSetIntakeState(false));
@@ -105,7 +128,10 @@ public class TwoBall extends AutoProgram
       gotoGoalTwo.addStep(new StepSetShooterPosition(true));
       gotoGoalTwo.addStep(new StepResetShooterPositionToggle());
       // Drive to point in line with goal
-      gotoGoalTwo.addStep(new StepDriveDistanceAtSpeed(108, 1, true));
+//      gotoGoalTwo.addStep(new StepDriveDistanceAtSpeed(108, 1, true));
+      gotoGoalTwo.addStep(new StepStartDriveUsingMotionProfile(108, 0));
+      gotoGoalTwo.addStep(new StepWaitForDriveMotionProfile()); 
+      gotoGoalTwo.addStep(new StepStopDriveUsingMotionProfile());
       // Turn to face goal
       gotoGoalTwo.addStep(new StepQuickTurn(60));
       shootTwo.addStep(gotoGoalTwo);

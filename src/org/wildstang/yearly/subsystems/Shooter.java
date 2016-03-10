@@ -8,6 +8,7 @@ import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.hardware.crio.outputs.WsDoubleSolenoid;
 import org.wildstang.hardware.crio.outputs.WsDoubleSolenoidState;
+import org.wildstang.hardware.crio.outputs.WsRelay;
 import org.wildstang.hardware.crio.outputs.WsVictor;
 import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
@@ -39,14 +40,15 @@ public class Shooter implements Subsystem, ConfigListener
    private static final int ON_SPEED_FLYWHEEL_DIFF_DEFAULT = 100;
    private static final double HIGH_RATE_DEFAULT = 3200;
    private static final double LOW_RATE_DEFAULT = 2800;
-   private static final double HIGH_DEFAULT = 0.8;
-   private static final double LOW_DEFAULT = 0.7;
+   private static final double HIGH_DEFAULT = 0.85;
+   private static final double LOW_DEFAULT = 0.4;
    private static final Integer hoodUp = new Integer(WsDoubleSolenoidState.FORWARD.ordinal());
    private static final Integer hoodDown = new Integer(WsDoubleSolenoidState.REVERSE.ordinal());
 
    private WsVictor flyWheel;
    private WsDoubleSolenoid shooterHood;
    private Encoder flyWheelEncoder;
+   private WsRelay RingLight;
 
    @Override
    public void inputUpdate(Input source)
@@ -92,6 +94,9 @@ public class Shooter implements Subsystem, ConfigListener
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_6.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_2.getName()).addInputListener(this);
 
+      RingLight = (WsRelay) Core.getOutputManager().getOutput(WSOutputs.RING_LIGHT.getName());
+      RingLight.enable();
+      
       flyWheel = (WsVictor) (Core.getOutputManager().getOutput(WSOutputs.SHOOTER.getName()));
       shooterHood = ((WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.SHOOTER_HOOD.getName()));
       flyWheelEncoder = new Encoder(4, 5, false, EncodingType.k4X);
@@ -109,11 +114,11 @@ public class Shooter implements Subsystem, ConfigListener
             + onSpeedDiffKey, ON_SPEED_FLYWHEEL_DIFF_DEFAULT);
 
       // Need to figure out these values to configure the encoder.
-      flyWheelEncoder.setMaxPeriod(0.1);
-      flyWheelEncoder.setMinRate(10);
-      flyWheelEncoder.setDistancePerPulse(5);
-      flyWheelEncoder.setReverseDirection(true);
-      flyWheelEncoder.setSamplesToAverage(7);
+//      flyWheelEncoder.setMaxPeriod(0.1);
+//      flyWheelEncoder.setMinRate(10);
+//      flyWheelEncoder.setDistancePerPulse(5);
+//      flyWheelEncoder.setReverseDirection(true);
+//      flyWheelEncoder.setSamplesToAverage(7);
 
       flyWheelDiff = 0;
    }

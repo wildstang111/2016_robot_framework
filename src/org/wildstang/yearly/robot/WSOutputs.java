@@ -6,8 +6,10 @@ import org.wildstang.framework.hardware.OutputConfig;
 import org.wildstang.framework.io.outputs.OutputType;
 import org.wildstang.hardware.crio.outputs.WSOutputType;
 import org.wildstang.hardware.crio.outputs.WsDoubleSolenoidState;
+import org.wildstang.hardware.crio.outputs.WsRelayState;
 import org.wildstang.hardware.crio.outputs.config.WsDoubleSolenoidConfig;
 import org.wildstang.hardware.crio.outputs.config.WsI2COutputConfig;
+import org.wildstang.hardware.crio.outputs.config.WsRelayConfig;
 import org.wildstang.hardware.crio.outputs.config.WsSolenoidConfig;
 import org.wildstang.hardware.crio.outputs.config.WsVictorConfig;
 
@@ -27,7 +29,7 @@ public enum WSOutputs implements Outputs
    FRONT_ROLLER_2("Front intake roller2",     WSOutputType.VICTOR,    new WsVictorConfig(8, 0.0), getLogging()),
    
    LED("LEDs", WSOutputType.I2C, new WsI2COutputConfig(I2C.Port.kOnboard, 0x10), getLogging()),
-
+   RING_LIGHT("Light", WSOutputType.RELAY, new WsRelayConfig(0, WsRelayState.RELAY_ON), getLogging()),
    // Solenoids
    
    SHIFTER("Shifter double solenoid", WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(1, 0, 1, WsDoubleSolenoidState.FORWARD), getLogging()),

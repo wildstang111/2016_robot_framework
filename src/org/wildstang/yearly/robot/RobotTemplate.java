@@ -26,8 +26,14 @@ import org.wildstang.framework.logger.StateLogger;
 import org.wildstang.framework.timer.ProfilingTimer;
 import org.wildstang.hardware.crio.RoboRIOInputFactory;
 import org.wildstang.hardware.crio.RoboRIOOutputFactory;
+import org.wildstang.yearly.auto.programs.CrossingDefense;
+import org.wildstang.yearly.auto.programs.FunctionTest;
+import org.wildstang.yearly.auto.programs.HarpoonAuto;
 import org.wildstang.yearly.auto.programs.MotionProfileTest;
+import org.wildstang.yearly.auto.programs.OneBallMoatRampart;
+import org.wildstang.yearly.auto.programs.TwoBall;
 import org.wildstang.yearly.subsystems.DriveBase;
+import org.wildstang.yearly.subsystems.Intake;
 
 import com.ni.vision.NIVision.Image;
 
@@ -54,6 +60,9 @@ public class RobotTemplate extends IterativeRobot
    private static Logger s_log = Logger.getLogger(RobotTemplate.class.getName());
    
    private boolean exceptionThrown = false;
+   
+   private boolean firstRun = true;
+   private boolean AutoFirstRun = true;
 
    static boolean teleopPerodicCalled = false;
 
@@ -161,6 +170,11 @@ public class RobotTemplate extends IterativeRobot
       // 2. Add Auto programs
 //      AutoManager.getInstance().addProgram(new OneBallMoatRampart());
       AutoManager.getInstance().addProgram(new MotionProfileTest());
+      AutoManager.getInstance().addProgram(new OneBallMoatRampart());
+      AutoManager.getInstance().addProgram(new HarpoonAuto());
+      AutoManager.getInstance().addProgram(new TwoBall());
+      AutoManager.getInstance().addProgram(new FunctionTest());
+      AutoManager.getInstance().addProgram(new CrossingDefense());
 
       s_log.logp(Level.ALL, this.getClass().getName(), "robotInit", "Startup Completed");
       startupTimer.endTimingSection();
@@ -238,6 +252,8 @@ public class RobotTemplate extends IterativeRobot
       {
          m_stateLogger.stop();
       }
+      AutoFirstRun = true;
+      firstRun = true;
    }
 
    public void autonomousInit()
@@ -254,6 +270,13 @@ public class RobotTemplate extends IterativeRobot
    public void autonomousPeriodic()
    {
       // Update all inputs, outputs and subsystems
+      if (AutoFirstRun)
+      {
+         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).resetLeftEncoder();
+         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).resetRightEncoder();
+         AutoFirstRun = false;
+      }
+      
       m_core.executeUpdate();
 
    }
@@ -277,6 +300,15 @@ public class RobotTemplate extends IterativeRobot
 
    public void teleopPeriodic()
    {
+      if (firstRun)
+      {
+         ((Intake) Core.getSubsystemManager().getSubsystem(WSSubsystems.INTAKE.getName())).setIntakeOverrideOn(false);
+         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).resetLeftEncoder();
+         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).resetRightEncoder();
+         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).stopStraightMoveWithMotionProfile();
+         firstRun = false;
+      }
+
       try{
       teleopPerodicCalled = true;
 
