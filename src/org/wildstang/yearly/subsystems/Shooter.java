@@ -37,18 +37,18 @@ public class Shooter implements Subsystem, ConfigListener
    private static final String expectedLowRateKey = ".expectedLowFlywheelRate";
    private double onSpeedFlyWheelDiff;
    private static final String onSpeedDiffKey = ".onSpeedDiff";
-   private static final int ON_SPEED_FLYWHEEL_DIFF_DEFAULT = 100;
-   private static final double HIGH_RATE_DEFAULT = 3200;
-   private static final double LOW_RATE_DEFAULT = 2800;
-   private static final double HIGH_DEFAULT = 0.85;
-   private static final double LOW_DEFAULT = 0.4;
+   private static final int ON_SPEED_FLYWHEEL_DIFF_DEFAULT = 75;
+   private static final double HIGH_RATE_DEFAULT = 2300;
+   private static final double LOW_RATE_DEFAULT = 1800;
+   private static final double HIGH_DEFAULT = 0.825;
+   private static final double LOW_DEFAULT = 0.6;
    private static final Integer hoodUp = new Integer(WsDoubleSolenoidState.FORWARD.ordinal());
    private static final Integer hoodDown = new Integer(WsDoubleSolenoidState.REVERSE.ordinal());
 
    
    private WsVictor flyWheel;
    private WsDoubleSolenoid shooterHood;
-   private Encoder flyWheelEncoder = new Encoder(4, 5, false, EncodingType.k4X);
+   private Encoder flyWheelEncoder = new Encoder(4, 5, true, EncodingType.k4X);
    private WsRelay RingLight;
 
    @Override
@@ -156,30 +156,30 @@ public class Shooter implements Subsystem, ConfigListener
          }
          else
          {
-//            // Poor Man's PID.
-//            flyWheelDiff = Math.abs(flyWheelRate - expectedRate);
-//            outputAdjust = flyWheelDiff / expectedRate;
-//
-//            // Limit the output Adjust to less than half of the expected Rate to
-//            // temper this a bit.
-//            outputAdjustLimit = flySpeed / 2;
-//            if (outputAdjust > outputAdjustLimit) ;
-//            {
-//               outputAdjust = outputAdjustLimit;
-//            }
-//
-//            if (flyWheelRate > expectedRate)
-//            {
-//               // Decrease Speed
-//               flySpeed -= outputAdjust;
-//            }
-//            else if (flyWheelRate < expectedRate)
-//            {
-//               // Increase the speed.
-//               flySpeed += outputAdjust;
-//            }
-//            // Cap the fly wheel speed to 1.0.
-//            flySpeed = flySpeed > 1.0 ? 1.0 : flySpeed < 0.0 ? 0.0 : flySpeed;
+            // Poor Man's PID.
+            flyWheelDiff = Math.abs(flyWheelRate - expectedRate);
+            outputAdjust = flyWheelDiff / expectedRate;
+
+            // Limit the output Adjust to less than half of the expected Rate to
+            // temper this a bit.
+            outputAdjustLimit = flySpeed / 2;
+            if (outputAdjust > outputAdjustLimit) ;
+            {
+               outputAdjust = outputAdjustLimit;
+            }
+
+            if (flyWheelRate > expectedRate)
+            {
+               // Decrease Speed
+               flySpeed -= outputAdjust;
+            }
+            else if (flyWheelRate < expectedRate)
+            {
+               // Increase the speed.
+               flySpeed += outputAdjust;
+            }
+            // Cap the fly wheel speed to 1.0.
+            flySpeed = flySpeed > 1.0 ? 1.0 : flySpeed < 0.0 ? 0.0 : flySpeed;
 
             flyWheel.setValue(-flySpeed);
          }
