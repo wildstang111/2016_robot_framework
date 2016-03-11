@@ -45,9 +45,10 @@ public class Shooter implements Subsystem, ConfigListener
    private static final Integer hoodUp = new Integer(WsDoubleSolenoidState.FORWARD.ordinal());
    private static final Integer hoodDown = new Integer(WsDoubleSolenoidState.REVERSE.ordinal());
 
+   
    private WsVictor flyWheel;
    private WsDoubleSolenoid shooterHood;
-   private Encoder flyWheelEncoder;
+   private Encoder flyWheelEncoder = new Encoder(4, 5, false, EncodingType.k4X);
    private WsRelay RingLight;
 
    @Override
@@ -99,7 +100,7 @@ public class Shooter implements Subsystem, ConfigListener
       
       flyWheel = (WsVictor) (Core.getOutputManager().getOutput(WSOutputs.SHOOTER.getName()));
       shooterHood = ((WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.SHOOTER_HOOD.getName()));
-      flyWheelEncoder = new Encoder(4, 5, false, EncodingType.k4X);
+
 
       highFlywheelSpeedConf = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
             + highSpeedKey, HIGH_DEFAULT);

@@ -37,6 +37,7 @@ import org.wildstang.yearly.subsystems.Intake;
 
 import com.ni.vision.NIVision.Image;
 
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -65,6 +66,8 @@ public class RobotTemplate extends IterativeRobot
    private boolean AutoFirstRun = true;
 
    static boolean teleopPerodicCalled = false;
+   
+   CameraServer server;
 
    private void startloggingState()
    {
@@ -178,6 +181,10 @@ public class RobotTemplate extends IterativeRobot
 
       s_log.logp(Level.ALL, this.getClass().getName(), "robotInit", "Startup Completed");
       startupTimer.endTimingSection();
+      
+      server = CameraServer.getInstance();
+      server.setQuality(50);
+      server.startAutomaticCapture("cam0");
 
    }
 
@@ -248,6 +255,7 @@ public class RobotTemplate extends IterativeRobot
    public void disabledPeriodic()
    {
       // If we are finished with teleop, finish and close the log file
+      ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).stopStraightMoveWithMotionProfile();
       if (teleopPerodicCalled)
       {
          m_stateLogger.stop();
@@ -259,6 +267,12 @@ public class RobotTemplate extends IterativeRobot
    public void autonomousInit()
    {
       Core.getSubsystemManager().init();
+      if (AutoFirstRun)
+      {
+         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).resetLeftEncoder();
+         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).resetRightEncoder();
+         AutoFirstRun = false;
+      }
 
       m_core.setAutoManager(AutoManager.getInstance());
       AutoManager.getInstance().startCurrentProgram();
@@ -270,12 +284,7 @@ public class RobotTemplate extends IterativeRobot
    public void autonomousPeriodic()
    {
       // Update all inputs, outputs and subsystems
-      if (AutoFirstRun)
-      {
-         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).resetLeftEncoder();
-         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).resetRightEncoder();
-         AutoFirstRun = false;
-      }
+
       
       m_core.executeUpdate();
 

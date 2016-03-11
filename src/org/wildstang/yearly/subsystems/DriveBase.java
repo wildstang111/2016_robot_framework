@@ -156,6 +156,7 @@ public class DriveBase implements Subsystem
       highGearFlag = false;
       quickTurnFlag = false;
       motionProfileActive = false;
+      stopStraightMoveWithMotionProfile();
       // previousTime = Timer.getFPGATimestamp();
       currentProfileX = 0.0;
        continuousAccelerationFilter = new ContinuousAccelFilter(0, 0, 0);
@@ -811,7 +812,6 @@ public class DriveBase implements Subsystem
          double goal_velocity)
    {
       startMoveWithHeadingAndMotionProfile(distance, goal_velocity, 0.0);
-
    }
 
    public void startMoveWithHeadingAndMotionProfile(double distance,

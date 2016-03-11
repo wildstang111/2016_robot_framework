@@ -6,8 +6,6 @@ package org.wildstang.yearly.auto.steps.drivebase;
 
 import org.wildstang.framework.auto.steps.AutoStep;
 import org.wildstang.framework.core.Core;
-import org.wildstang.framework.io.inputs.DigitalInput;
-import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSSubsystems;
 import org.wildstang.yearly.subsystems.DriveBase;
 
@@ -27,17 +25,17 @@ public class StepSetShifter extends AutoStep
    @Override
    public void initialize()
    {
-//      ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).setShifter(highGear);
-//      setFinished(true);
+      ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).setShifter(highGear);
+      setFinished(true);
    }
 
    @Override
    public void update()
    {
-      if(((DriveBase)Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).shifterState() != highGear)
-      {
-      ((DigitalInput)Core.getInputManager().getInput(WSInputs.DRV_BUTTON_7.getName())).setValue(true);
-      }
+//      if(((DriveBase)Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).shifterState() != highGear)
+//      {
+//      ((DigitalInput)Core.getInputManager().getInput(WSInputs.DRV_BUTTON_7.getName())).setValue(true);
+//      }
    }
 
    @Override
