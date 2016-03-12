@@ -29,13 +29,13 @@ org.wildstang.subsystems.DriveBase.feed_forward_velocity_constant=1.0
 org.wildstang.subsystems.DriveBase.feed_forward_acceleration_constant=1.8E-4
 org.wildstang.subsystems.DriveBase.max_acceleration_drive_profile=600.0
 org.wildstang.subsystems.DriveBase.max_speed_inches_lowgear=90.0
-org.wildstang.subsystems.DriveBase.deadband=0.05
+org.wildstang.subsystems.DriveBase.deadband=0.1
 org.wildstang.subsystems.DriveBase.deceleration_velocity_threshold=48.0
 org.wildstang.subsystems.DriveBase.deceleration_motor_speed=0.3
 org.wildstang.subsystems.DriveBase.stopping_distance_at_max_speed_lowgear=10.0
 org.wildstang.subsystems.DriveBase.quick_turn_cap=10.0
 org.wildstang.subsystems.DriveBase.quick_turn_antiturbo=10.0
-org.wildstang.subsystems.DriveBase.super_antiturbo_factor=0.30
+org.wildstang.subsystems.DriveBase.super_antiturbo_factor=0.25
 org.wildstang.subsystems.DriveBase.acceleration_enabled=true
 // 0.75 for proto, 0.5 for real robot
 org.wildstang.subsystems.DriveBase.output_scale_factor=0.75
@@ -56,10 +56,10 @@ org.wildstang.pid.controller.base.SpeedPidController.DriveBaseSpeedPid.minInput=
 org.wildstang.logger.sender.LogManager.Logger_Enabled=false
 
 //Shooter
-org.wildstang.yearly.subsystems.Shooter.highSpeedVictorVal=0.75
+org.wildstang.yearly.subsystems.Shooter.highSpeedVictorVal=0.825
 org.wildstang.yearly.subsystems.Shooter.lowSpeedVictorVal=0.70
-org.wildstang.yearly.subsystems.Shooter.expectedHighFlywheelRate=3200.0
-org.wildstang.yearly.subsystems.Shooter.expectedLowFlywheelRate=2800.0
+org.wildstang.yearly.subsystems.Shooter.expectedHighFlywheelRate=2300.0
+org.wildstang.yearly.subsystems.Shooter.expectedLowFlywheelRate=2050.0
 org.wildstang.yearly.subsystems.Shooter.onSpeedDiff=100
 
 

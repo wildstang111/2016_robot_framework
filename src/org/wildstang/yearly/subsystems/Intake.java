@@ -96,13 +96,13 @@ public class Intake implements Subsystem
       }
 
       // sets drvNoseControl to Drive Button 6
-      if (source.getName().equals(WSInputs.DRV_BUTTON_5.getName()))
-      {
+      //if (source.getName().equals(WSInputs.DRV_BUTTON_5.getName()))
+     // {
 //         if (((DigitalInput) source).getValue() == true)
 //         {
-            manNoseControl = ((DigitalInput) source).getValue();
+        //    manNoseControl = ((DigitalInput) source).getValue();
 //         }
-      }
+      //}
 
       // setting manRollerInOverride to Manipulator button 1
       if (source.getName().equals(WSInputs.MAN_BUTTON_9.getName()))

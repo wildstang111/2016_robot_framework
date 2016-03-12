@@ -56,7 +56,7 @@ public class DriveBase implements Subsystem
    private static double WHEEL_DIAMETER = 6;
    private static double MAX_HIGH_GEAR_PERCENT = 0.80;
    private static double ENCODER_GEAR_RATIO = 7.5;
-   private static double DEADBAND = 0.05;
+   private static double DEADBAND = 0.1;
    private static double SLOW_TURN_FORWARD_SPEED;
    private static double SLOW_TURN_BACKWARD_SPEED;
    private static double MAX_ACCELERATION_DRIVE_PROFILE = 600.0;
@@ -64,7 +64,7 @@ public class DriveBase implements Subsystem
    private static double QUICK_TURN_CAP;
    private static double QUICK_TURN_ANTITURBO;
    private static boolean ACCELERATION_ENABLED = false;
-   private static double SUPER_ANTITURBO_FACTOR = 0.50;
+   private static double SUPER_ANTITURBO_FACTOR = 0.25;
    private static double HELLA_ANTITURBO_FACTOR = 0.25;
    private static double driveBaseThrottleValue = 0.0;
    private static double driveBaseHeadingValue = 0.0;
@@ -170,7 +170,7 @@ public class DriveBase implements Subsystem
       // Shifter Button
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_6.getName()).addInputListener(this);
       // Super anti-turbo button
-      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_7.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_5.getName()).addInputListener(this);
       // Turbo
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_8.getName()).addInputListener(this);
       //Flip Drive
@@ -896,7 +896,7 @@ public class DriveBase implements Subsystem
             + ".max_acceleration_drive_profile", 600.0);
       MAX_SPEED_INCHES_LOWGEAR = config.getDouble(this.getClass().getName()
             + ".max_speed_inches_lowgear", 90.0);
-      DEADBAND = config.getDouble(this.getClass().getName() + ".deadband", 0.05);
+      DEADBAND = config.getDouble(this.getClass().getName() + ".deadband", 0.1);
       DECELERATION_VELOCITY_THRESHOLD = config.getDouble(this.getClass().getName()
             + ".deceleration_velocity_threshold", 48.0);
       DECELERATION_MOTOR_SPEED = config.getDouble(this.getClass().getName()
@@ -908,7 +908,7 @@ public class DriveBase implements Subsystem
       QUICK_TURN_ANTITURBO = config.getDouble(this.getClass().getName()
             + ".quick_turn_antiturbo", 10.0);
       SUPER_ANTITURBO_FACTOR = config.getDouble(this.getClass().getName()
-            + ".super_antiturbo_factor", 0.5);
+            + ".super_antiturbo_factor", 0.25);
       ACCELERATION_ENABLED = Core.getConfigManager().getConfig().getBoolean(this.getClass().getName()
             + ".acceleration_enabled", false);
       outputScaleFactor = config.getDouble(this.getClass().getName()
@@ -925,8 +925,6 @@ public class DriveBase implements Subsystem
 //         {
 //            highGearFlag = !highGearFlag;
 //         }
-         if (source.getName().equals(WSInputs.DRV_BUTTON_6.getName()))
-         {
             if (isPistolGrip)
             {
                highGearFlag = ((DigitalInput) source).getValue();
@@ -938,7 +936,6 @@ public class DriveBase implements Subsystem
                   highGearFlag = !highGearFlag;
                }
             }
-         }
       }
       else if (source.getName().equals(WSInputs.DRV_BUTTON_5.getName()))
       {
