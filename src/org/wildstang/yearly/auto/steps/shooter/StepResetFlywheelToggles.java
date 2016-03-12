@@ -25,6 +25,7 @@ public class StepResetFlywheelToggles extends AutoStep
       // TODO Auto-generated method stub
          ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_3.getName())).setValue(false);
          ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_4.getName())).setValue(false);
+         setFinished(true);
    }
 
    @Override

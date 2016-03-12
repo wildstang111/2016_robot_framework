@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Shooter implements Subsystem, ConfigListener
 {
-   private boolean flySpeedToggle = false;
+   private boolean flySpeedToggle = true;
    private boolean flyWheelToggle = false;
    private boolean hoodPosition = false;
    private double flySpeed;
@@ -247,6 +247,10 @@ public class Shooter implements Subsystem, ConfigListener
             + expectedLowRateKey, LOW_RATE_DEFAULT);
       onSpeedFlyWheelDiff = p_newConfig.getInt(this.getClass().getName()
             + onSpeedDiffKey, ON_SPEED_FLYWHEEL_DIFF_DEFAULT);
+   }
+   public void shooterOverride(boolean state)
+   {
+      flyWheelToggle = state;
    }
 
 }

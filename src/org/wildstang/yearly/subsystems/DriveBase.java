@@ -23,10 +23,12 @@ import org.wildstang.yearly.robot.WSOutputs;
 import org.wildstang.yearly.robot.WsDriveBaseSpeedPidInput;
 import org.wildstang.yearly.robot.WsDriveBaseSpeedPidOutput;
 
+import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.Encoder;
 //import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -76,6 +78,7 @@ public class DriveBase implements Subsystem
    private static boolean quickTurnFlag = false;
    private static Encoder leftDriveEncoder;
    private static Encoder rightDriveEncoder;
+   private static AnalogGyro driveHeadingGyro;
    private static ContinuousAccelFilter continuousAccelerationFilter;
    // Set low gear top speed to 8.5 ft/ second = 102 inches / second = 2.04
    // inches/ 20 ms
@@ -110,6 +113,7 @@ public class DriveBase implements Subsystem
    private double DECELERATION_MOTOR_SPEED = 0.3;
    private static boolean driveDistancePidEnabled = false;
    private static double outputScaleFactor = 1.0;
+   private boolean isPistolGrip = false;
 
    private double overriddenThrottle, overriddenHeading, overriddenStrafe;
    private boolean driveOverrideEnabled = false;
@@ -133,7 +137,7 @@ public class DriveBase implements Subsystem
 
       // Initialize the gyro
       // @TODO: Get the correct port
-      // driveHeadingGyro = new Gyro(1);
+       driveHeadingGyro = new AnalogGyro(0);
 
       continuousAccelerationFilter = new ContinuousAccelFilter(0, 0, 0);
        driveSpeedPidInput = new WsDriveBaseSpeedPidInput();
@@ -175,7 +179,9 @@ public class DriveBase implements Subsystem
       Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.DRV_THROTTLE.getName()).addInputListener(this);
       
-      
+      // Check to see if pistol grip controller is being used
+      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_12_PG.getName()).update();
+      isPistolGrip = ((DigitalInput)Core.getInputManager().getInput(WSInputs.DRV_BUTTON_12_PG.getName())).getValue();
 
       // Clear encoders
        resetLeftEncoder();
@@ -768,20 +774,20 @@ public class DriveBase implements Subsystem
        rightDriveEncoder.reset();
    }
 
-   // public Gyro getGyro()
-   // {
-   // return driveHeadingGyro;
-   // }
+    public Gyro getGyro()
+    {
+    return driveHeadingGyro;
+    }
 
-   // public double getGyroAngle()
-   // {
-   // return driveHeadingGyro.getAngle();
-   // }
+    public double getGyroAngle()
+    {
+    return driveHeadingGyro.getAngle();
+    }
 
-   // public void resetGyro()
-   // {
-   // driveHeadingGyro.reset();
-   // }
+    public void resetGyro()
+    {
+    driveHeadingGyro.reset();
+    }
 
    public void setPidSpeedValue(double pidSpeed)
    {
@@ -834,7 +840,7 @@ public class DriveBase implements Subsystem
       this.distance_remaining = 0.0;
       this.goal_velocity = 0.0;
       motionProfileActive = false;
-//      overrideHeadingValue(0.0);
+      overrideHeadingValue(0.0);
       disableDriveOverride();
    }
 
@@ -915,9 +921,23 @@ public class DriveBase implements Subsystem
    {
       if (source.getName().equals(WSInputs.DRV_BUTTON_6.getName()))
       {
-         if (((DigitalInput) source).getValue())
+//         if (((DigitalInput) source).getValue())
+//         {
+//            highGearFlag = !highGearFlag;
+//         }
+         if (source.getName().equals(WSInputs.DRV_BUTTON_6.getName()))
          {
-            highGearFlag = !highGearFlag;
+            if (isPistolGrip)
+            {
+               highGearFlag = ((DigitalInput) source).getValue();
+            }
+            else
+            {
+               if (((DigitalInput) source).getValue())
+               {
+                  highGearFlag = !highGearFlag;
+               }
+            }
          }
       }
       else if (source.getName().equals(WSInputs.DRV_BUTTON_5.getName()))

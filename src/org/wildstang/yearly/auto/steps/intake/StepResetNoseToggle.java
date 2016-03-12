@@ -24,6 +24,7 @@ public class StepResetNoseToggle extends AutoStep
    {
       // TODO Auto-generated method stub
       ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_5.getName())).setValue(false);
+      setFinished(true);
    }
 
    @Override

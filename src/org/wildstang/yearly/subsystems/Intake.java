@@ -58,6 +58,8 @@ public class Intake implements Subsystem
    private double manLeftJoyRoller;
    private double rollerSpeed;
    private boolean AutoIntakeOverride = false;
+   private boolean ShotIntakeOverride = false;
+   
    private double OverrideValue;
 
    @Override
@@ -240,7 +242,17 @@ public class Intake implements Subsystem
       
       intakeDeploy.setValue(deployPneumatic);
       intakeFrontLower.setValue(nosePneumatic);
-      if(AutoIntakeOverride)
+      if(AutoIntakeOverride && !intakeSensorReading)
+      {
+      frontRoller.setValue(OverrideValue);
+      frontRoller2.setValue(-OverrideValue);
+      }
+      else if(AutoIntakeOverride && intakeSensorReading)
+      {
+      frontRoller.setValue(0);
+      frontRoller2.setValue(0);
+      }
+      else if(ShotIntakeOverride)
       {
       frontRoller.setValue(OverrideValue);
       frontRoller2.setValue(-OverrideValue);
@@ -278,6 +290,15 @@ public class Intake implements Subsystem
    public void IntakeValue(double value)
    {
       OverrideValue = value;
+   }
+   public void setShotOverride(boolean state)
+   {
+      ShotIntakeOverride = state;
+   }
+   public void shotOverride(boolean on)
+   {
+      if(on) OverrideValue = -1;
+      else OverrideValue = 0;
    }
 
 }

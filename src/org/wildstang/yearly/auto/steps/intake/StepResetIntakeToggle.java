@@ -23,6 +23,7 @@ public class StepResetIntakeToggle extends AutoStep
    {
       // TODO Auto-generated method stub
       ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_7.getName())).setValue(false);
+      setFinished(true);
    }
 
    @Override

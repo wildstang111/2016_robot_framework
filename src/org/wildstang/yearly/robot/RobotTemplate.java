@@ -26,14 +26,17 @@ import org.wildstang.framework.logger.StateLogger;
 import org.wildstang.framework.timer.ProfilingTimer;
 import org.wildstang.hardware.crio.RoboRIOInputFactory;
 import org.wildstang.hardware.crio.RoboRIOOutputFactory;
+import org.wildstang.yearly.auto.programs.CornerAvoid;
 import org.wildstang.yearly.auto.programs.CrossingDefense;
 import org.wildstang.yearly.auto.programs.FunctionTest;
 import org.wildstang.yearly.auto.programs.HarpoonAuto;
 import org.wildstang.yearly.auto.programs.MotionProfileTest;
 import org.wildstang.yearly.auto.programs.OneBallMoatRampart;
+import org.wildstang.yearly.auto.programs.SpyShotCross;
 import org.wildstang.yearly.auto.programs.TwoBall;
 import org.wildstang.yearly.subsystems.DriveBase;
 import org.wildstang.yearly.subsystems.Intake;
+import org.wildstang.yearly.subsystems.Shooter;
 
 import com.ni.vision.NIVision.Image;
 
@@ -178,12 +181,14 @@ public class RobotTemplate extends IterativeRobot
       AutoManager.getInstance().addProgram(new TwoBall());
       AutoManager.getInstance().addProgram(new FunctionTest());
       AutoManager.getInstance().addProgram(new CrossingDefense());
+      AutoManager.getInstance().addProgram(new SpyShotCross());
+      AutoManager.getInstance().addProgram(new CornerAvoid());
 
       s_log.logp(Level.ALL, this.getClass().getName(), "robotInit", "Startup Completed");
       startupTimer.endTimingSection();
       
       server = CameraServer.getInstance();
-      server.setQuality(50);
+      server.setQuality(25);
       server.startAutomaticCapture("cam0");
 
    }
@@ -311,7 +316,9 @@ public class RobotTemplate extends IterativeRobot
    {
       if (firstRun)
       {
+         ((Shooter) Core.getSubsystemManager().getSubsystem(WSSubsystems.SHOOTER.getName())).shooterOverride(false);
          ((Intake) Core.getSubsystemManager().getSubsystem(WSSubsystems.INTAKE.getName())).setIntakeOverrideOn(false);
+         ((Intake) Core.getSubsystemManager().getSubsystem(WSSubsystems.INTAKE.getName())).setShotOverride(false);
          ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).resetLeftEncoder();
          ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).resetRightEncoder();
          ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).stopStraightMoveWithMotionProfile();

@@ -30,6 +30,7 @@ public class StepSetNoseState extends AutoStep
       {
       ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_5.getName())).setValue(true);
       }
+      setFinished(true);
    }
 
    @Override

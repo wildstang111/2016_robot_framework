@@ -27,14 +27,20 @@ public enum WSInputs implements Inputs {
    //DRV_BUTTON_1("Driver button 1", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 0), getLogging()), 
    DRV_BUTTON_2("Driver Limbo", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 1), getLogging()), 
    //DRV_BUTTON_3("Driver button 3", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 2), getLogging()), 
+//   DRV_BUTTON_4("Driver button 4", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 3), getLogging()), 
+//   DRV_BUTTON_5("Driver Turret Mode", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 4), getLogging()), 
+//   DRV_BUTTON_6("Driver Shift", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 5), getLogging()), 
+//   DRV_BUTTON_7("Driver Intake Nose Control", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 6), getLogging()), 
+//   DRV_BUTTON_8("Driver Turbo", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 7), getLogging()),
    DRV_BUTTON_4("Driver button 4", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 3), getLogging()), 
    DRV_BUTTON_5("Driver Turret Mode", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 4), getLogging()), 
    DRV_BUTTON_6("Driver Shift", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 5), getLogging()), 
    DRV_BUTTON_7("Driver Intake Nose Control", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 6), getLogging()), 
    DRV_BUTTON_8("Driver Turbo", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 7), getLogging()),
+   DRV_BUTTON_12_PG("Pistol Grip", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 11), getLogging()),
                         
     // This should get deleted, for debug only
-  DRV_BUTTON_12("Antiturbo (Driver 8)", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 11), getLogging()),
+//  DRV_BUTTON_12("Antiturbo (Driver 8)", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 11), getLogging()),
 
    // Manipulator Enums
    MAN_RIGHT_JOYSTICK_Y("Manip Climb up_down", WSInputType.JS_JOYSTICK, new WsJSJoystickInputConfig(1, JoystickConstants.RIGHT_JOYSTICK_Y), getLogging()), 

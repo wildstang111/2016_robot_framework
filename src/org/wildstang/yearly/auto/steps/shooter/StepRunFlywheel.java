@@ -50,6 +50,7 @@ public class StepRunFlywheel extends AutoStep
          ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_4.getName())).setValue(true);
 //         ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_4.getName())).setValue(false);
       }
+      setFinished(true);
    }
 
    @Override

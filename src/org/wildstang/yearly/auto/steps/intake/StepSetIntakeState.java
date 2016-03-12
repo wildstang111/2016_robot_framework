@@ -31,6 +31,7 @@ public class StepSetIntakeState extends AutoStep
       {
       ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_7.getName())).setValue(true);
       }
+      setFinished(true);
    }
 
    @Override

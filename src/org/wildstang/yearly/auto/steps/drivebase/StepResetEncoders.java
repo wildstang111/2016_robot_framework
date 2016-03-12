@@ -1,30 +1,25 @@
-package org.wildstang.yearly.auto.steps.shooter;
+package org.wildstang.yearly.auto.steps.drivebase;
 
 import org.wildstang.framework.auto.steps.AutoStep;
 import org.wildstang.framework.core.Core;
 import org.wildstang.yearly.robot.WSSubsystems;
-import org.wildstang.yearly.subsystems.Intake;
+import org.wildstang.yearly.subsystems.DriveBase;
 
-public class StepResetShotToggle extends AutoStep
+public class StepResetEncoders extends AutoStep
 {
-   public StepResetShotToggle()
-   {
-
-   }
-
+   DriveBase driveBase = ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName()));
    @Override
    public void initialize()
    {
       // TODO Auto-generated method stub
-
+      driveBase.resetLeftEncoder();
+      driveBase.resetRightEncoder();
    }
 
    @Override
    public void update()
    {
       // TODO Auto-generated method stub
-//      ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_8.getName())).setValue(false);
-      ((Intake)Core.getSubsystemManager().getSubsystem(WSSubsystems.INTAKE.getName())).shotOverride(false);
       setFinished(true);
    }
 
@@ -32,7 +27,7 @@ public class StepResetShotToggle extends AutoStep
    public String toString()
    {
       // TODO Auto-generated method stub
-      return "Shot reset";
+      return null;
    }
 
 }
