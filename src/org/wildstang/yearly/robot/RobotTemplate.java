@@ -1,10 +1,11 @@
+package org.wildstang.yearly.robot;
 /*----------------------------------------------------------------------------*/
 /* Copyright (c) FIRST 2008. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
-package org.wildstang.yearly.robot;
+
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -28,9 +29,9 @@ import org.wildstang.hardware.crio.RoboRIOInputFactory;
 import org.wildstang.hardware.crio.RoboRIOOutputFactory;
 import org.wildstang.yearly.auto.programs.CornerAvoid;
 import org.wildstang.yearly.auto.programs.CrossingDefense;
-import org.wildstang.yearly.auto.programs.FunctionTest;
 import org.wildstang.yearly.auto.programs.HarpoonAuto;
-import org.wildstang.yearly.auto.programs.MotionProfileTest;
+import org.wildstang.yearly.auto.programs.LowBarLowGoal;
+import org.wildstang.yearly.auto.programs.LowBarOneBall;
 import org.wildstang.yearly.auto.programs.OneBallMoatRampart;
 import org.wildstang.yearly.auto.programs.SpyShotCross;
 import org.wildstang.yearly.auto.programs.TwoBall;
@@ -175,20 +176,22 @@ public class RobotTemplate extends IterativeRobot
 
       // 2. Add Auto programs
 //      AutoManager.getInstance().addProgram(new OneBallMoatRampart());
-      AutoManager.getInstance().addProgram(new MotionProfileTest());
+//      AutoManager.getInstance().addProgram(new MotionProfileTest());
       AutoManager.getInstance().addProgram(new OneBallMoatRampart());
       AutoManager.getInstance().addProgram(new HarpoonAuto());
       AutoManager.getInstance().addProgram(new TwoBall());
-      AutoManager.getInstance().addProgram(new FunctionTest());
+//      AutoManager.getInstance().addProgram(new FunctionTest());
       AutoManager.getInstance().addProgram(new CrossingDefense());
       AutoManager.getInstance().addProgram(new SpyShotCross());
       AutoManager.getInstance().addProgram(new CornerAvoid());
+      AutoManager.getInstance().addProgram(new LowBarOneBall());
+      AutoManager.getInstance().addProgram(new LowBarLowGoal());
 
       s_log.logp(Level.ALL, this.getClass().getName(), "robotInit", "Startup Completed");
       startupTimer.endTimingSection();
       
       server = CameraServer.getInstance();
-      server.setQuality(15);
+      server.setQuality(25);
       server.startAutomaticCapture("cam0");
 
    }

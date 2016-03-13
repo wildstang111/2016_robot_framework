@@ -1,8 +1,9 @@
+package org.wildstang.yearly.auto.steps.drivebase;
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.wildstang.yearly.auto.steps.drivebase;
+
 
 import org.wildstang.framework.auto.steps.AutoStep;
 import org.wildstang.framework.core.Core;
@@ -33,11 +34,15 @@ public class StepQuickTurn extends AutoStep
       angle = ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getGyroAngle()
             + value;
       ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).setThrottleValue(0);
-      ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).overrideHeadingValue(value < 0 ? 0.6
-            : -0.6);
+//      ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).overrideHeadingValue(value < 0 ? 0.6
+//            : -0.6);
+    ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).overrideHeadingValue(value < 0 ? 0.4
+    : -0.4);
 // TODO
-      ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_THROTTLE.getName())).setValue(0.0);
-      ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).setValue(value < 0 ? 0.6 : -0.6);
+//      ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_THROTTLE.getName())).setValue(0.0);
+//      ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).setValue(value < 0 ? 0.6 : -0.6);
+    ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_THROTTLE.getName())).setValue(0.0);
+    ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).setValue(value < 0 ? 0.4 : -0.4);
 
    }
 
@@ -57,7 +62,8 @@ public class StepQuickTurn extends AutoStep
          {
             // TODO
             ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_THROTTLE.getName())).setValue(0.0);
-            ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).setValue(value < 0 ? 0.6 : -0.6);
+//            ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).setValue(value < 0 ? 0.6 : -0.6);
+            ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).setValue(value < 0 ? 0.4 : -0.4);
             shouldFinish = true;
          }
       }
