@@ -121,6 +121,8 @@ public class DriveBase implements Subsystem
    
    private boolean firstRun = true;
    
+   private boolean AutoDriveOverride = false;
+   
    public DriveBase()
    {
       // Load the config parameters
@@ -206,7 +208,7 @@ public class DriveBase implements Subsystem
 //         if(!DriverStation.getInstance().isAutonomous()) stopStraightMoveWithMotionProfile();
 //      }
       updateSpeedAndAccelerationCalculations();
-      if (true == motionProfileActive)
+      if (true == motionProfileActive && AutoDriveOverride)
       {
 
          // Update PID using profile velocity as setpoint and measured
@@ -919,32 +921,39 @@ public class DriveBase implements Subsystem
    @Override
    public void inputUpdate(Input source)
    {
+      if(!isPistolGrip)
+      {
       if (source.getName().equals(WSInputs.DRV_BUTTON_6.getName()))
       {
-//         if (((DigitalInput) source).getValue())
-//         {
-//            highGearFlag = !highGearFlag;
-//         }
-            if (isPistolGrip)
-            {
-               highGearFlag = ((DigitalInput) source).getValue();
-            }
-            else
-            {
                if (((DigitalInput) source).getValue())
                {
                   highGearFlag = !highGearFlag;
                }
-            }
-      }
-      else if (source.getName().equals(WSInputs.DRV_BUTTON_5.getName()))
-      {
-         superAntiTurboFlag = ((DigitalInput) source).getValue();
       }
       else if (source.getName().equals(WSInputs.DRV_BUTTON_8.getName()))
       {
          turboFlag = ((DigitalInput) source).getValue();
       }
+      }
+      else
+      {
+         if (source.getName().equals(WSInputs.DRV_BUTTON_8.getName()))
+         {
+            if (((DigitalInput) source).getValue())
+            {
+               highGearFlag = !highGearFlag;
+            }
+         }
+         else if (source.getName().equals(WSInputs.DRV_BUTTON_6.getName()))
+         {
+            turboFlag = ((DigitalInput) source).getValue();
+         }
+      }
+      if (source.getName().equals(WSInputs.DRV_BUTTON_5.getName()))
+      {
+         superAntiTurboFlag = ((DigitalInput) source).getValue();
+      }
+
       else if (source.getName().equals(WSInputs.DRV_BUTTON_4.getName())){
          if (((DigitalInput) source).getValue() == true)
          {
@@ -1014,5 +1023,9 @@ public class DriveBase implements Subsystem
    public boolean shifterState()
    {
       return highGearFlag;
+   }
+   public void setSuperDriveOverride(boolean state)
+   {
+      AutoDriveOverride = state;
    }
 }

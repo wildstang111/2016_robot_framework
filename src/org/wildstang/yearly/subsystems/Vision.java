@@ -1,5 +1,6 @@
 package org.wildstang.yearly.subsystems;
 
+import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.Input;
 import org.wildstang.framework.io.inputs.RemoteAnalogInput;
 import org.wildstang.framework.io.inputs.RemoteDigitalInput;
@@ -41,6 +42,12 @@ public class Vision implements Subsystem
       angleToRotateY = 0;
       angleToRotateZ = 0;
       isOnTarget = false;
+      
+      Core.getInputManager().getInput(WSInputs.CAMERA_ANGLE_X.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.CAMERA_ANGLE_Y.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.CAMERA_ANGLE_Z.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.CAMERA_DISTANCE.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.ON_TARGET.getName()).addInputListener(this);
    }
 
    @Override

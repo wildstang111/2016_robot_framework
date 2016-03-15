@@ -275,12 +275,6 @@ public class RobotTemplate extends IterativeRobot
    public void autonomousInit()
    {
       Core.getSubsystemManager().init();
-      if (AutoFirstRun)
-      {
-         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).resetLeftEncoder();
-         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).resetRightEncoder();
-         AutoFirstRun = false;
-      }
 
       m_core.setAutoManager(AutoManager.getInstance());
       AutoManager.getInstance().startCurrentProgram();
@@ -293,9 +287,15 @@ public class RobotTemplate extends IterativeRobot
    {
       // Update all inputs, outputs and subsystems
 
-      
       m_core.executeUpdate();
 
+      if (AutoFirstRun)
+      {
+         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).resetLeftEncoder();
+         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).resetRightEncoder();
+         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).setSuperDriveOverride(true);
+         AutoFirstRun = false;
+      }
    }
 
    /**
@@ -324,6 +324,7 @@ public class RobotTemplate extends IterativeRobot
          ((Intake) Core.getSubsystemManager().getSubsystem(WSSubsystems.INTAKE.getName())).setShotOverride(false);
          ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).resetLeftEncoder();
          ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).resetRightEncoder();
+         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).setSuperDriveOverride(false);
          ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).stopStraightMoveWithMotionProfile();
          firstRun = false;
       }
