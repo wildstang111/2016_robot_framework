@@ -1,5 +1,6 @@
 package org.wildstang.yearly.auto.steps.drivebase;
 
+
 import org.wildstang.framework.auto.steps.AutoStep;
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.inputs.AnalogInput;
@@ -15,7 +16,7 @@ public class StepVisionAdjustment extends AutoStep
 
    public StepVisionAdjustment()
    {
-      this.value = ((Vision) Core.getSubsystemManager().getSubsystem(WSSubsystems.VISION.getName())).getAngleToRotate();
+      this.value = ((Vision) Core.getSubsystemManager().getSubsystem(WSSubsystems.VISION.getName())).getAngleToRotateX();
    }
    
    @Override
@@ -45,10 +46,10 @@ public class StepVisionAdjustment extends AutoStep
          return;
       }
       boolean aimed = ((Vision) Core.getSubsystemManager().getSubsystem(WSSubsystems.VISION.getName())).getOnTarget();
-      angle = ((Vision) Core.getSubsystemManager().getSubsystem(WSSubsystems.VISION.getName())).getAngleToRotate();
+      angle = ((Vision) Core.getSubsystemManager().getSubsystem(WSSubsystems.VISION.getName())).getAngleToRotateX();
       if (value < 0)
       {
-         if (angle > gyroAngle)
+         if (!aimed)
          {
             // TODO
             ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_THROTTLE.getName())).setValue(0.0);
@@ -59,7 +60,7 @@ public class StepVisionAdjustment extends AutoStep
       }
       else
       {
-         if (angle < gyroAngle)
+         if (!aimed)
          {
             ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).overrideHeadingValue(0.0);
 
