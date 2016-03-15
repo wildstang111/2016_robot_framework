@@ -16,7 +16,7 @@ public class StepVisionAdjustment extends AutoStep
 
    public StepVisionAdjustment()
    {
-      this.value = ((Vision) Core.getSubsystemManager().getSubsystem(WSSubsystems.VISION.getName())).getAngleToRotateX();
+      this.value = ((Vision) Core.getSubsystemManager().getSubsystem(WSSubsystems.VISION.getName())).getAngleToRotateY();
    }
    
    @Override
@@ -45,11 +45,11 @@ public class StepVisionAdjustment extends AutoStep
          ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).overrideHeadingValue(0.0);
          return;
       }
-      boolean aimed = ((Vision) Core.getSubsystemManager().getSubsystem(WSSubsystems.VISION.getName())).getOnTarget();
-      angle = ((Vision) Core.getSubsystemManager().getSubsystem(WSSubsystems.VISION.getName())).getAngleToRotateX();
+//      boolean aimed = ((Vision) Core.getSubsystemManager().getSubsystem(WSSubsystems.VISION.getName())).getOnTarget();
+      angle = ((Vision) Core.getSubsystemManager().getSubsystem(WSSubsystems.VISION.getName())).getAngleToRotateY();
       if (value < 0)
       {
-         if (!aimed)
+         if (Math.abs(angle) > 10)
          {
             // TODO
             ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_THROTTLE.getName())).setValue(0.0);
@@ -60,7 +60,7 @@ public class StepVisionAdjustment extends AutoStep
       }
       else
       {
-         if (!aimed)
+         if (Math.abs(angle) < 10)
          {
             ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).overrideHeadingValue(0.0);
 

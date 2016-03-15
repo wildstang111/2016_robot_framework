@@ -7,7 +7,9 @@ import org.wildstang.framework.io.inputs.RemoteDigitalInput;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.yearly.robot.WSInputs;
 
-public class Vision implements Subsystem 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+public class Vision implements Subsystem
 {
    private double distanceToTarget;
    private double angleToRotateX;
@@ -61,14 +63,16 @@ public class Vision implements Subsystem
    public void update()
    {
       // TODO Auto-generated method stub
-      
+      SmartDashboard.putNumber("Camera Distance", distanceToTarget);
+      SmartDashboard.putNumber("Camera Angle", angleToRotateY);
+      SmartDashboard.putBoolean("On Target?", isOnTarget);
    }
 
    @Override
    public String getName()
    {
       // TODO Auto-generated method stub
-      return null;
+      return "Vision";
    }
    
    public double getAngleToRotateX() {
