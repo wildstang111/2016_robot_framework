@@ -2,8 +2,14 @@ package org.wildstang.yearly.robot;
 
 import org.wildstang.framework.core.Inputs;
 import org.wildstang.framework.hardware.InputConfig;
+import org.wildstang.framework.hardware.WsRemoteAnalogInputConfig;
+import org.wildstang.framework.hardware.WsRemoteDigitalInputConfig;
 import org.wildstang.framework.io.inputs.InputType;
+import org.wildstang.framework.io.inputs.RemoteAnalogInput;
+import org.wildstang.framework.io.inputs.RemoteDigitalInput;
 import org.wildstang.hardware.JoystickConstants;
+import org.wildstang.hardware.beaglebone.inputs.config.BBBAnalogInputConfig;
+import org.wildstang.hardware.beaglebone.inputs.config.BBBDigitalInputConfig;
 import org.wildstang.hardware.crio.inputs.WSInputType;
 import org.wildstang.hardware.crio.inputs.config.WsDigitalInputConfig;
 import org.wildstang.hardware.crio.inputs.config.WsI2CInputConfig;
@@ -62,12 +68,16 @@ public enum WSInputs implements Inputs {
    HALL_EFFECT("Lift hall effect sensors", WSInputType.HALL_EFFECT, new WsI2CInputConfig(Port.kMXP, 0x10), getLogging()),
    // LIMIT_SWITCH("Limit switch", WSInputType.SWITCH, 0, getLogging()),
    //POT("Pot", WSInputType.POT, new WsAnalogInputConfig(0), getLogging()), 
-   IMU("IMU", WSInputType.I2C, new WsI2CInputConfig(I2C.Port.kOnboard, 0x20), getLogging()), 
+   IMU("IMU", WSInputType.I2C, new WsI2CInputConfig(I2C.Port.kOnboard, 0x20), getLogging()),
+   CAMERA_DISTANCE("Camera Distance", WSInputType.REMOTE_ANALOG, new WsRemoteAnalogInputConfig("remoteIO"), getLogging()),
+   CAMERA_ANGLE("Camera Angle", WSInputType.REMOTE_ANALOG, new WsRemoteAnalogInputConfig("remoteIO"), getLogging()),
+   ON_TARGET("On Target", WSInputType.REMOTE_DIGITAL, new WsRemoteDigitalInputConfig("remoteIO"), getLogging()),
    MOTION_PROFILE_CONTROL("MotionProfileConfig", WSInputType.MOTION_PROFILE_CONTROL, new WsMotionProfileConfig(), getLogging()), 
    INTAKE_BOLDER_SENSOR("Intake Ball Staging", WSInputType.SWITCH, new WsDigitalInputConfig(8, false), getLogging()),
    // INTAKE_BALL_DETECT("Intake ball detection", WSInputType.SWITCH, new WsDigitalInputConfig(9, false), getLogging()),
    RIGHT_ARM_TOUCHING("Right Lift arm touching", WSInputType.SWITCH, new WsDigitalInputConfig(7, false), getLogging()),
    LEFT_ARM_TOUCHING("Left Lift arm touching", WSInputType.SWITCH, new WsDigitalInputConfig(6, false), getLogging());
+   
    //LEFT_DRIVE_ENCODER
    //RIGHT_DRIVER_ENCODER
    //SHOOTER_ENCODER
