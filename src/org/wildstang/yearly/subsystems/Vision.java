@@ -9,7 +9,9 @@ import org.wildstang.yearly.robot.WSInputs;
 public class Vision implements Subsystem 
 {
    private double distanceToTarget;
-   private double angleToRotate;
+   private double angleToRotateX;
+   private double angleToRotateY;
+   private double angleToRotateZ;
    private boolean isOnTarget;
    
    
@@ -19,8 +21,12 @@ public class Vision implements Subsystem
       // TODO Auto-generated method stub
       if (source.getName().equals(WSInputs.CAMERA_DISTANCE.getName())) {
          distanceToTarget = ((RemoteAnalogInput) source).getValue();
-      } else if (source.getName().equals(WSInputs.CAMERA_ANGLE.getName())) {
-         angleToRotate = ((RemoteAnalogInput) source).getValue();
+      } else if (source.getName().equals(WSInputs.CAMERA_ANGLE_X.getName())) {
+         angleToRotateX = ((RemoteAnalogInput) source).getValue();
+      } else if (source.getName().equals(WSInputs.CAMERA_ANGLE_Y.getName())) {
+         angleToRotateY = ((RemoteAnalogInput) source).getValue();
+      } else if (source.getName().equals(WSInputs.CAMERA_ANGLE_Z.getName())) {
+         angleToRotateZ = ((RemoteAnalogInput) source).getValue();
       } else if (source.getName().equals(WSInputs.ON_TARGET.getName())) {
          isOnTarget = ((RemoteDigitalInput) source).getValue();
       }
@@ -31,7 +37,9 @@ public class Vision implements Subsystem
    {
       // TODO Auto-generated method stub
       distanceToTarget = 0;
-      angleToRotate = 0;
+      angleToRotateX = 0;
+      angleToRotateY = 0;
+      angleToRotateZ = 0;
       isOnTarget = false;
    }
 
@@ -56,8 +64,16 @@ public class Vision implements Subsystem
       return null;
    }
    
-   public double getAngleToRotate() {
-      return angleToRotate;
+   public double getAngleToRotateX() {
+      return angleToRotateX;
+   }
+   
+   public double getAngleToRotateY() {
+      return angleToRotateY;
+   }
+   
+   public double getAngleToRotateZ() {
+      return angleToRotateZ;
    }
    
    public double getDistanceToTarget() {
