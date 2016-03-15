@@ -11,6 +11,7 @@ import org.wildstang.yearly.auto.steps.drivebase.StepWaitForDriveMotionProfile;
 import org.wildstang.yearly.auto.steps.intake.StepResetIntakeToggle;
 import org.wildstang.yearly.auto.steps.intake.StepSetIntakeState;
 import org.wildstang.yearly.auto.steps.shooter.StepResetShooterPositionToggle;
+import org.wildstang.yearly.auto.steps.shooter.StepResetShotToggle;
 import org.wildstang.yearly.auto.steps.shooter.StepRunFlywheel;
 import org.wildstang.yearly.auto.steps.shooter.StepSetShooterPosition;
 import org.wildstang.yearly.auto.steps.shooter.StepShoot;
@@ -34,11 +35,14 @@ public class LowBarOneBall extends AutoProgram
       addStep(new StepResetIntakeToggle());
       addStep(new StepSetIntakeState(false));
       addStep(new StepResetIntakeToggle());
-      addStep(new AutoStepDelay(500));
-      addStep(new StepQuickTurn(60));
+      addStep(new AutoStepDelay(1500));
+      addStep(new StepQuickTurn(55));
       addStep(new StepRunFlywheel(.825));
-      addStep(new AutoStepDelay(3000));
+      addStep(new AutoStepDelay(4000));
       addStep(new StepShoot());
+      addStep(new AutoStepDelay(3000));
+      addStep(new StepResetShotToggle());
+      addStep(new StepRunFlywheel(0));
    }
 
    @Override
