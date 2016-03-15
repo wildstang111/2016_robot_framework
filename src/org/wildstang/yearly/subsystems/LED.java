@@ -33,13 +33,17 @@ public class LED implements Subsystem
    boolean m_intake;
 
    /*
-    * | Function | Cmd | PL 1 | PL 2 |
-    * | Shoot | 0x05 | 0x13 | 0x14 |
-    * | Climb | 0x06 | 0x11 | 0x12 |
-    * | Autonomous | 0x02 | 0x11 | 0x12 |
-    * | Red Alliance | 0x04 | 0x52 | 0x01 |
-    * | Blue Alliance | 0x04 | 0x47 | 0x01 |
-    * 
+    * | Function      | Cmd  | PL 1 | PL 2 |
+    * --------------------------------------
+    * | Shoot         | 0x03 | 0x21 | 0x12 |
+    * | Climb         | 0x06 | 0x11 | 0x12 | not currently in code 4 arduino
+    * | Autonomous    | 0x02 | 0x13 | 0x14 |
+    * | Red Alliance  | 0x04 | 0x52 | 0x01 |
+    * | Blue Alliance | 0x47 | 0x34 | 0x26 |
+    * | Intake        | 0x11 | 0x57 | 0x49 |
+    * | Turbo         | 0x05 | 0x20 | 0x32 |
+    * | Anti-Turbo    | 0x06 | 0x09 | 0x08 |
+    *  
     * Send sequence once, no spamming the Arduino.
     */
 
@@ -53,7 +57,6 @@ public class LED implements Subsystem
    
    LedCmd turboCmd = new LedCmd(0x05, 0x20, 0x32);
    LedCmd antiturboCmd = new LedCmd(0x06, 0x09, 0x08);
-   LedCmd normalCmd = new LedCmd(0x07, 0x11, 0x12);
 
    public LED()
    {
@@ -102,7 +105,33 @@ public class LED implements Subsystem
                }
                else if (m_normal)
                {
-                  m_ledOutput.setValue(normalCmd.getBytes());
+                  switch (alliance)
+                  {
+                     case Red:
+                     {
+                           if (!disableDataSent)
+                           {
+                              m_ledOutput.setValue(redCmd.getBytes());
+                              disableDataSent = true;
+                           }
+                     }
+                     break;
+
+                     case Blue:
+                     {
+                        if (!disableDataSent)
+                        {
+                           m_ledOutput.setValue(blueCmd.getBytes());
+                           disableDataSent = true;
+                        }
+                     }
+                     break;
+                     
+                     default:
+                        {
+                           disableDataSent = false;
+                        }
+                     break;
                }
                
                if (m_shooter)
@@ -131,38 +160,39 @@ public class LED implements Subsystem
                autoDataSent = true;
             }
          }
-   
-   else
-      {
-         switch (alliance)
+         else
          {
-            case Red:
+            switch (alliance)
             {
-               if (!disableDataSent)
+               case Red:
                {
-                  m_ledOutput.setValue(redCmd.getBytes());
-                  disableDataSent = true;
+                  if (!disableDataSent)
+                  {
+                     m_ledOutput.setValue(redCmd.getBytes());
+                     disableDataSent = true;
+                  }
                }
-            }
                break;
 
-            case Blue:
-            {
-               if (!disableDataSent)
+               case Blue:
                {
-                  m_ledOutput.setValue(blueCmd.getBytes());
-                  disableDataSent = true;
+                  if (!disableDataSent)
+                  {
+                     m_ledOutput.setValue(blueCmd.getBytes());
+                     disableDataSent = true;
+                  }
                }
-            }
                break;
+               
                default:
-            {
-               disableDataSent = false;
-            }
+               {
+                  disableDataSent = false;
+               }
                break;
+            }
          }
       }
-    }
+   }
 
    @Override
    public void inputUpdate(Input source)
