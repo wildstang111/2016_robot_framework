@@ -5,11 +5,7 @@ import org.wildstang.framework.hardware.InputConfig;
 import org.wildstang.framework.hardware.WsRemoteAnalogInputConfig;
 import org.wildstang.framework.hardware.WsRemoteDigitalInputConfig;
 import org.wildstang.framework.io.inputs.InputType;
-import org.wildstang.framework.io.inputs.RemoteAnalogInput;
-import org.wildstang.framework.io.inputs.RemoteDigitalInput;
 import org.wildstang.hardware.JoystickConstants;
-import org.wildstang.hardware.beaglebone.inputs.config.BBBAnalogInputConfig;
-import org.wildstang.hardware.beaglebone.inputs.config.BBBDigitalInputConfig;
 import org.wildstang.hardware.crio.inputs.WSInputType;
 import org.wildstang.hardware.crio.inputs.config.WsDigitalInputConfig;
 import org.wildstang.hardware.crio.inputs.config.WsI2CInputConfig;
@@ -73,6 +69,7 @@ public enum WSInputs implements Inputs {
    CAMERA_ANGLE_X("Camera X Rotation", WSInputType.REMOTE_ANALOG, new WsRemoteAnalogInputConfig("remoteIO"), getLogging()),
    CAMERA_ANGLE_Y("Camera Y Rotation", WSInputType.REMOTE_ANALOG, new WsRemoteAnalogInputConfig("remoteIO"), getLogging()),
    CAMERA_ANGLE_Z("Camera Z Rotation", WSInputType.REMOTE_ANALOG, new WsRemoteAnalogInputConfig("remoteIO"), getLogging()),
+   ANGLE_OF_ROTATION("Angle To Rotate", WSInputType.REMOTE_ANALOG, new WsRemoteAnalogInputConfig("remoteIO"), getLogging()),
    ON_TARGET("On Target", WSInputType.REMOTE_DIGITAL, new WsRemoteDigitalInputConfig("remoteIO"), getLogging()),
    MOTION_PROFILE_CONTROL("MotionProfileConfig", WSInputType.MOTION_PROFILE_CONTROL, new WsMotionProfileConfig(), getLogging()), 
    INTAKE_BOLDER_SENSOR("Intake Ball Staging", WSInputType.SWITCH, new WsDigitalInputConfig(8, false), getLogging()),

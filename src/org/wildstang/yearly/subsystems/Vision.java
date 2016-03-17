@@ -15,6 +15,7 @@ public class Vision implements Subsystem
    private double angleToRotateX;
    private double angleToRotateY;
    private double angleToRotateZ;
+   private double angleToRotate;
    private boolean isOnTarget;
    
    
@@ -33,6 +34,9 @@ public class Vision implements Subsystem
       } else if (source.getName().equals(WSInputs.ON_TARGET.getName())) {
          isOnTarget = ((RemoteDigitalInput) source).getValue();
       }
+      else if (source.getName().equals(WSInputs.ANGLE_OF_ROTATION.getName())) {
+         angleToRotate = ((RemoteAnalogInput) source).getValue();
+      }
    }
 
    @Override
@@ -43,11 +47,13 @@ public class Vision implements Subsystem
       angleToRotateX = 0;
       angleToRotateY = 0;
       angleToRotateZ = 0;
+      angleToRotate = 0;
       isOnTarget = false;
       
       Core.getInputManager().getInput(WSInputs.CAMERA_ANGLE_X.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.CAMERA_ANGLE_Y.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.CAMERA_ANGLE_Z.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.ANGLE_OF_ROTATION.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.CAMERA_DISTANCE.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.ON_TARGET.getName()).addInputListener(this);
    }
@@ -64,7 +70,7 @@ public class Vision implements Subsystem
    {
       // TODO Auto-generated method stub
       SmartDashboard.putNumber("Camera Distance", distanceToTarget);
-      SmartDashboard.putNumber("Camera Angle", angleToRotateY);
+      SmartDashboard.putNumber("Camera Angle", angleToRotate);
       SmartDashboard.putBoolean("On Target?", isOnTarget);
    }
 

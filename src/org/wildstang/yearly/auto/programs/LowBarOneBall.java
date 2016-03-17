@@ -2,11 +2,13 @@ package org.wildstang.yearly.auto.programs;
 
 
 import org.wildstang.framework.auto.AutoProgram;
+import org.wildstang.framework.auto.steps.AutoParallelStepGroup;
 import org.wildstang.framework.auto.steps.control.AutoStepDelay;
 import org.wildstang.yearly.auto.steps.drivebase.StepQuickTurn;
 import org.wildstang.yearly.auto.steps.drivebase.StepSetShifter;
 import org.wildstang.yearly.auto.steps.drivebase.StepStartDriveUsingMotionProfile;
 import org.wildstang.yearly.auto.steps.drivebase.StepStopDriveUsingMotionProfile;
+import org.wildstang.yearly.auto.steps.drivebase.StepVisionAdjustment;
 import org.wildstang.yearly.auto.steps.drivebase.StepWaitForDriveMotionProfile;
 import org.wildstang.yearly.auto.steps.intake.StepResetIntakeToggle;
 import org.wildstang.yearly.auto.steps.intake.StepSetIntakeState;
@@ -22,6 +24,7 @@ public class LowBarOneBall extends AutoProgram
    @Override
    protected void defineSteps()
    {
+      AutoParallelStepGroup findGoal = new AutoParallelStepGroup();
       // TODO Auto-generated method stub
       addStep(new StepSetShifter(false));
       addStep(new StepSetShooterPosition(false));
@@ -38,7 +41,9 @@ public class LowBarOneBall extends AutoProgram
       addStep(new AutoStepDelay(1500));
       addStep(new StepQuickTurn(55));
       addStep(new StepRunFlywheel(.825));
-      addStep(new AutoStepDelay(4000));
+      findGoal.addStep(new AutoStepDelay(4000));
+      findGoal.addStep(new StepVisionAdjustment());
+      addStep(findGoal);
       addStep(new StepShoot());
       addStep(new AutoStepDelay(3000));
       addStep(new StepResetShotToggle());

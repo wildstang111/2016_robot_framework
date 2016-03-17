@@ -35,7 +35,7 @@ org.wildstang.subsystems.DriveBase.deceleration_motor_speed=0.3
 org.wildstang.subsystems.DriveBase.stopping_distance_at_max_speed_lowgear=10.0
 org.wildstang.subsystems.DriveBase.quick_turn_cap=10.0
 org.wildstang.subsystems.DriveBase.quick_turn_antiturbo=10.0
-org.wildstang.subsystems.DriveBase.super_antiturbo_factor=0.25
+org.wildstang.subsystems.DriveBase.super_antiturbo_factor=0.4
 org.wildstang.subsystems.DriveBase.acceleration_enabled=true
 // 0.75 for proto, 0.5 for real robot
 org.wildstang.subsystems.DriveBase.output_scale_factor=0.75

@@ -26,13 +26,13 @@ public class StepVisionAdjustment extends AutoStep
       ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).setThrottleValue(0);
 //      ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).overrideHeadingValue(value < 0 ? 0.6
 //            : -0.6);
-    ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).overrideHeadingValue(goalOffset < 0 ? 0.4
-    : -0.4);
+    ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).overrideHeadingValue(goalOffset < 0 ? 0.2
+    : -0.2);
 // TODO
 //      ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_THROTTLE.getName())).setValue(0.0);
 //      ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).setValue(value < 0 ? 0.6 : -0.6);
     ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_THROTTLE.getName())).setValue(0.0);
-    ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).setValue(goalOffset < 0 ? 0.4 : -0.4);
+    ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).setValue(goalOffset < 0 ? 0.2 : -0.2);
    }
 
    @Override
@@ -49,18 +49,18 @@ public class StepVisionAdjustment extends AutoStep
       angle = ((Vision) Core.getSubsystemManager().getSubsystem(WSSubsystems.VISION.getName())).getAngleToRotateY();
       if (value < 0)
       {
-         if (Math.abs(angle) > 10)
+         if (Math.abs(angle) > 5)
          {
             // TODO
             ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_THROTTLE.getName())).setValue(0.0);
 //            ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).setValue(value < 0 ? 0.6 : -0.6);
-            ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).setValue(value < 0 ? 0.4 : -0.4);
+            ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).setValue(value < 0 ? 0.2 : -0.2);
             shouldFinish = true;
          }
       }
       else
       {
-         if (Math.abs(angle) < 10)
+         if (Math.abs(angle) < 5)
          {
             ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).overrideHeadingValue(0.0);
 
