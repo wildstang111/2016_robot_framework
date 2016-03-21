@@ -40,12 +40,11 @@ public class Shooter implements Subsystem, ConfigListener
    private static final int ON_SPEED_FLYWHEEL_DIFF_DEFAULT = 75;
    private static final double HIGH_RATE_DEFAULT = 2300;
    private static final double LOW_RATE_DEFAULT = 2100;
-   private static   double HIGH_DEFAULT = 0.825;
+   private static double HIGH_DEFAULT = 0.825;
    private static final double LOW_DEFAULT = 0.75;
    private static final Integer hoodUp = new Integer(WsDoubleSolenoidState.FORWARD.ordinal());
    private static final Integer hoodDown = new Integer(WsDoubleSolenoidState.REVERSE.ordinal());
 
-   
    private WsVictor flyWheel;
    private WsDoubleSolenoid shooterHood;
    private Encoder flyWheelEncoder = new Encoder(4, 5, true, EncodingType.k4X);
@@ -97,10 +96,9 @@ public class Shooter implements Subsystem, ConfigListener
 
       RingLight = (WsRelay) Core.getOutputManager().getOutput(WSOutputs.RING_LIGHT.getName());
       RingLight.enable();
-      
+
       flyWheel = (WsVictor) (Core.getOutputManager().getOutput(WSOutputs.SHOOTER.getName()));
       shooterHood = ((WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.SHOOTER_HOOD.getName()));
-
 
       highFlywheelSpeedConf = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
             + highSpeedKey, HIGH_DEFAULT);
@@ -115,11 +113,11 @@ public class Shooter implements Subsystem, ConfigListener
             + onSpeedDiffKey, ON_SPEED_FLYWHEEL_DIFF_DEFAULT);
 
       // Need to figure out these values to configure the encoder.
-//      flyWheelEncoder.setMaxPeriod(0.1);
-//      flyWheelEncoder.setMinRate(10);
-//      flyWheelEncoder.setDistancePerPulse(5);
-//      flyWheelEncoder.setReverseDirection(true);
-//      flyWheelEncoder.setSamplesToAverage(7);
+      // flyWheelEncoder.setMaxPeriod(0.1);
+      // flyWheelEncoder.setMinRate(10);
+      // flyWheelEncoder.setDistancePerPulse(5);
+      // flyWheelEncoder.setReverseDirection(true);
+      // flyWheelEncoder.setSamplesToAverage(7);
 
       flyWheelDiff = 0;
    }
@@ -134,16 +132,16 @@ public class Shooter implements Subsystem, ConfigListener
       double flyWheelRate = flyWheelEncoder.getRate();
 
       hoodUpDown = hoodPosition ? hoodUp : hoodDown;
-      
+
       if (true == flySpeedToggle)
       {
-         flySpeed = highFlywheelSpeedConf;
-         expectedRate = expectedHighRateConf;
+         flySpeed = .825;
+         expectedRate = 2330;
       }
       else
       {
-         flySpeed = lowFlywheelSpeedConf;
-         expectedRate = expectedLowRateConf;
+         flySpeed = .75;
+         expectedRate = 2100;
       }
 
       if (true == flyWheelToggle)
@@ -156,31 +154,39 @@ public class Shooter implements Subsystem, ConfigListener
          }
          else
          {
-            // Poor Man's PID.
-            flyWheelDiff = Math.abs(flyWheelRate - expectedRate);
-            outputAdjust = flyWheelDiff / expectedRate;
-
-            // Limit the output Adjust to less than half of the expected Rate to
-            // temper this a bit.
-            outputAdjustLimit = flySpeed / 2;
-            if (outputAdjust > outputAdjustLimit) ;
+            if (flyWheelRate != 0)
             {
-               outputAdjust = outputAdjustLimit;
-            }
 
-            if (flyWheelRate > expectedRate)
-            {
-               // Decrease Speed
-               flySpeed -= outputAdjust;
-            }
-            else if (flyWheelRate < expectedRate)
-            {
-               // Increase the speed.
-               flySpeed += outputAdjust;
-            }
-            // Cap the fly wheel speed to 1.0.
-            flySpeed = flySpeed > 1.0 ? 1.0 : flySpeed < 0.0 ? 0.0 : flySpeed;
+               // Poor Man's PID.
+               flyWheelDiff = Math.abs(flyWheelRate - expectedRate);
+               outputAdjust = flyWheelDiff / expectedRate;
 
+               // Limit the output Adjust to less than half of the expected Rate
+               // to
+               // temper this a bit.
+               outputAdjustLimit = flySpeed / 2;
+               if (outputAdjust > outputAdjustLimit) ;
+               {
+                  outputAdjust = outputAdjustLimit;
+               }
+
+               if (flyWheelRate > expectedRate)
+               {
+                  // Decrease Speed
+                  SmartDashboard.putNumber("flyWheelRate > expectedRate", flySpeed);
+                  flySpeed -= outputAdjust;
+               }
+               else if (flyWheelRate < expectedRate)
+               {
+                  SmartDashboard.putNumber("flyWheelRate < expectedRate", flySpeed);
+                  // Increase the speed.
+                  flySpeed += outputAdjust;
+               }
+
+               // Cap the fly wheel speed to 1.0.
+               flySpeed = flySpeed > 1.0 ? 1.0
+                     : flySpeed < 0.0 ? 0.0 : flySpeed;
+            }
             flyWheel.setValue(-flySpeed);
          }
       }
@@ -188,16 +194,16 @@ public class Shooter implements Subsystem, ConfigListener
       {
          flyWheel.setValue(0);
       }
-      
-      shooterHood.setValue(hoodUpDown);
 
+      shooterHood.setValue(hoodUpDown);
+      SmartDashboard.putNumber("Expected Rate", expectedRate);
+      SmartDashboard.putNumber("Raw Flywheel", -flySpeed);
       SmartDashboard.putString("Flywheel Speed", flySpeedToggle ? "High"
             : "Low");
       SmartDashboard.putNumber("Flywheel Rate", flyWheelRate);
       SmartDashboard.putNumber("Flywheel Output Adjustment", outputAdjust);
       SmartDashboard.putString("Flywheel", flyWheelToggle ? "On" : "Off");
-      SmartDashboard.putString("Hood Positition", hoodPosition ? "Up"
-            : "Down");
+      SmartDashboard.putString("Hood Positition", hoodPosition ? "Up" : "Down");
       SmartDashboard.putBoolean("Flywheel at Speed", doesSpeedMatch());
    }
 
@@ -248,6 +254,7 @@ public class Shooter implements Subsystem, ConfigListener
       onSpeedFlyWheelDiff = p_newConfig.getInt(this.getClass().getName()
             + onSpeedDiffKey, ON_SPEED_FLYWHEEL_DIFF_DEFAULT);
    }
+
    public void shooterOverride(boolean state)
    {
       flyWheelToggle = state;

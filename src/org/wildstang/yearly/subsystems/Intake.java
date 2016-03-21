@@ -262,6 +262,7 @@ public class Intake implements Subsystem
       frontRoller.setValue(rollerSpeed);
       frontRoller2.setValue(-rollerSpeed);
       }
+      SmartDashboard.putBoolean("Has Ball", intakeSensorReading);
       SmartDashboard.putBoolean("deployPneumatic=", deployPneumatic);
       SmartDashboard.putBoolean("nosePneumatic=", nosePneumatic);
       SmartDashboard.putNumber("rollerSpeed=", rollerSpeed);

@@ -11,12 +11,13 @@ import org.wildstang.yearly.subsystems.Vision;
 
 public class StepVisionAdjustment extends AutoStep
 {
-   private double goalOffset, distance, angle, value;
+//   private double goalOffset, distance, angle, value;
+   private int rotateInt;
    private boolean shouldFinish = false;
 
    public StepVisionAdjustment()
    {
-      this.value = ((Vision) Core.getSubsystemManager().getSubsystem(WSSubsystems.VISION.getName())).getAngleToRotateY();
+      this.rotateInt = ((Vision) Core.getSubsystemManager().getSubsystem(WSSubsystems.VISION.getName())).getRotateInt();
    }
    
    @Override
@@ -26,13 +27,13 @@ public class StepVisionAdjustment extends AutoStep
       ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).setThrottleValue(0);
 //      ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).overrideHeadingValue(value < 0 ? 0.6
 //            : -0.6);
-    ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).overrideHeadingValue(goalOffset < 0 ? 0.2
+    ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).overrideHeadingValue(rotateInt < 0 ? 0.2
     : -0.2);
 // TODO
 //      ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_THROTTLE.getName())).setValue(0.0);
 //      ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).setValue(value < 0 ? 0.6 : -0.6);
     ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_THROTTLE.getName())).setValue(0.0);
-    ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).setValue(goalOffset < 0 ? 0.2 : -0.2);
+    ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).setValue(rotateInt < 0 ? 0.2 : -0.2);
    }
 
    @Override
@@ -46,21 +47,19 @@ public class StepVisionAdjustment extends AutoStep
          return;
       }
 //      boolean aimed = ((Vision) Core.getSubsystemManager().getSubsystem(WSSubsystems.VISION.getName())).getOnTarget();
-      angle = ((Vision) Core.getSubsystemManager().getSubsystem(WSSubsystems.VISION.getName())).getAngleToRotateY();
-      if (value < 0)
+      rotateInt = ((Vision) Core.getSubsystemManager().getSubsystem(WSSubsystems.VISION.getName())).getRotateInt();
+      if (rotateInt != 0)
       {
-         if (Math.abs(angle) > 5)
-         {
+         
             // TODO
             ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_THROTTLE.getName())).setValue(0.0);
 //            ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).setValue(value < 0 ? 0.6 : -0.6);
-            ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).setValue(value < 0 ? 0.2 : -0.2);
+            ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).setValue(rotateInt < 0 ? 0.2 : -0.2);
             shouldFinish = true;
-         }
       }
       else
       {
-         if (Math.abs(angle) < 5)
+         if (rotateInt == 0)
          {
             ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).overrideHeadingValue(0.0);
 
