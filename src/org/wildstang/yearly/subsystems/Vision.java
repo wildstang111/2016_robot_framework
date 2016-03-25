@@ -17,7 +17,6 @@ public class Vision implements Subsystem
 //   private double angleToRotate;
 //   private boolean isOnTarget;
    private int rotateInt = 7;
-   private int rotateTeleop = 9;
    
    @Override
    public void inputUpdate(Input source)
