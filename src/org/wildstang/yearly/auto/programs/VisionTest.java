@@ -2,8 +2,10 @@ package org.wildstang.yearly.auto.programs;
 
 
 import org.wildstang.framework.auto.AutoProgram;
+import org.wildstang.framework.auto.steps.control.AutoStepDelay;
 import org.wildstang.yearly.auto.steps.drivebase.StepVisionAdjustment;
-import org.wildstang.yearly.auto.steps.intake.StepSetIntakeState;
+import org.wildstang.yearly.auto.steps.shooter.StepResetShooterPositionToggle;
+import org.wildstang.yearly.auto.steps.shooter.StepSetShooterPosition;
 
 public class VisionTest extends AutoProgram
 {
@@ -11,9 +13,15 @@ public class VisionTest extends AutoProgram
    @Override
    protected void defineSteps()
    {
-      addStep(new StepSetIntakeState(true));
+      addStep(new StepSetShooterPosition(true));
+      addStep(new StepResetShooterPositionToggle());
+      addStep(new AutoStepDelay(1000));
+      
       addStep(new StepVisionAdjustment());
-      addStep(new StepSetIntakeState(false));
+      
+      addStep(new AutoStepDelay(1000));
+      addStep(new StepSetShooterPosition(false));
+      addStep(new StepResetShooterPositionToggle());
    }
 
    @Override

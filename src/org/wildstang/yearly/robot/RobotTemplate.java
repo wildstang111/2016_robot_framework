@@ -29,7 +29,9 @@ import org.wildstang.hardware.crio.RoboRIOInputFactory;
 import org.wildstang.hardware.crio.RoboRIOOutputFactory;
 import org.wildstang.yearly.auto.programs.CornerShot;
 import org.wildstang.yearly.auto.programs.CrossingDefense;
+import org.wildstang.yearly.auto.programs.FunctionTest;
 import org.wildstang.yearly.auto.programs.LowBarOneBall;
+import org.wildstang.yearly.auto.programs.VisionTest;
 import org.wildstang.yearly.subsystems.DriveBase;
 import org.wildstang.yearly.subsystems.Intake;
 import org.wildstang.yearly.subsystems.Shooter;
@@ -180,8 +182,9 @@ public class RobotTemplate extends IterativeRobot
 //      AutoManager.getInstance().addProgram(new CornerAvoid());
       AutoManager.getInstance().addProgram(new LowBarOneBall());
 //      AutoManager.getInstance().addProgram(new LowBarLowGoal());
-//      AutoManager.getInstance().addProgram(new VisionTest());
+      AutoManager.getInstance().addProgram(new VisionTest());
       AutoManager.getInstance().addProgram(new CornerShot());
+      AutoManager.getInstance().addProgram(new FunctionTest());
 
       s_log.logp(Level.ALL, this.getClass().getName(), "robotInit", "Startup Completed");
       startupTimer.endTimingSection();
