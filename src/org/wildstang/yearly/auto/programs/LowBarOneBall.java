@@ -40,6 +40,7 @@ public class LowBarOneBall extends AutoProgram
       addStep(new StepResetIntakeToggle());
       addStep(new AutoStepDelay(1500));
       addStep(new StepQuickTurn(55));
+      addStep(new AutoStepDelay(1000));
       addStep(new StepRunFlywheel(.825));
       findGoal.addStep(new AutoStepDelay(4000));
       findGoal.addStep(new StepVisionAdjustment());
