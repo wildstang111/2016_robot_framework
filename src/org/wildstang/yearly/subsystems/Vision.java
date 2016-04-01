@@ -3,6 +3,7 @@ package org.wildstang.yearly.subsystems;
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.Input;
 import org.wildstang.framework.io.inputs.RemoteAnalogInput;
+import org.wildstang.framework.io.inputs.RemoteDigitalInput;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.yearly.robot.WSInputs;
 
@@ -17,14 +18,22 @@ public class Vision implements Subsystem
 //   private double angleToRotate;
 //   private boolean isOnTarget;
    private int rotateInt = 7;
+   private int rotateIntTele = 8;
+   private boolean goodHeight = false;
    
    @Override
    public void inputUpdate(Input source)
    {
       // TODO Auto-generated method stub
       if (source.getName().equals(WSInputs.ROTATION_INTEGER.getName())) {
-       rotateInt = (int) ((RemoteAnalogInput) source).getValue();
-       }
+         rotateInt = (int) ((RemoteAnalogInput) source).getValue();
+      }
+      if (source.getName().equals(WSInputs.ROTATION_INTEGER_TELEOP.getName())) {
+         rotateIntTele = (int) ((RemoteAnalogInput) source).getValue();
+      }
+      if (source.getName().equals(WSInputs.CAMERA_HEIGHT.getName())) {
+         goodHeight = (boolean) ((RemoteDigitalInput) source).getValue();
+      }
       
 //      if (source.getName().equals(WSInputs.CAMERA_DISTANCE.getName())) {
 //         distanceToTarget = ((RemoteAnalogInput) source).getValue();
@@ -60,7 +69,8 @@ public class Vision implements Subsystem
 //      Core.getInputManager().getInput(WSInputs.CAMERA_DISTANCE.getName()).addInputListener(this);
 //      Core.getInputManager().getInput(WSInputs.ON_TARGET.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.ROTATION_INTEGER.getName()).addInputListener(this);
-      
+      Core.getInputManager().getInput(WSInputs.ROTATION_INTEGER_TELEOP.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.CAMERA_HEIGHT.getName()).addInputListener(this);
    }
 
    @Override
@@ -75,6 +85,9 @@ public class Vision implements Subsystem
    {
       // TODO Auto-generated method stub
       SmartDashboard.putNumber("Rotation Integer", rotateInt);
+      boolean xTarget= rotateIntTele == 0 ? true : false;
+      SmartDashboard.putBoolean("On Target X", xTarget);
+      SmartDashboard.putBoolean("On Target Y", goodHeight);
 //      SmartDashboard.putNumber("Camera Distance", distanceToTarget);
 //      SmartDashboard.putNumber("Camera Angle", angleToRotate);
 //      SmartDashboard.putBoolean("On Target?", isOnTarget);

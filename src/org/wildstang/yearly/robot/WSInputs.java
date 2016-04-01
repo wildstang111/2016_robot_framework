@@ -71,6 +71,8 @@ public enum WSInputs implements Inputs {
 //   CAMERA_ANGLE_Z("Camera Z Rotation", WSInputType.REMOTE_ANALOG, new WsRemoteAnalogInputConfig("remoteIO"), getLogging()),
 //   ANGLE_OF_ROTATION("Angle To Rotate", WSInputType.REMOTE_ANALOG, new WsRemoteAnalogInputConfig("remoteIO"), getLogging()),
 //   ON_TARGET("On Target", WSInputType.REMOTE_DIGITAL, new WsRemoteDigitalInputConfig("remoteIO"), getLogging()),
+   CAMERA_HEIGHT("Target Height", WSInputType.REMOTE_DIGITAL, new WsRemoteDigitalInputConfig("remoteIO"), getLogging()),
+   ROTATION_INTEGER_TELEOP("Rotation Integer Teleop", WSInputType.REMOTE_ANALOG, new WsRemoteAnalogInputConfig("remoteIO"), getLogging()),
    ROTATION_INTEGER("Rotation Integer", WSInputType.REMOTE_ANALOG, new WsRemoteAnalogInputConfig("remoteIO"), getLogging()),
    MOTION_PROFILE_CONTROL("MotionProfileConfig", WSInputType.MOTION_PROFILE_CONTROL, new WsMotionProfileConfig(), getLogging()), 
    INTAKE_BOLDER_SENSOR("Intake Ball Staging", WSInputType.SWITCH, new WsDigitalInputConfig(8, false), getLogging()),

@@ -190,7 +190,7 @@ public class RobotTemplate extends IterativeRobot
       startupTimer.endTimingSection();
       
       server = CameraServer.getInstance();
-      server.setQuality(25);
+      server.setQuality(15);
       server.startAutomaticCapture("cam0");
 
    }
