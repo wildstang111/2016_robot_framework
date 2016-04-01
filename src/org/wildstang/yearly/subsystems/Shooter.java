@@ -136,12 +136,12 @@ public class Shooter implements Subsystem, ConfigListener
       if (true == flySpeedToggle)
       {
          flySpeed = .825;
-         expectedRate = 2330;
+         expectedRate = 2310;
       }
       else
       {
-         flySpeed = .75;
-         expectedRate = 2100;
+         flySpeed = .8;
+         expectedRate = 2290;
       }
 
       if (true == flyWheelToggle)
@@ -173,12 +173,12 @@ public class Shooter implements Subsystem, ConfigListener
                if (flyWheelRate > expectedRate)
                {
                   // Decrease Speed
-                  SmartDashboard.putNumber("flyWheelRate > expectedRate", flySpeed);
+                  SmartDashboard.putNumber("flyWheelRate greater than expectedRate", flySpeed);
                   flySpeed -= outputAdjust;
                }
                else if (flyWheelRate < expectedRate)
                {
-                  SmartDashboard.putNumber("flyWheelRate < expectedRate", flySpeed);
+                  SmartDashboard.putNumber("flyWheelRate less than expectedRate", flySpeed);
                   // Increase the speed.
                   flySpeed += outputAdjust;
                }

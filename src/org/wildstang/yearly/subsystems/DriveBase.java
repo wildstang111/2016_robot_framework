@@ -64,8 +64,8 @@ public class DriveBase implements Subsystem
    private static double QUICK_TURN_CAP;
    private static double QUICK_TURN_ANTITURBO;
    private static boolean ACCELERATION_ENABLED = false;
-   private static double SUPER_ANTITURBO_FACTOR = 0.25;
-   private static double HELLA_ANTITURBO_FACTOR = 0.25;
+   private static double SUPER_ANTITURBO_FACTOR = 0.22;
+   private static double HELLA_ANTITURBO_FACTOR = 0.22;
    private static double driveBaseThrottleValue = 0.0;
    private static double driveBaseHeadingValue = 0.0;
    private static double driveBaseStrafeValue = 0.0;
@@ -136,7 +136,7 @@ public class DriveBase implements Subsystem
        rightDriveEncoder = new Encoder(2, 3, false, EncodingType.k4X);
        rightDriveEncoder.reset();
        
-
+       
       // Initialize the gyro
       // @TODO: Get the correct port
        driveHeadingGyro = new AnalogGyro(0);
@@ -311,7 +311,7 @@ public class DriveBase implements Subsystem
        SmartDashboard.putNumber("Right Distance: ",
        this.getRightDistance());
        SmartDashboard.putNumber("Left Distance: ", this.getLeftDistance());
-      // SmartDashboard.putNumber("Gyro angle", this.getGyroAngle());
+       SmartDashboard.putNumber("Gyro angle", this.getGyroAngle());
    }
 
    public void overrideThrottleValue(double throttle)
