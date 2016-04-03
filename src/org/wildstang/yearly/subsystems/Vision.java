@@ -28,9 +28,9 @@ public class Vision implements Subsystem
       if (source.getName().equals(WSInputs.ROTATION_INTEGER.getName())) {
          rotateInt = (int) ((RemoteAnalogInput) source).getValue();
       }
-      if (source.getName().equals(WSInputs.ROTATION_INTEGER.getName())) {
-         rotateTeleop = (int) ((RemoteAnalogInput) source).getValue();
-         }
+      if (source.getName().equals(WSInputs.ROTATION_INTEGER_TELEOP.getName())) {
+         rotateIntTele = (int) ((RemoteAnalogInput) source).getValue();
+      }
       if (source.getName().equals(WSInputs.CAMERA_HEIGHT.getName())) {
          goodHeight = (boolean) ((RemoteDigitalInput) source).getValue();
       }
