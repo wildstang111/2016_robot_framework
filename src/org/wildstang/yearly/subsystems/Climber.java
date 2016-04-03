@@ -1,5 +1,6 @@
 package org.wildstang.yearly.subsystems;
 
+import org.wildstang.framework.config.Config;
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.Input;
 import org.wildstang.framework.io.inputs.AnalogInput;
@@ -13,6 +14,7 @@ import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
 import org.wildstang.yearly.robot.WSSubsystems;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Climber implements Subsystem
@@ -34,6 +36,14 @@ public class Climber implements Subsystem
    private boolean rightArmTouch;
    private boolean leftArmTouch;
    private boolean Winched = false;
+   
+   private double armHelpSpeed;
+   private double armHelpRunTime;
+   private static final String armsUpOutSpeed = ".arm_up_out_speed";
+   private static final String armsUpRunTime = ".arm_up_run_time";
+   private static final double ARMOUTSPEED_DEFAULT = .2;
+   private static final double ARMOUTTIME_DEFAULT = 1000.0;
+   private double winchEndTime;
 
    private WsSolenoid brake;
    private WsDoubleSolenoid hooks;
@@ -50,6 +60,9 @@ public class Climber implements Subsystem
          if (((DigitalInput) source).getValue())
          {
             arm = !arm;
+            if(true == arm){
+               winchEndTime = Timer.getFPGATimestamp() + armHelpRunTime;
+            }
          }
       }
       else if (source.getName().equals(WSInputs.MAN_RIGHT_JOYSTICK_Y.getName()))
@@ -68,7 +81,9 @@ public class Climber implements Subsystem
       else if (source.getName().equals(WSInputs.MAN_BUTTON_9.getName()))
       {
          if (((DigitalInput) source).getValue())
-         override = true;
+         {
+            override = true;
+         }
       }
       else if (source.getName().equals(WSInputs.LEFT_ARM_TOUCHING.getName()))
       {
@@ -95,6 +110,12 @@ public class Climber implements Subsystem
       upperArm = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.UPPER_ARM.getName());
       leftWinch = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.WINCH_LEFT.getName());
       rightWinch = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.WINCH_RIGHT.getName());
+      
+      armHelpSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
+            + armsUpOutSpeed, ARMOUTSPEED_DEFAULT);
+
+      armHelpRunTime = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
+            + armsUpRunTime, ARMOUTTIME_DEFAULT);
    }
 
    @Override
@@ -109,12 +130,28 @@ public class Climber implements Subsystem
    {
       if (arm)
       {
+         if(Timer.getFPGATimestamp() < winchEndTime){
+            leftWinch.setValue(-armHelpSpeed);
+            rightWinch.setValue(-armHelpSpeed);
+         }else{
+            leftWinch.setValue(0);
+            rightWinch.setValue(0);
+         }
+         
          protectIntake();
          resetIntakeToggle();
          if(!Winched)
          {
          upperArm.setValue(true);
          lowerArm.setValue(true);
+         if (!hook)
+         {
+            hooks.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
+         }
+         else
+         {
+            hooks.setValue(WsDoubleSolenoidState.FORWARD.ordinal());
+         }
          }
          if (!hook)
          {
@@ -218,6 +255,16 @@ public class Climber implements Subsystem
    {
       // TODO Auto-generated method stub
       return "Climber";
+   }
+   
+   public void notifyConfigChange(Config p_newConfig)
+   {
+      armHelpSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
+            + armsUpOutSpeed, ARMOUTSPEED_DEFAULT);
+
+      armHelpRunTime = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
+            + armsUpRunTime, ARMOUTTIME_DEFAULT);
+
    }
    
    public void protectIntake()

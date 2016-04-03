@@ -151,7 +151,6 @@ public class DriveBase implements Subsystem
    @Override
    public void init()
    {
-      System.out.println("dbinit");
       driveBaseThrottleValue = 0.0;
       driveBaseHeadingValue = 0.0;
       antiTurboFlag = false;
@@ -707,6 +706,7 @@ public class DriveBase implements Subsystem
             * right_drive_bias);
       ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.RIGHT_2.getName())).setValue(rightFlipped
             * right_drive_bias);
+      
    }
 
    public void checkAutoQuickTurn()
