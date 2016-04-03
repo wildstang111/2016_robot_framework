@@ -3,6 +3,7 @@ package org.wildstang.yearly.robot;
 import org.wildstang.framework.core.Inputs;
 import org.wildstang.framework.hardware.InputConfig;
 import org.wildstang.framework.hardware.WsRemoteAnalogInputConfig;
+import org.wildstang.framework.hardware.WsRemoteDigitalInputConfig;
 import org.wildstang.framework.io.inputs.InputType;
 import org.wildstang.hardware.JoystickConstants;
 import org.wildstang.hardware.crio.inputs.WSInputType;
@@ -73,7 +74,6 @@ public enum WSInputs implements Inputs {
    CAMERA_HEIGHT("Target Height", WSInputType.REMOTE_DIGITAL, new WsRemoteDigitalInputConfig("remoteIO"), getLogging()),
    ROTATION_INTEGER_TELEOP("Rotation Integer Teleop", WSInputType.REMOTE_ANALOG, new WsRemoteAnalogInputConfig("remoteIO"), getLogging()),
    ROTATION_INTEGER("Rotation Integer", WSInputType.REMOTE_ANALOG, new WsRemoteAnalogInputConfig("remoteIO"), getLogging()),
-   ROTATION_INTEGER_TELEOP("Rotation Integer Teleop", WSInputType.REMOTE_ANALOG, new WsRemoteAnalogInputConfig("remoteIO"), getLogging()),
    MOTION_PROFILE_CONTROL("MotionProfileConfig", WSInputType.MOTION_PROFILE_CONTROL, new WsMotionProfileConfig(), getLogging()), 
    INTAKE_BOLDER_SENSOR("Intake Ball Staging", WSInputType.SWITCH, new WsDigitalInputConfig(8, false), getLogging()),
    // INTAKE_BALL_DETECT("Intake ball detection", WSInputType.SWITCH, new WsDigitalInputConfig(9, false), getLogging()),

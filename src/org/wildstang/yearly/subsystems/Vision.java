@@ -82,7 +82,7 @@ public class Vision implements Subsystem
    @Override
    public void update()
    {
-      boolean onTarget = ((rotateTeleop == 0) ? true : false);
+      boolean onTarget = ((rotateIntTele == 0) ? true : false);
       
       // TODO Auto-generated method stub
       SmartDashboard.putNumber("Rotation Integer", rotateInt);
