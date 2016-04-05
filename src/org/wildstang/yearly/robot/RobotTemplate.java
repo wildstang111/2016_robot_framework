@@ -29,6 +29,16 @@ import org.wildstang.hardware.crio.RoboRIOInputFactory;
 import org.wildstang.hardware.crio.RoboRIOOutputFactory;
 import org.wildstang.yearly.auto.programs.CornerShot;
 import org.wildstang.yearly.auto.programs.CrossingDefense;
+import org.wildstang.yearly.auto.programs.DriveAtp1;
+import org.wildstang.yearly.auto.programs.DriveAtp10;
+import org.wildstang.yearly.auto.programs.DriveAtp2;
+import org.wildstang.yearly.auto.programs.DriveAtp3;
+import org.wildstang.yearly.auto.programs.DriveAtp4;
+import org.wildstang.yearly.auto.programs.DriveAtp5;
+import org.wildstang.yearly.auto.programs.DriveAtp6;
+import org.wildstang.yearly.auto.programs.DriveAtp7;
+import org.wildstang.yearly.auto.programs.DriveAtp8;
+import org.wildstang.yearly.auto.programs.DriveAtp9;
 import org.wildstang.yearly.auto.programs.FunctionTest;
 import org.wildstang.yearly.auto.programs.LowBarOneBall;
 import org.wildstang.yearly.auto.programs.VisionTest;
@@ -185,7 +195,17 @@ public class RobotTemplate extends IterativeRobot
       AutoManager.getInstance().addProgram(new VisionTest());
       AutoManager.getInstance().addProgram(new CornerShot());
       AutoManager.getInstance().addProgram(new FunctionTest());
-
+      AutoManager.getInstance().addProgram(new DriveAtp1());
+      AutoManager.getInstance().addProgram(new DriveAtp2());
+      AutoManager.getInstance().addProgram(new DriveAtp3());
+      AutoManager.getInstance().addProgram(new DriveAtp4());
+      AutoManager.getInstance().addProgram(new DriveAtp5());
+      AutoManager.getInstance().addProgram(new DriveAtp6());
+      AutoManager.getInstance().addProgram(new DriveAtp7());
+      AutoManager.getInstance().addProgram(new DriveAtp8());
+      AutoManager.getInstance().addProgram(new DriveAtp9());
+      AutoManager.getInstance().addProgram(new DriveAtp10());
+      
       s_log.logp(Level.ALL, this.getClass().getName(), "robotInit", "Startup Completed");
       startupTimer.endTimingSection();
       

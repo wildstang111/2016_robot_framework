@@ -108,6 +108,10 @@ public class StepDriveDistanceAtSpeed extends AutoStep
          setFinished(true);
       }
       }
+      // to create a function so robot drives straight
+      SmartDashboard.putNumber("Actual Left Speed", driveBase.getLeftEncoderValue());
+      SmartDashboard.putNumber("Actual Right Speed", driveBase.getRightEncoderValue());
+      SmartDashboard.putNumber("supposed", speed);
    }
 
    @Override
