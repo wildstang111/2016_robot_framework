@@ -114,6 +114,8 @@ public class DriveBase implements Subsystem
    private static boolean driveDistancePidEnabled = false;
    private static double outputScaleFactor = 1.0;
    private boolean isPistolGrip = false;
+   private double leftIndividual = 0;
+   private double rightIndividual = 0;
 
    private double overriddenThrottle, overriddenHeading, overriddenStrafe;
    private boolean driveOverrideEnabled = false;
@@ -698,6 +700,8 @@ public class DriveBase implements Subsystem
       double rightFlipped = rightMotorSpeed * (isDriveFlipped ? -1:1);
       
       // Update Outputs
+      if(rightIndividual == 0 && leftIndividual == 0)
+      {
       ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.LEFT_2.getName())).setValue(leftFlipped
             * left_drive_bias);
       ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.LEFT_1.getName())).setValue(leftFlipped
@@ -706,6 +710,14 @@ public class DriveBase implements Subsystem
             * right_drive_bias);
       ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.RIGHT_2.getName())).setValue(rightFlipped
             * right_drive_bias);
+      }
+      else
+      {
+         ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.RIGHT_1.getName())).setValue(rightIndividual);
+         ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.RIGHT_2.getName())).setValue(rightIndividual);
+         ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.LEFT_2.getName())).setValue(leftIndividual);
+         ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.LEFT_1.getName())).setValue(leftIndividual);
+      }
       
    }
 
@@ -1024,5 +1036,15 @@ public class DriveBase implements Subsystem
    public void setSuperDriveOverride(boolean state)
    {
       AutoDriveOverride = state;
+   }
+   public void setLeftDrive(double speed)
+   {
+      rightIndividual = 0;
+      leftIndividual = speed;
+   }
+   public void setRightDrive(double speed)
+   {
+      leftIndividual = 0;
+      rightIndividual = speed;
    }
 }
