@@ -1,0 +1,46 @@
+package org.wildstang.yearly.auto.programs;
+
+import org.wildstang.framework.auto.AutoProgram;
+import org.wildstang.framework.auto.steps.AutoParallelStepGroup;
+import org.wildstang.framework.auto.steps.AutoSerialStepGroup;
+import org.wildstang.framework.auto.steps.control.AutoStepDelay;
+import org.wildstang.yearly.auto.steps.intake.StepIntake;
+import org.wildstang.yearly.auto.steps.intake.StepSetIntakeState;
+import org.wildstang.yearly.auto.steps.shooter.StepResetShotToggle;
+import org.wildstang.yearly.auto.steps.shooter.StepRunFlywheel;
+import org.wildstang.yearly.auto.steps.shooter.StepSetShooterPosition;
+import org.wildstang.yearly.auto.steps.shooter.StepShoot;
+
+public class New2Ball extends AutoProgram
+{
+
+   @Override
+   protected void defineSteps()
+   {
+      // TODO Auto-generated method stub
+      AutoParallelStepGroup setup = new AutoParallelStepGroup();
+      setup.addStep(new StepSetShooterPosition(true));
+      setup.addStep(new StepRunFlywheel(82.5));
+      addStep(setup);
+      addStep(new AutoStepDelay(250));
+      addStep(new StepSetIntakeState(true));
+      addStep(new StepShoot());
+      addStep(new AutoStepDelay(350));
+      AutoParallelStepGroup cross = new AutoParallelStepGroup();
+      AutoSerialStepGroup manageIntake = new AutoSerialStepGroup();
+      manageIntake.addStep(new StepResetShotToggle());
+      manageIntake.addStep(new StepIntake(1));
+      manageIntake.addStep(new AutoStepDelay(1000));
+      manageIntake.addStep(new StepIntake(0));
+      cross.addStep(manageIntake);
+//      cross.addStep(new Step)
+   }
+
+   @Override
+   public String toString()
+   {
+      // TODO Auto-generated method stub
+      return "2 Ball";
+   }
+
+}

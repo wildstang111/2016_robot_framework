@@ -35,12 +35,14 @@ public enum WSOutputs implements Outputs
    SHIFTER("Shifter double solenoid", WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(1, 0, 1, WsDoubleSolenoidState.FORWARD), getLogging()),
    INTAKE_DEPLOY("Intake deploy", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 2, false), getLogging()),
    INTAKE_FRONT_LOWER("Intake front lower", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 3, false), getLogging()),
-   LOWER_ARM("Lower Lift Arm", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 4, false), getLogging()),
-   UPPER_ARM("Upper Lift Arm", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 5, false), getLogging()),
+//   LOWER_ARM("Lower Lift Arm", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 4, false), getLogging()),
+//   UPPER_ARM("Upper Lift Arm", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 5, false), getLogging()),
+   LEFT_BRAKE("Left Winch Brake", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 4, false), getLogging()),
+   RIGHT_BRAKE("Right Winch Brake", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 5, false), getLogging()),
    HOOK_EXTENSION("Hook Extenstion", WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(1, 6, 7, WsDoubleSolenoidState.REVERSE), getLogging()),
    SHOOTER_HOOD("Shooter Hood", WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(2, 0, 1, WsDoubleSolenoidState.REVERSE), getLogging()),
-   WINCH_BRAKE("Stop the winches",             WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(2, 3, false), getLogging());
-   
+//   WINCH_BRAKE("Stop the winches",             WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(2, 3, false), getLogging());
+   ARMS("Both Arms", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(2, 3, false), getLogging());
    
    private String m_name;
    private OutputType m_type;
