@@ -58,7 +58,7 @@ public enum WSInputs implements Inputs {
    MAN_BUTTON_7("Manip Deploy Intake", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 6), getLogging()), 
    MAN_BUTTON_8("Manip Shoot", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 7), getLogging()), 
    MAN_BUTTON_9("Override", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 8), getLogging()), 
-   //MAN_BUTTON_10("Manipulator button 10", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 9), getLogging()), 
+   MAN_BUTTON_10("Manipulator button 10", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 9), getLogging()), 
    //MAN_BUTTON_11("Manipulator button 11", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 10), getLogging()), 
    //MAN_BUTTON_12("Manipulator button 12", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 11), getLogging()),
    HALL_EFFECT("Lift hall effect sensors", WSInputType.HALL_EFFECT, new WsI2CInputConfig(Port.kMXP, 0x10), getLogging()),

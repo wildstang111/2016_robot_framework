@@ -39,7 +39,7 @@ public class Shooter implements Subsystem, ConfigListener
    private static final String onSpeedDiffKey = ".onSpeedDiff";
    private static final int ON_SPEED_FLYWHEEL_DIFF_DEFAULT = 75;
    private static final double HIGH_RATE_DEFAULT = 2300;
-   private static final double LOW_RATE_DEFAULT = 2100;
+   private static final double LOW_RATE_DEFAULT = 2450;
    private static final double HIGH_DEFAULT = 0.8;
    private static final double LOW_DEFAULT = 0.77;
    private static final Integer hoodUp = new Integer(WsDoubleSolenoidState.FORWARD.ordinal());
