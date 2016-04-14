@@ -141,7 +141,7 @@ public class Shooter implements Subsystem, ConfigListener
       else
       {
          flySpeed = .8;
-         expectedRate = 2290;
+         expectedRate = 2700;
       }
 
       if (true == flyWheelToggle)

@@ -83,14 +83,14 @@ public class Climber implements Subsystem
       }
       else if (source.getName().equals(WSInputs.MAN_BUTTON_9.getName()))
       {
-            winchLimit = ((DigitalInput) source).getValue();
+//       if (((DigitalInput) source).getValue())
+//       {
+//          override = true;
+//       }
       }
       else if (source.getName().equals(WSInputs.MAN_BUTTON_10.getName()))
       {
-//         if (((DigitalInput) source).getValue())
-//         {
-//            override = true;
-//         }
+         winchLimit = ((DigitalInput) source).getValue();
       }
       else if (source.getName().equals(WSInputs.LEFT_WINCH_FREE.getName()))
       {

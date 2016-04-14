@@ -1,7 +1,16 @@
 package org.wildstang.yearly.subsystems;
 
 import org.wildstang.framework.config.Config;
+import org.wildstang.framework.io.Input;
+import org.wildstang.framework.io.inputs.AnalogInput;
+import org.wildstang.framework.io.inputs.DigitalInput;
+import org.wildstang.framework.io.outputs.AnalogOutput;
+import org.wildstang.framework.subsystems.Subsystem;
+import org.wildstang.hardware.crio.outputs.WsSolenoid;
+import org.wildstang.yearly.robot.WSInputs;
+import org.wildstang.yearly.robot.WSOutputs;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /* Please edit!!!
  * This program does all these things
  * reads INTAKE_BOLDER_SENSOR. INTAKE_BOLDER_SENSOR = intakeSensorReading.
@@ -24,19 +33,8 @@ import org.wildstang.framework.config.Config;
  * 
  * Continue...
  */
-
 //expand this and edit if trouble with Ws
 import org.wildstang.framework.core.Core;
-import org.wildstang.framework.io.Input;
-import org.wildstang.framework.io.inputs.AnalogInput;
-import org.wildstang.framework.io.inputs.DigitalInput;
-import org.wildstang.framework.io.outputs.AnalogOutput;
-import org.wildstang.framework.subsystems.Subsystem;
-import org.wildstang.hardware.crio.outputs.WsSolenoid;
-import org.wildstang.yearly.robot.WSInputs;
-import org.wildstang.yearly.robot.WSOutputs;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Intake implements Subsystem
 {
@@ -234,7 +232,7 @@ public class Intake implements Subsystem
 
       if (shoot == true)
       {
-         rollerSpeed = intakeSpeedOut;
+         rollerSpeed = intakeSpeedIn;
       }
 
       // Allows for toggling of limbo
