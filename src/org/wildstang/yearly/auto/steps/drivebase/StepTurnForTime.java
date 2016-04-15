@@ -20,7 +20,7 @@ public class StepTurnForTime extends AutoStep
 {
 
    private double speed, time;
-   
+   private long startTime;
    private boolean shouldFinish = false;
 
    public StepTurnForTime(double speed, double time)
@@ -32,7 +32,7 @@ public class StepTurnForTime extends AutoStep
    @Override
    public void initialize()
    {
-      
+      startTime = System.currentTimeMillis();
       ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).setThrottleValue(0);
 //      ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).setLeftDrive(value < 0 ? 0.6
 //            : -0.6);
@@ -58,15 +58,16 @@ public class StepTurnForTime extends AutoStep
 
             ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_THROTTLE.getName())).setValue(0.0);
 //            ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).setValue(value < 0 ? 0.6 : -0.6);
-            ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).setValue(speed < 0 ? 0.4 : -0.4);
-            
+            ((DriveBase)Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).setLeftDrive(speed);
+            if(System.currentTimeMillis() > (startTime + time))
+            {
             shouldFinish = true;
- 
+            }
       }
 
    @Override
    public String toString()
    {
-      return "Turning using quickturn with a relative angle";
+      return "Turning using time";
    }
 }
