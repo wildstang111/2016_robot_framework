@@ -92,14 +92,14 @@ public class Climber implements Subsystem
       {
          winchLimit = ((DigitalInput) source).getValue();
       }
-      else if (source.getName().equals(WSInputs.LEFT_WINCH_FREE.getName()))
-      {
-         leftWinchFree = ((DigitalInput) source).getValue();
-      }
-      else if (source.getName().equals(WSInputs.RIGHT_WINCH_FREE.getName()))
-      {
-         rightWinchFree = ((DigitalInput) source).getValue();
-      }
+//      else if (source.getName().equals(WSInputs.LEFT_WINCH_FREE.getName()))
+//      {
+//         leftWinchFree = ((DigitalInput) source).getValue();
+//      }
+//      else if (source.getName().equals(WSInputs.RIGHT_WINCH_FREE.getName()))
+//      {
+//         rightWinchFree = ((DigitalInput) source).getValue();
+//      }
    }
 
    @Override

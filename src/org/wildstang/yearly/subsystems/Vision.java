@@ -28,7 +28,7 @@ public class Vision implements Subsystem
    private int m_bottom_high_max;
 
    private int targetBottom = 7;
-   private int targetCenter = 8;
+   private int targetCenter = 311;
    private double robotAngle;
    private double robotDistance;
    private int rotateInt = 6;
