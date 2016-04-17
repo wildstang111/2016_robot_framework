@@ -25,14 +25,12 @@ public class StepVisionAdjustment extends AutoStep
    {
       // TODO Auto-generated method stub
       ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).setThrottleValue(0);
-//    ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).overrideHeadingValue(rotateInt < 0 ? 0.22
-//    : -0.22);
-    ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).overrideHeadingValue(rotateInt > 0 ? 0.22
-    : -0.22);
+      ((DriveBase)Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).setLeftDrive(rotateInt < 0 ? 0.22 : -0.22);
 // TODO
     ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_THROTTLE.getName())).setValue(0.0);
 //    ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).setValue(rotateInt < 0 ? 0.22 : -0.22);
-    ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).setValue(rotateInt > 0 ? 0.22 : -0.22);
+//    ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).setValue(rotateInt > 0 ? 0.22 : -0.22);
+//    ((DriveBase)Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).setLeftDrive(rotateInt > 0 ? 0.22 : -0.22);
    }
 
    @Override
@@ -53,7 +51,8 @@ public class StepVisionAdjustment extends AutoStep
             // TODO
             ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_THROTTLE.getName())).setValue(0.0);
 //            ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).setValue(rotateInt < 0 ? 0.22 : -0.22);
-            ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).setValue(rotateInt > 0 ? 0.22 : -0.22);
+//            ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).setValue(rotateInt > 0 ? 0.22 : -0.22);
+            ((DriveBase)Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).setLeftDrive(rotateInt < 0 ? 0.22 : -0.22);
       }
       else
       {

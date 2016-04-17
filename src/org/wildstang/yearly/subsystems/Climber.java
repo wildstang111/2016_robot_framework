@@ -33,22 +33,26 @@ public class Climber implements Subsystem
    private int stopDelay = 0;
    private boolean brakeEngaged = true;
    private boolean override = false;
-   private boolean rightArmTouch;
-   private boolean leftArmTouch;
+   private boolean rightWinchFree = false;
+   private boolean leftWinchFree = false;
    private boolean Winched = false;
    
    private double armHelpSpeed;
    private double armHelpRunTime;
    private static final String armsUpOutSpeed = ".arm_up_out_speed";
    private static final String armsUpRunTime = ".arm_up_run_time";
-   private static final double ARMOUTSPEED_DEFAULT = .2;
+   private static final double ARMOUTSPEED_DEFAULT = .4;
    private static final double ARMOUTTIME_DEFAULT = 1000.0;
    private double winchEndTime;
+   private boolean winchLimit;
 
-   private WsSolenoid brake;
+//   private WsSolenoid brake;
+   private WsSolenoid leftBrake;
+   private WsSolenoid rightBrake;
    private WsDoubleSolenoid hooks;
-   private WsSolenoid lowerArm;
-   private WsSolenoid upperArm;
+//   private WsSolenoid lowerArm;
+//   private WsSolenoid upperArm;
+   private WsSolenoid Arms;
    private WsVictor leftWinch;
    private WsVictor rightWinch;
 
@@ -67,7 +71,6 @@ public class Climber implements Subsystem
       }
       else if (source.getName().equals(WSInputs.MAN_RIGHT_JOYSTICK_Y.getName()))
       {
-
          winchValue = ((AnalogInput) source).getValue();
       }
       else if (source.getName().equals(WSInputs.MAN_BUTTON_2.getName()))
@@ -80,19 +83,23 @@ public class Climber implements Subsystem
       }
       else if (source.getName().equals(WSInputs.MAN_BUTTON_9.getName()))
       {
-         if (((DigitalInput) source).getValue())
-         {
-            override = true;
-         }
+//       if (((DigitalInput) source).getValue())
+//       {
+//          override = true;
+//       }
       }
-      else if (source.getName().equals(WSInputs.LEFT_ARM_TOUCHING.getName()))
+      else if (source.getName().equals(WSInputs.MAN_BUTTON_10.getName()))
       {
-         leftArmTouch = ((DigitalInput) source).getValue();
+         winchLimit = ((DigitalInput) source).getValue();
       }
-      else if (source.getName().equals(WSInputs.RIGHT_ARM_TOUCHING.getName()))
-      {
-         rightArmTouch = ((DigitalInput) source).getValue();
-      }
+//      else if (source.getName().equals(WSInputs.LEFT_WINCH_FREE.getName()))
+//      {
+//         leftWinchFree = ((DigitalInput) source).getValue();
+//      }
+//      else if (source.getName().equals(WSInputs.RIGHT_WINCH_FREE.getName()))
+//      {
+//         rightWinchFree = ((DigitalInput) source).getValue();
+//      }
    }
 
    @Override
@@ -102,12 +109,13 @@ public class Climber implements Subsystem
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_1.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_2.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_9.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_10.getName()).addInputListener(this);
       //Core.getInputManager().getInput(WSInputs.RIGHT_ARM_TOUCHING.getName()).addInputListener(this);
       //Core.getInputManager().getInput(WSInputs.LEFT_ARM_TOUCHING.getName()).addInputListener(this);
-      brake = ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.WINCH_BRAKE.getName()));
+      leftBrake = ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LEFT_BRAKE.getName()));
+      rightBrake = ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.RIGHT_BRAKE.getName()));
       hooks = (WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.HOOK_EXTENSION.getName());
-      lowerArm = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LOWER_ARM.getName());
-      upperArm = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.UPPER_ARM.getName());
+      Arms = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.ARMS.getName());
       leftWinch = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.WINCH_LEFT.getName());
       rightWinch = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.WINCH_RIGHT.getName());
       
@@ -128,6 +136,10 @@ public class Climber implements Subsystem
    @Override
    public void update()
    {
+      if(winchLimit)
+      {
+         winchValue /= 2;
+      }
       if (arm)
       {
          if(Timer.getFPGATimestamp() < winchEndTime){
@@ -142,8 +154,9 @@ public class Climber implements Subsystem
          resetIntakeToggle();
          if(!Winched)
          {
-         upperArm.setValue(true);
-         lowerArm.setValue(true);
+//         upperArm.setValue(true);
+//         lowerArm.setValue(true);
+         Arms.setValue(true);
          if (!hook)
          {
             hooks.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
@@ -169,9 +182,10 @@ public class Climber implements Subsystem
          winchValue = 0;
          winchRunning = false;
          brakeEngaged = true;
-         brake.setValue(true);
-         upperArm.setValue(false);
-         lowerArm.setValue(false);
+//         brake.setValue(true);
+//         upperArm.setValue(false);
+//         lowerArm.setValue(false);
+         Arms.setValue(false);
       }
 
       if (!override)
@@ -179,7 +193,7 @@ public class Climber implements Subsystem
          if(!Winched && arm)
          {
             brakeEngaged = false;
-            brake.setValue(false);
+//            brake.setValue(false);
          }
          else if ((winchValue < .1) && (winchValue > -.1))
          {
@@ -190,7 +204,7 @@ public class Climber implements Subsystem
                stopDelay++;
                if (stopDelay == 3)
                {
-                  brake.setValue(true);
+//                  brake.setValue(true);
                   brakeEngaged = true;
                   stopDelay = 0;
                }
@@ -202,7 +216,7 @@ public class Climber implements Subsystem
             {
                winchValue = 0.0;
                brakeEngaged = false;
-               brake.setValue(false);
+//               brake.setValue(false);
                startDelay++;
                if (startDelay == 3)
                {
@@ -215,15 +229,16 @@ public class Climber implements Subsystem
          if(arm && Math.abs(winchValue) > 0)
          {
             Winched = true;
-            upperArm.setValue(false);
-            lowerArm.setValue(false);
-            leftWinch.setValue(winchValue/2);
-            rightWinch.setValue(winchValue/2);
+//            upperArm.setValue(false);
+//            lowerArm.setValue(false);
+            Arms.setValue(false);
+            leftWinch.setValue(-winchValue);
+            rightWinch.setValue(-winchValue);
          }
          else
          {
-            leftWinch.setValue(winchValue/2);
-            rightWinch.setValue(winchValue/2);
+            leftWinch.setValue(-winchValue);
+            rightWinch.setValue(-winchValue);
          }
 
 
@@ -233,9 +248,38 @@ public class Climber implements Subsystem
          winchValue = 0.0;
          brakeEngaged = true;
          winchRunning = false;
-         brake.setValue(true);
+//         brake.setValue(true);
          rightWinch.setValue(0.0);
          leftWinch.setValue(0.0);
+      }
+      
+      if(brakeEngaged)
+      {
+//         if(!rightWinchFree)
+//         {
+            rightBrake.setValue(false);
+            rightWinch.setValue(0);
+//         }
+//         else
+//         {
+//            rightBrake.setValue(false);
+//            rightWinch.setValue(-.5);
+//         }
+//         if(!leftWinchFree)
+//         {
+            leftBrake.setValue(false);
+            leftWinch.setValue(0);
+//         }
+//         else
+//         {
+//            leftBrake.setValue(false);
+//            leftWinch.setValue(-.5);
+//         }
+      }
+      else
+      {
+         leftBrake.setValue(true);
+         rightBrake.setValue(true);
       }
       
       SmartDashboard.putBoolean("Arm", arm);
@@ -245,8 +289,9 @@ public class Climber implements Subsystem
       SmartDashboard.putBoolean("Winch Running", winchRunning);
       SmartDashboard.putBoolean("brakeEngaged", brakeEngaged);
       // SmartDashboard.putBoolean("Override", override);
-      SmartDashboard.putBoolean("Right Arm", upperArm.getValue());
-      SmartDashboard.putBoolean("Left Arm", lowerArm.getValue());
+      SmartDashboard.putBoolean("Arms", Arms.getValue());
+      SmartDashboard.putBoolean("Left Brake", leftBrake.getValue());
+      SmartDashboard.putBoolean("Right Brake", rightBrake.getValue());
       SmartDashboard.putBoolean("Winch check", Winched);
    }
 

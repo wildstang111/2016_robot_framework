@@ -6,6 +6,7 @@ import org.wildstang.framework.io.inputs.RemoteAnalogInput;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.yearly.robot.WSInputs;
 
+//import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Vision implements Subsystem
@@ -36,6 +37,8 @@ public class Vision implements Subsystem
    private boolean onTarget = false;
    private boolean goodLongHeight = false;
    private boolean goodShortHeight = false;
+   
+   //NetworkTable table;
 
    @Override
    public void inputUpdate(Input source)
@@ -63,7 +66,6 @@ public class Vision implements Subsystem
    @Override
    public void init()
    {
-
       Core.getInputManager().getInput(WSInputs.TARGET_BOTTOM.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.TARGET_CENTER.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.VISION_ANGLE.getName()).addInputListener(this);
@@ -79,6 +81,13 @@ public class Vision implements Subsystem
    @Override
    public void update()
    {
+	   //targetCenter = (int) table.getNumber("Target Center", 2);
+      m_centered_left = (int) SmartDashboard.getNumber("Left Centered Mark", CENTERED_LEFT);
+      m_centered_right = (int) SmartDashboard.getNumber("Right Centered Mark", CENTERED_RIGHT);
+      m_bottom_low_min = (int) SmartDashboard.getNumber("Target Bottom Low Min", BOTTOM_LOW_MIN);
+      m_bottom_low_max = (int) SmartDashboard.getNumber("Target Bottom Low Min", BOTTOM_LOW_MAX);
+      m_bottom_high_min = (int) SmartDashboard.getNumber("Target Bottom Low Min", BOTTOM_HIGH_MIN);
+      m_bottom_high_max = (int) SmartDashboard.getNumber("Target Bottom Low Min", BOTTOM_HIGH_MAX);
 
       m_centered_left = (int) SmartDashboard.getNumber("Left Centered Mark", CENTERED_LEFT);
       m_centered_right = (int) SmartDashboard.getNumber("Right Centered Mark", CENTERED_RIGHT);
@@ -120,6 +129,7 @@ public class Vision implements Subsystem
 
       onTarget = ((rotateInt == 0) ? true : false);
       SmartDashboard.putNumber("Rotation Integer", rotateInt);
+      SmartDashboard.putNumber("TargetBottom", targetBottom);
       boolean xTarget = rotateInt == 0 ? true : false;
       SmartDashboard.putBoolean("On Target X", xTarget);
       SmartDashboard.putBoolean("On Target Y", goodLongHeight

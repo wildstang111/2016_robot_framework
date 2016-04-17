@@ -14,10 +14,11 @@ import org.wildstang.yearly.auto.steps.shooter.StepResetShotToggle;
 import org.wildstang.yearly.auto.steps.shooter.StepRunFlywheel;
 import org.wildstang.yearly.auto.steps.shooter.StepSetShooterPosition;
 import org.wildstang.yearly.auto.steps.shooter.StepShoot;
+import org.wildstang.yearly.subsystems.Shooter;
 
 public class OneBallMoatRampartRightHigh extends AutoProgram
 {
-   private double speed;
+   private int speed;
    private int defensePosition;
 //   protected final double dist2 = 91.78;
    protected final double dist3 = 104;
@@ -102,7 +103,7 @@ public class OneBallMoatRampartRightHigh extends AutoProgram
       addStep(new StepShoot());
       addStep(new StepResetShotToggle());
       
-      addStep(new StepRunFlywheel(0));
+      addStep(new StepRunFlywheel(Shooter.FLYWHEEL_SPEED_ZERO));
       addStep(new StepResetFlywheelToggles());
 
    }
