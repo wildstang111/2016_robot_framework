@@ -29,7 +29,7 @@ public class Vision implements Subsystem
    private int m_bottom_high_max;
 
    private int targetBottom = 7;
-   private int targetCenter = 311;
+   private int targetCenter = 8;
    private double robotAngle;
    private double robotDistance;
    private int rotateInt = 6;
@@ -66,8 +66,6 @@ public class Vision implements Subsystem
    @Override
    public void init()
    {
-	   //NetworkTable.setIPAddress("10.1.11.2");
-	   //table = NetworkTable.getTable("remoteIO");
       Core.getInputManager().getInput(WSInputs.TARGET_BOTTOM.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.TARGET_CENTER.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.VISION_ANGLE.getName()).addInputListener(this);
@@ -83,8 +81,14 @@ public class Vision implements Subsystem
    @Override
    public void update()
    {
-	   //targetBottom = (int)table.getNumber("Target Bottom", 1);
 	   //targetCenter = (int) table.getNumber("Target Center", 2);
+      m_centered_left = (int) SmartDashboard.getNumber("Left Centered Mark", CENTERED_LEFT);
+      m_centered_right = (int) SmartDashboard.getNumber("Right Centered Mark", CENTERED_RIGHT);
+      m_bottom_low_min = (int) SmartDashboard.getNumber("Target Bottom Low Min", BOTTOM_LOW_MIN);
+      m_bottom_low_max = (int) SmartDashboard.getNumber("Target Bottom Low Min", BOTTOM_LOW_MAX);
+      m_bottom_high_min = (int) SmartDashboard.getNumber("Target Bottom Low Min", BOTTOM_HIGH_MIN);
+      m_bottom_high_max = (int) SmartDashboard.getNumber("Target Bottom Low Min", BOTTOM_HIGH_MAX);
+
       m_centered_left = (int) SmartDashboard.getNumber("Left Centered Mark", CENTERED_LEFT);
       m_centered_right = (int) SmartDashboard.getNumber("Right Centered Mark", CENTERED_RIGHT);
       m_bottom_low_min = (int) SmartDashboard.getNumber("Target Bottom Low Min", BOTTOM_LOW_MIN);
@@ -100,6 +104,7 @@ public class Vision implements Subsystem
       {
          goodLongHeight = false;
       }
+
       if (targetBottom > m_bottom_high_min && targetBottom < m_bottom_high_max)
       {
          goodShortHeight = true;
