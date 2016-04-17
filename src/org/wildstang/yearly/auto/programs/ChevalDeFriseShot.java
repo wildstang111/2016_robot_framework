@@ -16,6 +16,7 @@ import org.wildstang.yearly.auto.steps.shooter.StepResetShotToggle;
 import org.wildstang.yearly.auto.steps.shooter.StepRunFlywheel;
 import org.wildstang.yearly.auto.steps.shooter.StepSetShooterPosition;
 import org.wildstang.yearly.auto.steps.shooter.StepShoot;
+import org.wildstang.yearly.subsystems.Shooter;
 
 public class ChevalDeFriseShot extends AutoProgram
 {
@@ -42,7 +43,8 @@ public class ChevalDeFriseShot extends AutoProgram
       driveOver.addStep(new StepStartDriveUsingMotionProfile(80, 0.0));
       driveOver.addStep(new StepWaitForDriveMotionProfile());
       driveOver.addStep(new StepStopDriveUsingMotionProfile());
-      crossCheval.addStep(new StepRunFlywheel(82.5));
+      //Medium flywheel speed.
+      crossCheval.addStep(new StepRunFlywheel(Shooter.FLYWHEEL_SPEED_MEDIUM));
       crossCheval.addStep(driveOver);
       addStep(crossCheval);
       addStep(new AutoStepDelay(500));
@@ -60,7 +62,7 @@ public class ChevalDeFriseShot extends AutoProgram
       addStep(new StepShoot());
       addStep(new AutoStepDelay(1000));
       addStep(new StepResetShotToggle());
-      addStep(new StepRunFlywheel(0));
+      addStep(new StepRunFlywheel(Shooter.FLYWHEEL_SPEED_ZERO));
       
       //total delay time: 7.5 seconds
    }

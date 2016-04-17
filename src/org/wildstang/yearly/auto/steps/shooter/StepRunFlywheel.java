@@ -9,9 +9,9 @@ import org.wildstang.yearly.subsystems.Shooter;
 
 public class StepRunFlywheel extends AutoStep
 {
-   private double speed;
+   private int speed;
 
-   public StepRunFlywheel(double speed)
+   public StepRunFlywheel(int speed)
    {
       this.speed = speed;
    }
@@ -39,17 +39,8 @@ public class StepRunFlywheel extends AutoStep
 //         ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_3.getName())).setValue(false);
       }
       
-      if(speed > .7 && ((Shooter)Core.getSubsystemManager().getSubsystem(WSSubsystems.SHOOTER.getName())).flySpeed() == false)
-      {
-         ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_4.getName())).setValue(true);
-//         ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_4.getName())).setValue(false);
-      }
-     
-      else if(speed < .7 && speed != 0 && ((Shooter)Core.getSubsystemManager().getSubsystem(WSSubsystems.SHOOTER.getName())).flySpeed() == true)
-      {
-         ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_4.getName())).setValue(true);
-//         ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_4.getName())).setValue(false);
-      }
+      ((Shooter)Core.getSubsystemManager().getSubsystem(WSSubsystems.SHOOTER.getName())).setFlySpeed(speed);
+      
       setFinished(true);
    }
 

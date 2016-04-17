@@ -7,6 +7,7 @@ import org.wildstang.yearly.auto.steps.shooter.StepResetShotToggle;
 import org.wildstang.yearly.auto.steps.shooter.StepRunFlywheel;
 import org.wildstang.yearly.auto.steps.shooter.StepSetShooterPosition;
 import org.wildstang.yearly.auto.steps.shooter.StepShoot;
+import org.wildstang.yearly.subsystems.Shooter;
 
 public class CornerShot extends AutoProgram
 {
@@ -16,14 +17,15 @@ public class CornerShot extends AutoProgram
    {
       // TODO Auto-generated method stub
       //wait for flywheel to get to speed, then shoot
-      addStep(new StepRunFlywheel(.825));
+      // Medium flywheel speed.
+      addStep(new StepRunFlywheel(Shooter.FLYWHEEL_SPEED_MEDIUM));
       addStep(new StepSetShooterPosition(true));
       addStep(new StepResetShooterPositionToggle());
       addStep(new AutoStepDelay(2000));
       addStep(new StepShoot());
       addStep(new AutoStepDelay(1000));
       addStep(new StepResetShotToggle());
-      addStep(new StepRunFlywheel(0));
+      addStep(new StepRunFlywheel(Shooter.FLYWHEEL_SPEED_ZERO));
    }
 
    @Override

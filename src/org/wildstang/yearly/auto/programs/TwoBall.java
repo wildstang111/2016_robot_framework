@@ -17,10 +17,11 @@ import org.wildstang.yearly.auto.steps.shooter.StepResetShotToggle;
 import org.wildstang.yearly.auto.steps.shooter.StepRunFlywheel;
 import org.wildstang.yearly.auto.steps.shooter.StepSetShooterPosition;
 import org.wildstang.yearly.auto.steps.shooter.StepShoot;
+import org.wildstang.yearly.subsystems.Shooter;
 
 public class TwoBall extends AutoProgram
 {
-   private double speed;
+   private int speed;
 
    @Override
    protected void defineSteps()
@@ -54,7 +55,7 @@ public class TwoBall extends AutoProgram
       AutoParallelStepGroup leaveCourtyard = new AutoParallelStepGroup("Stop flywheel and go to low bar");
       AutoSerialStepGroup gotoLowBar = new AutoSerialStepGroup("Go to low bar");
       // Stop flywheel
-      leaveCourtyard.addStep(new StepRunFlywheel(0));
+      leaveCourtyard.addStep(new StepRunFlywheel(Shooter.FLYWHEEL_SPEED_ZERO));
 //      leaveCourtyard.addStep(new StepResetFlywheelToggles());
       leaveCourtyard.addStep(new StepSetShooterPosition(false));
 //      leaveCourtyard.addStep(new StepResetShooterPositionToggle());

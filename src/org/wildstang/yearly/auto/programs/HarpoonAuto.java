@@ -15,10 +15,11 @@ import org.wildstang.yearly.auto.steps.shooter.StepResetFlywheelToggles;
 import org.wildstang.yearly.auto.steps.shooter.StepResetShotToggle;
 import org.wildstang.yearly.auto.steps.shooter.StepRunFlywheel;
 import org.wildstang.yearly.auto.steps.shooter.StepShoot;
+import org.wildstang.yearly.subsystems.Shooter;
 
 public class HarpoonAuto extends AutoProgram
 {
-   private double speed;
+   private int speed;
 
    @Override
    protected void defineSteps()
@@ -62,7 +63,7 @@ public class HarpoonAuto extends AutoProgram
       addStep(new StepShoot());
       addStep(new StepResetShotToggle());
       
-      addStep(new StepRunFlywheel(0));
+      addStep(new StepRunFlywheel(Shooter.FLYWHEEL_SPEED_ZERO));
       addStep(new StepResetFlywheelToggles());
    }
 

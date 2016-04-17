@@ -13,6 +13,7 @@ import org.wildstang.yearly.auto.steps.shooter.StepResetShotToggle;
 import org.wildstang.yearly.auto.steps.shooter.StepRunFlywheel;
 import org.wildstang.yearly.auto.steps.shooter.StepSetShooterPosition;
 import org.wildstang.yearly.auto.steps.shooter.StepShoot;
+import org.wildstang.yearly.subsystems.Shooter;
 
 public class CornerAvoid extends AutoProgram
 {
@@ -24,7 +25,8 @@ public class CornerAvoid extends AutoProgram
       AutoParallelStepGroup beginAuto = new AutoParallelStepGroup("Start shooter and go to goal");
       AutoSerialStepGroup gotoGoal = new AutoSerialStepGroup("Go to goal");
       // Start shooter to get to speed
-      beginAuto.addStep(new StepRunFlywheel(.825));
+      //Medium Flywheel speed.
+      beginAuto.addStep(new StepRunFlywheel(Shooter.FLYWHEEL_SPEED_MEDIUM));
       beginAuto.addStep(new StepSetShooterPosition(true));
 
       // Drive to point in line with goal

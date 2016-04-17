@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Shooter implements Subsystem, ConfigListener
 {
-   private boolean flySpeedToggle = true;
+   private int flySpeedToggle = 2;
    private boolean flyWheelToggle = false;
    private boolean hoodPosition = false;
    private double flySpeed;
@@ -38,10 +38,19 @@ public class Shooter implements Subsystem, ConfigListener
    private double onSpeedFlyWheelDiff;
    private static final String onSpeedDiffKey = ".onSpeedDiff";
    private static final int ON_SPEED_FLYWHEEL_DIFF_DEFAULT = 75;
-   private static final double HIGH_RATE_DEFAULT = 2300;
-   private static final double LOW_RATE_DEFAULT = 2450;
-   private static final double HIGH_DEFAULT = 0.8;
+   /*********************************************************************************************
+    * Change Speeds here
+    *********************************************************************************************/
+ //Low and Medium are for driver control.  High is really for auto
+   private static final double HIGH_RATE_DEFAULT = 2600;
+   private static final double LOW_RATE_DEFAULT = 2300;
+   private static final double MEDIUM_RATE_DEFAULT = 2450;
+   private static final double HIGH_DEFAULT = 0.9;
+   private static final double MEDIUM_DEFAULT = 0.8;
    private static final double LOW_DEFAULT = 0.77;
+   /**********************************************************************************************
+    * End Speed change area.
+    **********************************************************************************************/
    private static final Integer hoodUp = new Integer(WsDoubleSolenoidState.FORWARD.ordinal());
    private static final Integer hoodDown = new Integer(WsDoubleSolenoidState.REVERSE.ordinal());
 
@@ -50,6 +59,11 @@ public class Shooter implements Subsystem, ConfigListener
    private Encoder flyWheelEncoder = new Encoder(4, 5, true, EncodingType.k4X);
    private WsRelay RingLight;
 
+   public static int FLYWHEEL_SPEED_HIGH = 3;
+   public static int FLYWHEEL_SPEED_MEDIUM = 2;
+   public static int FLYWHEEL_SPEED_LOW = 1;
+   public static int FLYWHEEL_SPEED_ZERO = 0;
+   
    @Override
    public void inputUpdate(Input source)
    {
@@ -81,7 +95,21 @@ public class Shooter implements Subsystem, ConfigListener
       {
          if (((DigitalInput) source).getValue() == true)
          {
-            flySpeedToggle = !flySpeedToggle;
+            /* Remove the extra high speed from driver control and ignore the 0 speed */
+            /* Speed = 3 and speed = 0 are not used for driver control  only auto control */
+            if (flySpeedToggle == 3)
+            {
+               flySpeedToggle = 2;
+            }
+            if (flySpeedToggle == 0)
+            {
+               flySpeedToggle = 1;
+            }
+            flySpeedToggle +=1;
+            if (flySpeedToggle > 2)
+            {
+               flySpeedToggle = 1;
+            }
          }
       }
    }
@@ -120,6 +148,7 @@ public class Shooter implements Subsystem, ConfigListener
       // flyWheelEncoder.setSamplesToAverage(7);
 
       flyWheelDiff = 0;
+      flySpeedToggle = 2;
    }
 
    @Override
@@ -133,15 +162,28 @@ public class Shooter implements Subsystem, ConfigListener
 
       hoodUpDown = hoodPosition ? hoodUp : hoodDown;
 
-      if (true == flySpeedToggle)
+      switch(flySpeedToggle)
       {
-         flySpeed = .825;
-         expectedRate = 2310;
-      }
-      else
-      {
-         flySpeed = .8;
-         expectedRate = 2700;
+         case 0:
+            flySpeed = 0;
+            expectedRate = 0;
+            break;
+         case 1:
+            flySpeed = LOW_DEFAULT;
+            expectedRate = LOW_RATE_DEFAULT;
+            break;
+         case 2:
+            flySpeed = MEDIUM_DEFAULT;
+            expectedRate = MEDIUM_RATE_DEFAULT;
+            break;
+         case 3:
+            flySpeed = HIGH_DEFAULT;
+            expectedRate = HIGH_RATE_DEFAULT;
+            break;
+         default:
+            flySpeed = MEDIUM_DEFAULT;
+            expectedRate = MEDIUM_RATE_DEFAULT;
+            break;
       }
 
       if (true == flyWheelToggle)
@@ -198,8 +240,8 @@ public class Shooter implements Subsystem, ConfigListener
       shooterHood.setValue(hoodUpDown);
       SmartDashboard.putNumber("Expected Rate", expectedRate);
       SmartDashboard.putNumber("Raw Flywheel", -flySpeed);
-      SmartDashboard.putString("Flywheel Speed", flySpeedToggle ? "High"
-            : "Low");
+      SmartDashboard.putString("Flywheel Speed", flySpeedToggle == 0 ? "Low"
+            : flySpeedToggle == 1 ? "Medium" : "High");
       SmartDashboard.putNumber("Flywheel Rate", flyWheelRate);
       SmartDashboard.putNumber("Flywheel Output Adjustment", outputAdjust);
       SmartDashboard.putString("Flywheel", flyWheelToggle ? "On" : "Off");
@@ -220,9 +262,14 @@ public class Shooter implements Subsystem, ConfigListener
       return "Shooter";
    }
 
-   public boolean flySpeed()
+   public int flySpeed()
    {
       return flySpeedToggle;
+   }
+   
+   public void setFlySpeed(int speed)
+   {
+      flySpeedToggle = speed;
    }
 
    public boolean hoodPos()

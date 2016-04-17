@@ -10,6 +10,7 @@ import org.wildstang.yearly.auto.steps.shooter.StepResetShotToggle;
 import org.wildstang.yearly.auto.steps.shooter.StepRunFlywheel;
 import org.wildstang.yearly.auto.steps.shooter.StepSetShooterPosition;
 import org.wildstang.yearly.auto.steps.shooter.StepShoot;
+import org.wildstang.yearly.subsystems.Shooter;
 
 public class New2Ball extends AutoProgram
 {
@@ -20,13 +21,13 @@ public class New2Ball extends AutoProgram
       // TODO Auto-generated method stub
       AutoParallelStepGroup setup = new AutoParallelStepGroup();
       setup.addStep(new StepSetShooterPosition(true));
-      setup.addStep(new StepRunFlywheel(82.5));
+      setup.addStep(new StepRunFlywheel(Shooter.FLYWHEEL_SPEED_MEDIUM));
       addStep(setup);
       addStep(new AutoStepDelay(250));
       addStep(new StepSetIntakeState(true));
       addStep(new StepShoot());
       addStep(new AutoStepDelay(350));
-      addStep(new StepRunFlywheel(0));
+      addStep(new StepRunFlywheel(Shooter.FLYWHEEL_SPEED_ZERO));
       AutoParallelStepGroup cross = new AutoParallelStepGroup();
       AutoSerialStepGroup manageIntake = new AutoSerialStepGroup();
       AutoSerialStepGroup crossLow = new AutoSerialStepGroup();

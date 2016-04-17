@@ -18,7 +18,7 @@ import org.wildstang.yearly.auto.steps.shooter.StepSetShooterPosition;
 
 public class LowGoalTest extends AutoProgram
 {
-   private double speed;
+   private int speed;
 
    @Override
    protected void defineSteps()

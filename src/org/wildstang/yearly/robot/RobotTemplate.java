@@ -211,7 +211,7 @@ public class RobotTemplate extends IterativeRobot
       
       server = CameraServer.getInstance();
       server.setQuality(15);
-      server.setSize(1);
+      server.setSize(2);
       server.startAutomaticCapture("cam0");
 
    }

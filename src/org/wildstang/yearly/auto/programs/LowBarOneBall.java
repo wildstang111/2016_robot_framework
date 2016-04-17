@@ -17,6 +17,7 @@ import org.wildstang.yearly.auto.steps.shooter.StepResetShotToggle;
 import org.wildstang.yearly.auto.steps.shooter.StepRunFlywheel;
 import org.wildstang.yearly.auto.steps.shooter.StepSetShooterPosition;
 import org.wildstang.yearly.auto.steps.shooter.StepShoot;
+import org.wildstang.yearly.subsystems.Shooter;
 
 public class LowBarOneBall extends AutoProgram
 {
@@ -42,7 +43,7 @@ public class LowBarOneBall extends AutoProgram
 //      addStep(new StepQuickTurn(50));
       addStep(new StepTurnForTime(.4, 500));
       addStep(new AutoStepDelay(1000));
-      addStep(new StepRunFlywheel(.825));
+      addStep(new StepRunFlywheel(Shooter.FLYWHEEL_SPEED_MEDIUM));
       addStep(new AutoStepDelay(2000));
       findGoal.addStep(new AutoStepDelay(2000));
       findGoal.addStep(new StepVisionAdjustment());
@@ -50,7 +51,7 @@ public class LowBarOneBall extends AutoProgram
       addStep(new StepShoot());
       addStep(new AutoStepDelay(3000));
       addStep(new StepResetShotToggle());
-      addStep(new StepRunFlywheel(0));
+      addStep(new StepRunFlywheel(Shooter.FLYWHEEL_SPEED_ZERO));
    }
 
    @Override

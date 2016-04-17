@@ -11,6 +11,7 @@ import org.wildstang.yearly.auto.steps.intake.StepSetNoseState;
 import org.wildstang.yearly.auto.steps.shooter.StepRunFlywheel;
 import org.wildstang.yearly.auto.steps.shooter.StepSetShooterPosition;
 import org.wildstang.yearly.auto.steps.shooter.StepShoot;
+import org.wildstang.yearly.subsystems.Shooter;
 
 public class PortcullisShot extends AutoProgram
 {
@@ -24,7 +25,7 @@ public class PortcullisShot extends AutoProgram
       
       AutoParallelStepGroup flywheelCross = new AutoParallelStepGroup();
       flywheelCross.addStep(new StepDriveDistanceAtSpeed(150, .5, true));
-      flywheelCross.addStep(new StepRunFlywheel(82.5));
+      flywheelCross.addStep(new StepRunFlywheel(Shooter.FLYWHEEL_SPEED_MEDIUM));
       addStep(new AutoStepDelay(500));
       addStep(new StepQuickTurn(180));
       addStep(new StepSetShooterPosition(true));
@@ -35,7 +36,7 @@ public class PortcullisShot extends AutoProgram
       addStep(new AutoStepDelay(1000));
       addStep(new StepShoot());
       addStep(new AutoStepDelay(2000));
-      addStep(new StepRunFlywheel(0));
+      addStep(new StepRunFlywheel(Shooter.FLYWHEEL_SPEED_ZERO));
    }
 
    @Override
