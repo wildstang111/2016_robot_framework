@@ -154,6 +154,9 @@ public class Intake implements Subsystem
       intakeSpeedOut = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
                        + intakeSpeedOutKey, INTAKE_OUT_DEFAULT);
       
+      // Reset intake state
+      deployPneumatic = false;
+      
       // asking for below Inputs
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_5.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_5.getName()).addInputListener(this);

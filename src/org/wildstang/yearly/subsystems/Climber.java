@@ -136,9 +136,6 @@ public class Climber implements Subsystem
       
       if (armsDeploying && !armsDeployed)
       {
-         // Flag that we are deploying the arms (also used to control the arm pistons)
-         armsDeploying = true;
-         
          // Set the wind-out winch speed
          winchSpeed = -armHelpSpeed;
          
@@ -200,7 +197,6 @@ public class Climber implements Subsystem
       }
 
       // Set the output values
-      armSolenoid.setValue(armsDeploying);
       if (!hooksDeployed)
       {
          hooks.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
@@ -210,6 +206,7 @@ public class Climber implements Subsystem
          hooks.setValue(WsDoubleSolenoidState.FORWARD.ordinal());
       }
 
+      armSolenoid.setValue(armsDeploying);
       leftWinch.setValue(winchSpeed);
       rightWinch.setValue(winchSpeed);
       rightBrake.setValue(brakeEngaged);
