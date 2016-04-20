@@ -91,6 +91,26 @@ public class Shooter implements Subsystem, ConfigListener
             hoodPosition = false;
          }
       }
+      else if (source.getName().equals(WSInputs.MAN_DPAD_X.getName()))
+      {
+         double value = ((AnalogInput) source).getValue();
+         if (value > 0)
+         {
+            flySpeedToggle = 2;
+         }
+         else if (value < 0)
+         {
+            flySpeedToggle = 0;
+         }
+      }
+      else if (source.getName().equals(WSInputs.MAN_DPAD_Y.getName()))
+      {
+         double value = ((AnalogInput) source).getValue();
+         if (value > 0)
+         {
+            flySpeedToggle = 1;
+         }
+      }
       else if (source.getName().equals(WSInputs.MAN_BUTTON_4.getName()))
       {
          if (((DigitalInput) source).getValue() == true)
