@@ -41,19 +41,19 @@ public class Climber implements Subsystem
    
    private double armHelpSpeed;
    private double armHelpRunTime;
+   
    private static final String armsUpOutSpeed = ".arm_up_out_speed";
    private static final String armsUpRunTime = ".arm_up_run_time";
    private static final double ARMOUTSPEED_DEFAULT = .4;
-   private static final double ARMOUTTIME_DEFAULT = 1000.0;
+   private static final double ARMOUTTIME_DEFAULT = 1.0;
+   private static final double WINCH_SPEED_DEADBAND = 0.1;
+
    private double winchEndTime;
    private boolean winchLimit;
 
-//   private WsSolenoid brake;
    private WsSolenoid leftBrake;
    private WsSolenoid rightBrake;
    private WsDoubleSolenoid hooks;
-//   private WsSolenoid lowerArm;
-//   private WsSolenoid upperArm;
    private WsSolenoid armSolenoid;
    private WsVictor leftWinch;
    private WsVictor rightWinch;
@@ -81,16 +81,9 @@ public class Climber implements Subsystem
          }
 
       }
-      else if (source.getName().equals(WSInputs.MAN_BUTTON_9.getName()))
-      {
-//       if (((DigitalInput) source).getValue())
-//       {
-//          override = true;
-//       }
-      }
       else if (source.getName().equals(WSInputs.MAN_BUTTON_10.getName()))
       {
-         winchLimit = ((DigitalInput) source).getValue();
+         override = !override;
       }
    }
 
@@ -100,7 +93,6 @@ public class Climber implements Subsystem
       Core.getInputManager().getInput(WSInputs.MAN_RIGHT_JOYSTICK_Y.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_1.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_2.getName()).addInputListener(this);
-      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_9.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_10.getName()).addInputListener(this);
       //Core.getInputManager().getInput(WSInputs.RIGHT_ARM_TOUCHING.getName()).addInputListener(this);
       //Core.getInputManager().getInput(WSInputs.LEFT_ARM_TOUCHING.getName()).addInputListener(this);
@@ -128,13 +120,29 @@ public class Climber implements Subsystem
    @Override
    public void update()
    {
-      if(winchLimit)
+      if (override)
       {
+         // Run at half speed in override mode
          joystickWinchSpeed /= 2;
+         
+         if (winchInDeadband(joystickWinchSpeed))
+         {
+            // Explicitly stop if we're in the deadband
+            winchSpeed = 0.0;
+         }
+         else
+         {
+            // Steve: Do we need this state check?  I was going somewhere with this, but can't remember now...
+               // If we have started to move, remove air from the arm pistons
+            armsDeploying = false;
+
+            winchSpeed = joystickWinchSpeed;
+         }
+      
+         
       }
-      
-      
-      if (armsDeploying && !armsDeployed)
+      // Button has been pressed to deploy arms.  Activate arm pistons and wind winches out
+      else if (armsDeploying && !armsDeployed)
       {
          // Set the wind-out winch speed
          winchSpeed = -armHelpSpeed;
@@ -145,8 +153,21 @@ public class Climber implements Subsystem
             // Flag to not repeatedly call this
             deployStarted = true;
             protectIntake();
+            
+            // Start winch timer
+            
          }
 
+         // Delay the winches running to allow the brakes to disengage
+         // Actively set the speed to 0 if the delay has not ended
+//         if (deployStarted && startDelay < 3)
+//         {
+//            // Flag that we are disengaging the brakes
+//            brakesDisengaging = true;
+//            winchSpeed = 0.0;
+//            startDelay++;
+//         }
+         
          if (Timer.getFPGATimestamp() >= winchEndTime)
          {
             winchSpeed = 0.0;
@@ -154,16 +175,20 @@ public class Climber implements Subsystem
          }
          
          // E-stop arms!
-         if ((joystickWinchSpeed <= -0.1) || (joystickWinchSpeed >= 0.1))
+         if (!winchInDeadband(joystickWinchSpeed))
          {
             winchSpeed = 0.0;
          }
       }
-      
-      
-      if (armsDeployed)
+      // Arms are now at full extension.  Allow joystick control of the winches
+      else if (armsDeployed)
       {
-         if ((joystickWinchSpeed <= -0.1) || (joystickWinchSpeed >= 0.1))
+         // Explicitly set speed to 0 if we're in the deadband
+         if (winchInDeadband(joystickWinchSpeed))
+         {
+            winchSpeed = 0.0;
+         }
+         else
          {
             // Steve: Do we need this state check?  I was going somewhere with this, but can't remember now...
             if (!winchMoved)
@@ -183,17 +208,16 @@ public class Climber implements Subsystem
 //         {
 //            winchSpeed = 0;
 //         }
-         
       }
 
       // Set if the brake should be engaged.  Note this is the reverse of what you expect, due to the wiring of the solenoid
-      if (winchSpeed == 0)
+      if (winchSpeed != 0)
       {
-         brakeEngaged = false;
+         brakeEngaged = true;
       }
       else
       {
-         brakeEngaged = true;
+         brakeEngaged = false;
       }
 
       // Set the output values
@@ -222,6 +246,11 @@ public class Climber implements Subsystem
       SmartDashboard.putBoolean("Arms", armSolenoid.getValue());
       SmartDashboard.putBoolean("Left Brake", leftBrake.getValue());
       SmartDashboard.putBoolean("Right Brake", rightBrake.getValue());
+   }
+
+   private boolean winchInDeadband(double p_winchSpeed)
+   {
+      return (p_winchSpeed > -WINCH_SPEED_DEADBAND) && (p_winchSpeed < WINCH_SPEED_DEADBAND);
    }
 
    @Override
