@@ -42,10 +42,12 @@ public class Climber implements Subsystem
    private double armHelpSpeed;
    private double armHelpRunTime;
    
+   private boolean brakeOverride = false;
+   
    private static final String armsUpOutSpeed = ".arm_up_out_speed";
    private static final String armsUpRunTime = ".arm_up_run_time";
-   private static final double ARMOUTSPEED_DEFAULT = .4;
-   private static final double ARMOUTTIME_DEFAULT = 1.0;
+   private static final double ARMOUTSPEED_DEFAULT = -.25;
+   private static final double ARMOUTTIME_DEFAULT = 2.0;
    private static final double WINCH_SPEED_DEADBAND = 0.1;
 
    private double winchEndTime;
@@ -81,6 +83,10 @@ public class Climber implements Subsystem
          }
 
       }
+      else if (source.getName().equals(WSInputs.MAN_BUTTON_9.getName()))
+      {
+         brakeOverride = ((DigitalInput) source).getValue();
+      }
       else if (source.getName().equals(WSInputs.MAN_BUTTON_10.getName()))
       {
          override = !override;
@@ -90,10 +96,15 @@ public class Climber implements Subsystem
    @Override
    public void init()
    {
+      armsDeployed = false;
+      armsDeploying = false;
+      joystickWinchSpeed = 0;
+      winchSpeed = 0;
       Core.getInputManager().getInput(WSInputs.MAN_RIGHT_JOYSTICK_Y.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_1.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_2.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_10.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_9.getName()).addInputListener(this);
       //Core.getInputManager().getInput(WSInputs.RIGHT_ARM_TOUCHING.getName()).addInputListener(this);
       //Core.getInputManager().getInput(WSInputs.LEFT_ARM_TOUCHING.getName()).addInputListener(this);
       leftBrake = ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LEFT_BRAKE.getName()));
@@ -122,8 +133,9 @@ public class Climber implements Subsystem
    {
       if (override)
       {
+         double dummySpeed = joystickWinchSpeed/2;
          // Run at half speed in override mode
-         joystickWinchSpeed /= 2;
+         joystickWinchSpeed = dummySpeed;
          
          if (winchInDeadband(joystickWinchSpeed))
          {
@@ -160,13 +172,13 @@ public class Climber implements Subsystem
 
          // Delay the winches running to allow the brakes to disengage
          // Actively set the speed to 0 if the delay has not ended
-//         if (deployStarted && startDelay < 3)
-//         {
-//            // Flag that we are disengaging the brakes
-//            brakesDisengaging = true;
-//            winchSpeed = 0.0;
-//            startDelay++;
-//         }
+         if (deployStarted && startDelay < 10)
+         {
+            // Flag that we are disengaging the brakes
+            brakeEngaged = false;
+            winchSpeed = 0.2;
+            startDelay++;
+         }
          
          if (Timer.getFPGATimestamp() >= winchEndTime)
          {
@@ -233,8 +245,16 @@ public class Climber implements Subsystem
       armSolenoid.setValue(armsDeploying);
       leftWinch.setValue(winchSpeed);
       rightWinch.setValue(winchSpeed);
+      if(!brakeOverride)
+      {
       rightBrake.setValue(brakeEngaged);
       leftBrake.setValue(brakeEngaged);
+      }
+      else
+      {
+      rightBrake.setValue(true);
+      leftBrake.setValue(true);
+      }
 
       
       SmartDashboard.putBoolean("Arms deploying", armsDeploying);
@@ -246,6 +266,8 @@ public class Climber implements Subsystem
       SmartDashboard.putBoolean("Arms", armSolenoid.getValue());
       SmartDashboard.putBoolean("Left Brake", leftBrake.getValue());
       SmartDashboard.putBoolean("Right Brake", rightBrake.getValue());
+      SmartDashboard.putBoolean("Brake Override", brakeOverride);
+      SmartDashboard.putNumber("Winch Speed", winchSpeed);
    }
 
    private boolean winchInDeadband(double p_winchSpeed)
