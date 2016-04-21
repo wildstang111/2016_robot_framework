@@ -4,6 +4,7 @@ import org.wildstang.framework.config.Config;
 import org.wildstang.framework.config.ConfigListener;
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.Input;
+import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.hardware.crio.outputs.WsDoubleSolenoid;
@@ -19,7 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Shooter implements Subsystem, ConfigListener
 {
-   private int flySpeedToggle = 2;
+   private int flySpeedToggle = FLYWHEEL_SPEED_LOW;
    private boolean flyWheelToggle = false;
    private boolean hoodPosition = false;
    private double flySpeed;
@@ -91,46 +92,20 @@ public class Shooter implements Subsystem, ConfigListener
             hoodPosition = false;
          }
       }
-      else if (source.getName().equals(WSInputs.MAN_DPAD_X.getName()))
+      else if (source.getName().equals(WSInputs.FLYWHEEL_LOW.getName()))
       {
-         double value = ((AnalogInput) source).getValue();
-         if (value > 0)
-         {
-            flySpeedToggle = 2;
-         }
-         else if (value < 0)
-         {
-            flySpeedToggle = 0;
-         }
+         flySpeedToggle = FLYWHEEL_SPEED_LOW;
       }
-      else if (source.getName().equals(WSInputs.MAN_DPAD_Y.getName()))
+      else if (source.getName().equals(WSInputs.FLYWHEEL_MEDIUM.getName()))
       {
-         double value = ((AnalogInput) source).getValue();
-         if (value > 0)
-         {
-            flySpeedToggle = 1;
-         }
+         flySpeedToggle = FLYWHEEL_SPEED_MEDIUM;
+      }
+      else if (source.getName().equals(WSInputs.FLYWHEEL_HIGH.getName()))
+      {
+         flySpeedToggle = FLYWHEEL_SPEED_HIGH;
       }
       else if (source.getName().equals(WSInputs.MAN_BUTTON_4.getName()))
       {
-         if (((DigitalInput) source).getValue() == true)
-         {
-            /* Remove the extra high speed from driver control and ignore the 0 speed */
-            /* Speed = 3 and speed = 0 are not used for driver control  only auto control */
-            if (flySpeedToggle == 3)
-            {
-               flySpeedToggle = 2;
-            }
-            if (flySpeedToggle == 0)
-            {
-               flySpeedToggle = 1;
-            }
-            flySpeedToggle +=1;
-            if (flySpeedToggle > 2)
-            {
-               flySpeedToggle = 1;
-            }
-         }
       }
    }
 
@@ -141,6 +116,10 @@ public class Shooter implements Subsystem, ConfigListener
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_4.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_6.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_2.getName()).addInputListener(this);
+
+      Core.getInputManager().getInput(WSInputs.FLYWHEEL_LOW.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.FLYWHEEL_MEDIUM.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.FLYWHEEL_HIGH.getName()).addInputListener(this);
 
       RingLight = (WsRelay) Core.getOutputManager().getOutput(WSOutputs.RING_LIGHT.getName());
       RingLight.enable();
@@ -168,7 +147,7 @@ public class Shooter implements Subsystem, ConfigListener
       // flyWheelEncoder.setSamplesToAverage(7);
 
       flyWheelDiff = 0;
-      flySpeedToggle = 2;
+      flySpeedToggle = FLYWHEEL_SPEED_LOW;
    }
 
    @Override
