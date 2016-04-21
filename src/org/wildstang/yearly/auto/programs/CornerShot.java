@@ -18,7 +18,7 @@ public class CornerShot extends AutoProgram
       // TODO Auto-generated method stub
       //wait for flywheel to get to speed, then shoot
       // Medium flywheel speed.
-      addStep(new StepRunFlywheel(Shooter.FLYWHEEL_SPEED_MEDIUM));
+      addStep(new StepRunFlywheel(Shooter.FLYWHEEL_SPEED_LOW));
       addStep(new StepSetShooterPosition(true));
       addStep(new StepResetShooterPositionToggle());
       addStep(new AutoStepDelay(2000));

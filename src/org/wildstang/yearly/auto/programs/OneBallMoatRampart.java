@@ -7,6 +7,7 @@ import org.wildstang.framework.auto.steps.control.AutoStepDelay;
 import org.wildstang.yearly.auto.steps.drivebase.StepQuickTurn;
 import org.wildstang.yearly.auto.steps.drivebase.StepStartDriveUsingMotionProfile;
 import org.wildstang.yearly.auto.steps.drivebase.StepStopDriveUsingMotionProfile;
+import org.wildstang.yearly.auto.steps.drivebase.StepTurnForTime;
 import org.wildstang.yearly.auto.steps.drivebase.StepVisionAdjustment;
 import org.wildstang.yearly.auto.steps.drivebase.StepWaitForDriveMotionProfile;
 import org.wildstang.yearly.auto.steps.shooter.StepResetFlywheelToggles;
@@ -20,7 +21,7 @@ import org.wildstang.yearly.subsystems.Shooter;
 public class OneBallMoatRampart extends AutoProgram
 {
    private int speed = Shooter.FLYWHEEL_SPEED_MEDIUM;
-   private int defensePosition = 4;
+   private int defensePosition = 2;
    protected final double dist2 = 91.78;
    protected final double dist3 = 38.59;
 //   protected final double dist4 = -15.12;
@@ -63,11 +64,12 @@ public class OneBallMoatRampart extends AutoProgram
 
          case (2):
          {
-            gotoGoal.addStep(new StepQuickTurn(90 * (dist2 / Math.abs(dist2))));
-            gotoGoal.addStep(new StepStartDriveUsingMotionProfile(Math.abs(dist2), 0));
-            gotoGoal.addStep(new StepWaitForDriveMotionProfile()); 
-            gotoGoal.addStep(new StepStopDriveUsingMotionProfile());
-            gotoGoal.addStep(new StepQuickTurn(-90 * (dist2 / Math.abs(dist2))));
+//            gotoGoal.addStep(new StepQuickTurn(90 * (dist2 / Math.abs(dist2))));
+//            gotoGoal.addStep(new StepStartDriveUsingMotionProfile(Math.abs(dist2), 0));
+//            gotoGoal.addStep(new StepWaitForDriveMotionProfile()); 
+//            gotoGoal.addStep(new StepStopDriveUsingMotionProfile());
+//            gotoGoal.addStep(new StepQuickTurn(-90 * (dist2 / Math.abs(dist2))));
+            gotoGoal.addStep(new StepTurnForTime(.5, .5));
          }
          case (3):
          {
