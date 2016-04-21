@@ -47,7 +47,6 @@ public class Climber implements Subsystem
    private static final double ARMOUTSPEED_DEFAULT = .4;
    private static final double ARMOUTTIME_DEFAULT = 1.0;
    private static final double WINCH_SPEED_DEADBAND = 0.1;
-   private static final double MAX_WINCH_SPEED = 0.75;
 
    private double winchEndTime;
    private boolean winchLimit;
@@ -200,7 +199,7 @@ public class Climber implements Subsystem
                armsDeploying = false;
             }
 
-            winchSpeed = limitSpeed(joystickWinchSpeed, MAX_WINCH_SPEED);
+            winchSpeed = joystickWinchSpeed;
          }
 
          // Safety - don't pull down too far
@@ -252,26 +251,6 @@ public class Climber implements Subsystem
    private boolean winchInDeadband(double p_winchSpeed)
    {
       return (p_winchSpeed > -WINCH_SPEED_DEADBAND) && (p_winchSpeed < WINCH_SPEED_DEADBAND);
-   }
-
-   private double limitSpeed(double p_speed, double p_max)
-   {
-      double result;
-      
-      if (p_speed > p_max)
-      {
-         result = p_max;
-      }
-      else if (p_speed < (-p_max))
-      {
-         result = -p_max;
-      }
-      else
-      {
-         result = p_speed;
-      }
-      
-      return result;
    }
    
    @Override
