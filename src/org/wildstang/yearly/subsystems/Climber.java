@@ -274,7 +274,7 @@ public class Climber implements Subsystem
    {
       return (p_winchSpeed > -WINCH_SPEED_DEADBAND) && (p_winchSpeed < WINCH_SPEED_DEADBAND);
    }
-
+   
    @Override
    public String getName()
    {
