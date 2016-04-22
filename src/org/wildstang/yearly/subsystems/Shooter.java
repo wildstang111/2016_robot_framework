@@ -4,7 +4,6 @@ import org.wildstang.framework.config.Config;
 import org.wildstang.framework.config.ConfigListener;
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.Input;
-import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.hardware.crio.outputs.WsDoubleSolenoid;
@@ -239,8 +238,8 @@ public class Shooter implements Subsystem, ConfigListener
       shooterHood.setValue(hoodUpDown);
       SmartDashboard.putNumber("Expected Rate", expectedRate);
       SmartDashboard.putNumber("Raw Flywheel", -flySpeed);
-      SmartDashboard.putString("Flywheel Speed", flySpeedToggle == 0 ? "Low"
-            : flySpeedToggle == 1 ? "Medium" : "High");
+      SmartDashboard.putString("Flywheel Speed", flySpeedToggle == FLYWHEEL_SPEED_LOW ? "Low"
+            : flySpeedToggle == FLYWHEEL_SPEED_MEDIUM ? "Medium" : "High");
       SmartDashboard.putNumber("Flywheel Rate", flyWheelRate);
       SmartDashboard.putNumber("Flywheel Output Adjustment", outputAdjust);
       SmartDashboard.putString("Flywheel", flyWheelToggle ? "On" : "Off");

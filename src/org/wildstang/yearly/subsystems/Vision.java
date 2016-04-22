@@ -14,7 +14,7 @@ public class Vision implements Subsystem
    private final double WIDTH = 640;
    private final double HEIGHT = 480;
 
-   private final int CENTERED_LEFT = 310;
+   private final int CENTERED_LEFT = 290;
    private final int CENTERED_RIGHT = 330;
    private final int BOTTOM_LOW_MIN = 45;
    private final int BOTTOM_LOW_MAX = 70;
@@ -134,6 +134,8 @@ public class Vision implements Subsystem
       SmartDashboard.putBoolean("On Target X", xTarget);
       SmartDashboard.putBoolean("On Target Y", goodLongHeight
             || goodShortHeight);
+      SmartDashboard.putNumber("Target Center", targetCenter);
+      
       // SmartDashboard.putNumber("Camera Distance", distanceToTarget);
       // SmartDashboard.putNumber("Camera Angle", angleToRotate);
       // SmartDashboard.putBoolean("On Target?", isOnTarget);
