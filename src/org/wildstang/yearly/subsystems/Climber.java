@@ -31,6 +31,9 @@ public class Climber implements Subsystem
 
    private int startDelay = 0;
    private int stopDelay = 0;
+   private double previousWinch;
+   private boolean brakeDelay;
+   private double brakeTimer;
 
    private boolean brakeEngaged = true;
 
@@ -47,7 +50,7 @@ public class Climber implements Subsystem
    private static final String armsUpOutSpeed = ".arm_up_out_speed";
    private static final String armsUpRunTime = ".arm_up_run_time";
    private static final double ARMOUTSPEED_DEFAULT = -.25;
-   private static final double ARMOUTTIME_DEFAULT = 2.0;
+   private static final double ARMOUTTIME_DEFAULT = 2.5;
    private static final double WINCH_SPEED_DEADBAND = 0.1;
 
    private double winchEndTime;
@@ -96,6 +99,10 @@ public class Climber implements Subsystem
    @Override
    public void init()
    {
+      brakeTimer = 0;
+      startDelay = 0;
+      previousWinch = 0;
+      brakeDelay = false;
       armsDeployed = false;
       armsDeploying = false;
       joystickWinchSpeed = 0;
@@ -133,10 +140,9 @@ public class Climber implements Subsystem
    {
       if (override)
       {
-         double dummySpeed = joystickWinchSpeed/2;
+//         double dummySpeed = joystickWinchSpeed/2;
          // Run at half speed in override mode
-         joystickWinchSpeed = dummySpeed;
-         
+//         joystickWinchSpeed = dummySpeed;
          if (winchInDeadband(joystickWinchSpeed))
          {
             // Explicitly stop if we're in the deadband
@@ -150,8 +156,31 @@ public class Climber implements Subsystem
 
             winchSpeed = joystickWinchSpeed;
          }
-      
-         
+         if(previousWinch == 0 && winchSpeed != 0)
+         {
+            brakeTimer = Timer.getFPGATimestamp();
+            brakeDelay = true;
+         }
+         if(brakeDelay)
+         {
+            if(Timer.getFPGATimestamp() - brakeTimer > .3)
+            {
+               brakeDelay = false;
+            }
+         }
+         if(!brakeDelay)
+         {
+            leftWinch.setValue(winchSpeed);
+            rightWinch.setValue(winchSpeed);  
+         }
+         else
+         {
+//          leftWinch.setValue(0);
+//          rightWinch.setValue(0);
+        leftWinch.setValue(.2);
+        rightWinch.setValue(.2);
+         }
+         previousWinch = winchSpeed;
       }
       // Button has been pressed to deploy arms.  Activate arm pistons and wind winches out
       else if (armsDeploying && !armsDeployed)
@@ -172,11 +201,11 @@ public class Climber implements Subsystem
 
          // Delay the winches running to allow the brakes to disengage
          // Actively set the speed to 0 if the delay has not ended
-         if (deployStarted && startDelay < 10)
+         if (deployStarted && startDelay < 12)
          {
             // Flag that we are disengaging the brakes
             brakeEngaged = false;
-            winchSpeed = 0.2;
+            winchSpeed = -0.25;
             startDelay++;
          }
          
@@ -214,6 +243,18 @@ public class Climber implements Subsystem
             winchSpeed = joystickWinchSpeed;
          }
 
+         if(previousWinch == 0 && winchSpeed != 0)
+         {
+            brakeTimer = Timer.getFPGATimestamp();
+            brakeDelay = true;
+         }
+         if(brakeDelay)
+         {
+            if(Timer.getFPGATimestamp() - brakeTimer > .3)
+            {
+               brakeDelay = false;
+            }
+         }
          // Safety - don't pull down too far
          // TODO: Need switches/limit sensor
 //         if (upperArmLimit || lowerArmLimit)
@@ -243,8 +284,21 @@ public class Climber implements Subsystem
       }
 
       armSolenoid.setValue(armsDeploying);
-      leftWinch.setValue(winchSpeed);
-      rightWinch.setValue(winchSpeed);
+      if(!override)
+      {
+      if(!brakeDelay)
+      {
+         leftWinch.setValue(winchSpeed);
+         rightWinch.setValue(winchSpeed);  
+      }
+      else
+      {
+//         leftWinch.setValue(0);
+//         rightWinch.setValue(0);
+       leftWinch.setValue(.2);
+       rightWinch.setValue(.2);
+      }
+      }
       if(!brakeOverride)
       {
       rightBrake.setValue(brakeEngaged);
@@ -255,8 +309,8 @@ public class Climber implements Subsystem
       rightBrake.setValue(true);
       leftBrake.setValue(true);
       }
-
       
+      previousWinch = winchSpeed;
       SmartDashboard.putBoolean("Arms deploying", armsDeploying);
       SmartDashboard.putBoolean("Arms deployed", armsDeployed);
       SmartDashboard.putBoolean("hooks deployed", hooksDeployed);
