@@ -41,7 +41,7 @@ public class LowBarOneBall extends AutoProgram
       addStep(new StepSetIntakeState(false));
       addStep(new StepResetIntakeToggle());
       addStep(new AutoStepDelay(1500));
-      addStep(new StepQuickTurn(60));
+      addStep(new StepQuickTurn(55));
       addStep(new StepResetEncoders());
       addStep(new StepStartDriveUsingMotionProfile(-40, 0.0));
       addStep(new StepWaitForDriveMotionProfile());
@@ -52,7 +52,7 @@ public class LowBarOneBall extends AutoProgram
 //      addStep(new AutoStepDelay(2000));
 //      findGoal.addStep(new AutoStepDelay(2000));
       addStep(new StepVisionAdjustment());
-      addStep(new StepRunFlywheel(Shooter.FLYWHEEL_SPEED_MEDIUM));
+      addStep(new StepRunFlywheel(Shooter.FLYWHEEL_SPEED_LOW));
       addStep(new AutoStepDelay(4000));
 //      addStep(findGoal);
       addStep(new StepShoot());

@@ -49,8 +49,8 @@ public class Climber implements Subsystem
    
    private static final String armsUpOutSpeed = ".arm_up_out_speed";
    private static final String armsUpRunTime = ".arm_up_run_time";
-   private static final double ARMOUTSPEED_DEFAULT = -.25;
-   private static final double ARMOUTTIME_DEFAULT = 2.5;
+   private static final double ARMOUTSPEED_DEFAULT = -.75;
+   private static final double ARMOUTTIME_DEFAULT = 2.7;
    private static final double WINCH_SPEED_DEADBAND = 0.1;
 
    private double winchEndTime;
@@ -68,7 +68,7 @@ public class Climber implements Subsystem
    {
       if (source.getName().equals(WSInputs.MAN_BUTTON_1.getName()))
       {
-         if (((DigitalInput) source).getValue())
+         if (((DigitalInput) source).getValue() && ((Intake)Core.getSubsystemManager().getSubsystem(WSSubsystems.INTAKE.getName())).isDeployed())
          {
             armsDeploying = true;
             winchEndTime = Timer.getFPGATimestamp() + armHelpRunTime;
@@ -152,9 +152,15 @@ public class Climber implements Subsystem
          {
             // Steve: Do we need this state check?  I was going somewhere with this, but can't remember now...
                // If we have started to move, remove air from the arm pistons
-            armsDeploying = false;
-
+            
             winchSpeed = joystickWinchSpeed;
+            if (!winchMoved && winchSpeed < 0)
+            {
+               winchMoved = true;
+               
+               // If we have started to move, remove air from the arm pistons
+               armsDeploying = false;
+            }
          }
          if(previousWinch == 0 && winchSpeed != 0)
          {
@@ -232,15 +238,16 @@ public class Climber implements Subsystem
          else
          {
             // Steve: Do we need this state check?  I was going somewhere with this, but can't remember now...
-            if (!winchMoved)
+
+
+            winchSpeed = joystickWinchSpeed;
+            if (!winchMoved && winchSpeed < 0)
             {
                winchMoved = true;
                
                // If we have started to move, remove air from the arm pistons
                armsDeploying = false;
             }
-
-            winchSpeed = joystickWinchSpeed;
          }
 
          if(previousWinch == 0 && winchSpeed != 0)

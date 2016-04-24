@@ -25,12 +25,12 @@ public class StepVisionAdjustment extends AutoStep
    {
       // TODO Auto-generated method stub
       ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).setThrottleValue(0);
-      ((DriveBase)Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).setLeftDrive(rotateInt < 0 ? 0.35 : -0.35);
+      ((DriveBase)Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).setLeftDrive(rotateInt < 0 ? 0.25 : -0.25);
 // TODO
     ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_THROTTLE.getName())).setValue(0.0);
-//    ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).setValue(rotateInt < 0 ? 0.35 : -0.35);
-//    ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).setValue(rotateInt > 0 ? 0.35 : -0.35);
-//    ((DriveBase)Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).setLeftDrive(rotateInt > 0 ? 0.35 : -0.35);
+//    ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).setValue(rotateInt < 0 ? 0.25 : -0.25);
+//    ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).setValue(rotateInt > 0 ? 0.25 : -0.25);
+//    ((DriveBase)Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).setLeftDrive(rotateInt > 0 ? 0.25 : -0.25);
    }
 
    @Override
@@ -52,9 +52,9 @@ public class StepVisionAdjustment extends AutoStep
          
             // TODO
             ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_THROTTLE.getName())).setValue(0.0);
-//            ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).setValue(rotateInt < 0 ? 0.35 : -0.35);
-//            ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).setValue(rotateInt > 0 ? 0.35 : -0.35);
-            ((DriveBase)Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).setLeftDrive(rotateInt < 0 ? 0.35 : -0.35);
+//            ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).setValue(rotateInt < 0 ? 0.25 : -0.25);
+//            ((AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName())).setValue(rotateInt > 0 ? 0.25 : -0.25);
+            ((DriveBase)Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).setLeftDrive(rotateInt < 0 ? 0.25 : -0.25);
       }
       else
       {
