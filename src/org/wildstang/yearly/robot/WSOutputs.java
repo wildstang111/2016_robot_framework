@@ -39,7 +39,7 @@ public enum WSOutputs implements Outputs
 //   UPPER_ARM("Upper Lift Arm", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 5, false), getLogging()),
    LEFT_BRAKE("Left Winch Brake", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 4, false), getLogging()),
    RIGHT_BRAKE("Right Winch Brake", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 5, false), getLogging()),
-   HOOK_EXTENSION("Hook Extenstion", WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(1, 6, 7, WsDoubleSolenoidState.REVERSE), getLogging()),
+   HOOK_EXTENSION("Hook Extenstion", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 7, false), getLogging()),
    SHOOTER_HOOD("Shooter Hood", WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(2, 0, 1, WsDoubleSolenoidState.REVERSE), getLogging()),
 //   WINCH_BRAKE("Stop the winches",             WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(2, 3, false), getLogging());
    ARMS("Both Arms", WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(2, 3, false), getLogging());

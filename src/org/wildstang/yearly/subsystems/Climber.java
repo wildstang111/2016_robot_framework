@@ -6,8 +6,6 @@ import org.wildstang.framework.io.Input;
 import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.framework.subsystems.Subsystem;
-import org.wildstang.hardware.crio.outputs.WsDoubleSolenoid;
-import org.wildstang.hardware.crio.outputs.WsDoubleSolenoidState;
 import org.wildstang.hardware.crio.outputs.WsSolenoid;
 import org.wildstang.hardware.crio.outputs.WsVictor;
 import org.wildstang.yearly.robot.WSInputs;
@@ -58,7 +56,7 @@ public class Climber implements Subsystem
 
    private WsSolenoid leftBrake;
    private WsSolenoid rightBrake;
-   private WsDoubleSolenoid hooks;
+   private WsSolenoid hooks;
    private WsSolenoid armSolenoid;
    private WsVictor leftWinch;
    private WsVictor rightWinch;
@@ -116,7 +114,7 @@ public class Climber implements Subsystem
       //Core.getInputManager().getInput(WSInputs.LEFT_ARM_TOUCHING.getName()).addInputListener(this);
       leftBrake = ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LEFT_BRAKE.getName()));
       rightBrake = ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.RIGHT_BRAKE.getName()));
-      hooks = (WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.HOOK_EXTENSION.getName());
+      hooks = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.HOOK_EXTENSION.getName());
       armSolenoid = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.ARMS.getName());
       leftWinch = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.WINCH_LEFT.getName());
       rightWinch = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.WINCH_RIGHT.getName());
@@ -283,11 +281,11 @@ public class Climber implements Subsystem
       // Set the output values
       if (!hooksDeployed)
       {
-         hooks.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
+         hooks.setValue(false);
       }
       else
       {
-         hooks.setValue(WsDoubleSolenoidState.FORWARD.ordinal());
+         hooks.setValue(true);
       }
 
       armSolenoid.setValue(armsDeploying);
