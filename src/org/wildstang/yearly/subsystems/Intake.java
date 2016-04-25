@@ -1,16 +1,6 @@
 package org.wildstang.yearly.subsystems;
 
 import org.wildstang.framework.config.Config;
-import org.wildstang.framework.io.Input;
-import org.wildstang.framework.io.inputs.AnalogInput;
-import org.wildstang.framework.io.inputs.DigitalInput;
-import org.wildstang.framework.io.outputs.AnalogOutput;
-import org.wildstang.framework.subsystems.Subsystem;
-import org.wildstang.hardware.crio.outputs.WsSolenoid;
-import org.wildstang.yearly.robot.WSInputs;
-import org.wildstang.yearly.robot.WSOutputs;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /* Please edit!!!
  * This program does all these things
  * reads INTAKE_BOLDER_SENSOR. INTAKE_BOLDER_SENSOR = intakeSensorReading.
@@ -35,6 +25,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 //expand this and edit if trouble with Ws
 import org.wildstang.framework.core.Core;
+import org.wildstang.framework.io.Input;
+import org.wildstang.framework.io.inputs.AnalogInput;
+import org.wildstang.framework.io.inputs.DigitalInput;
+import org.wildstang.framework.io.outputs.AnalogOutput;
+import org.wildstang.framework.subsystems.Subsystem;
+import org.wildstang.hardware.crio.outputs.WsSolenoid;
+import org.wildstang.yearly.robot.WSInputs;
+import org.wildstang.yearly.robot.WSOutputs;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Intake implements Subsystem
 {
@@ -118,7 +118,7 @@ public class Intake implements Subsystem
       // setting manRollerInOverride to Manipulator button 1
       if (source.getName().equals(WSInputs.MAN_BUTTON_9.getName()))
       {
-         manRollerInOverride = ((DigitalInput) source).getValue();
+//         manRollerInOverride = ((DigitalInput) source).getValue();
       }
 
       // setting manDeployPneumaticControl to Manipulator button 8
@@ -143,7 +143,6 @@ public class Intake implements Subsystem
    public void init()
    {
       // TODO Auto-generated method stub
-
       intakeDeploy = ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_DEPLOY.getName()));
       intakeFrontLower = ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_FRONT_LOWER.getName()));
       frontRoller = ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.FRONT_ROLLER.getName()));
@@ -153,6 +152,11 @@ public class Intake implements Subsystem
                       + intakeSpeedInKey, INTAKE_IN_DEFAULT);
       intakeSpeedOut = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
                        + intakeSpeedOutKey, INTAKE_OUT_DEFAULT);
+      
+      // Reset intake state
+      deployPneumatic = false;
+//      manDeployPneumaticControl = false;
+//      limboOn = false;
       
       // asking for below Inputs
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_5.getName()).addInputListener(this);
@@ -255,7 +259,9 @@ public class Intake implements Subsystem
       // ((DigitalOutput)Core.getOutputManager().getOutput(WSOutputs.FRONT_ROLLER_LED_2.getName())).setValue(rollerMovingIn);
       // ((DigitalOutput)Core.getOutputManager().getOutput(WSOutputs.Pneumatic_1.getName())).setValue(nosePneumatic);
       // ((DigitalOutput)Core.getOutputManager().getOutput(WSOutputs.Pneumatic_2.getName())).setValue(deployPneumatic);
-      
+
+         intakeDeploy.setValue(true);
+
       intakeDeploy.setValue(deployPneumatic);
       intakeFrontLower.setValue(nosePneumatic);
       if(AutoIntakeOverride && !intakeSensorReading)

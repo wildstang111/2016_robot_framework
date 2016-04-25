@@ -22,37 +22,44 @@ public class Climber implements Subsystem
    /*
     * Climber Robot Class Authors: Wallace Butler and Lucas Papaioannou
     */
-   private boolean arm;
+   private boolean armsDeploying = false;
+   private boolean armsDeployed = false;
+   private boolean hooksDeployed = false;
+   private boolean deployStarted = false;
 
-   private double winchValue;
-   private boolean winchRunning;
-
-   private boolean hook;
+   private boolean winchMoved = false;
 
    private int startDelay = 0;
    private int stopDelay = 0;
+   private double previousWinch;
+   private boolean brakeDelay;
+   private double brakeTimer;
+
    private boolean brakeEngaged = true;
+
+   private double joystickWinchSpeed = 0.0;
+   private double winchSpeed = 0.0;
+   
    private boolean override = false;
-   private boolean rightWinchFree = false;
-   private boolean leftWinchFree = false;
-   private boolean Winched = false;
    
    private double armHelpSpeed;
    private double armHelpRunTime;
+   
+   private boolean brakeOverride = false;
+   
    private static final String armsUpOutSpeed = ".arm_up_out_speed";
    private static final String armsUpRunTime = ".arm_up_run_time";
-   private static final double ARMOUTSPEED_DEFAULT = .4;
-   private static final double ARMOUTTIME_DEFAULT = 1000.0;
+   private static final double ARMOUTSPEED_DEFAULT = -.75;
+   private static final double ARMOUTTIME_DEFAULT = 2.7;
+   private static final double WINCH_SPEED_DEADBAND = 0.1;
+
    private double winchEndTime;
    private boolean winchLimit;
 
-//   private WsSolenoid brake;
    private WsSolenoid leftBrake;
    private WsSolenoid rightBrake;
    private WsDoubleSolenoid hooks;
-//   private WsSolenoid lowerArm;
-//   private WsSolenoid upperArm;
-   private WsSolenoid Arms;
+   private WsSolenoid armSolenoid;
    private WsVictor leftWinch;
    private WsVictor rightWinch;
 
@@ -61,61 +68,56 @@ public class Climber implements Subsystem
    {
       if (source.getName().equals(WSInputs.MAN_BUTTON_1.getName()))
       {
-         if (((DigitalInput) source).getValue())
+         if (((DigitalInput) source).getValue() && ((Intake)Core.getSubsystemManager().getSubsystem(WSSubsystems.INTAKE.getName())).isDeployed())
          {
-            arm = !arm;
-            if(true == arm){
-               winchEndTime = Timer.getFPGATimestamp() + armHelpRunTime;
-            }
+            armsDeploying = true;
+            winchEndTime = Timer.getFPGATimestamp() + armHelpRunTime;
          }
       }
       else if (source.getName().equals(WSInputs.MAN_RIGHT_JOYSTICK_Y.getName()))
       {
-         winchValue = ((AnalogInput) source).getValue();
+         joystickWinchSpeed = ((AnalogInput) source).getValue();
       }
       else if (source.getName().equals(WSInputs.MAN_BUTTON_2.getName()))
       {
          if (((DigitalInput) source).getValue())
          {
-            hook = !hook;
+            hooksDeployed = !hooksDeployed;
          }
 
       }
       else if (source.getName().equals(WSInputs.MAN_BUTTON_9.getName()))
       {
-//       if (((DigitalInput) source).getValue())
-//       {
-//          override = true;
-//       }
+         brakeOverride = ((DigitalInput) source).getValue();
       }
       else if (source.getName().equals(WSInputs.MAN_BUTTON_10.getName()))
       {
-         winchLimit = ((DigitalInput) source).getValue();
+         override = !override;
       }
-//      else if (source.getName().equals(WSInputs.LEFT_WINCH_FREE.getName()))
-//      {
-//         leftWinchFree = ((DigitalInput) source).getValue();
-//      }
-//      else if (source.getName().equals(WSInputs.RIGHT_WINCH_FREE.getName()))
-//      {
-//         rightWinchFree = ((DigitalInput) source).getValue();
-//      }
    }
 
    @Override
    public void init()
    {
+      brakeTimer = 0;
+      startDelay = 0;
+      previousWinch = 0;
+      brakeDelay = false;
+      armsDeployed = false;
+      armsDeploying = false;
+      joystickWinchSpeed = 0;
+      winchSpeed = 0;
       Core.getInputManager().getInput(WSInputs.MAN_RIGHT_JOYSTICK_Y.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_1.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_2.getName()).addInputListener(this);
-      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_9.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_10.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_9.getName()).addInputListener(this);
       //Core.getInputManager().getInput(WSInputs.RIGHT_ARM_TOUCHING.getName()).addInputListener(this);
       //Core.getInputManager().getInput(WSInputs.LEFT_ARM_TOUCHING.getName()).addInputListener(this);
       leftBrake = ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.LEFT_BRAKE.getName()));
       rightBrake = ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.RIGHT_BRAKE.getName()));
       hooks = (WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.HOOK_EXTENSION.getName());
-      Arms = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.ARMS.getName());
+      armSolenoid = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.ARMS.getName());
       leftWinch = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.WINCH_LEFT.getName());
       rightWinch = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.WINCH_RIGHT.getName());
       
@@ -136,165 +138,204 @@ public class Climber implements Subsystem
    @Override
    public void update()
    {
-      if(winchLimit)
+      if (override)
       {
-         winchValue /= 2;
+//         double dummySpeed = joystickWinchSpeed/2;
+         // Run at half speed in override mode
+//         joystickWinchSpeed = dummySpeed;
+         if (winchInDeadband(joystickWinchSpeed))
+         {
+            // Explicitly stop if we're in the deadband
+            winchSpeed = 0.0;
+         }
+         else
+         {
+            // Steve: Do we need this state check?  I was going somewhere with this, but can't remember now...
+               // If we have started to move, remove air from the arm pistons
+            
+            winchSpeed = joystickWinchSpeed;
+            if (!winchMoved && winchSpeed < 0)
+            {
+               winchMoved = true;
+               
+               // If we have started to move, remove air from the arm pistons
+               armsDeploying = false;
+            }
+         }
+         if(previousWinch == 0 && winchSpeed != 0)
+         {
+            brakeTimer = Timer.getFPGATimestamp();
+            brakeDelay = true;
+         }
+         if(brakeDelay)
+         {
+            if(Timer.getFPGATimestamp() - brakeTimer > .3)
+            {
+               brakeDelay = false;
+            }
+         }
+         if(!brakeDelay)
+         {
+            leftWinch.setValue(winchSpeed);
+            rightWinch.setValue(winchSpeed);  
+         }
+         else
+         {
+//          leftWinch.setValue(0);
+//          rightWinch.setValue(0);
+        leftWinch.setValue(.2);
+        rightWinch.setValue(.2);
+         }
+         previousWinch = winchSpeed;
       }
-      if (arm)
+      // Button has been pressed to deploy arms.  Activate arm pistons and wind winches out
+      else if (armsDeploying && !armsDeployed)
       {
-         if(Timer.getFPGATimestamp() < winchEndTime){
-            leftWinch.setValue(-armHelpSpeed);
-            rightWinch.setValue(-armHelpSpeed);
-         }else{
-            leftWinch.setValue(0);
-            rightWinch.setValue(0);
+         // Set the wind-out winch speed
+         winchSpeed = -armHelpSpeed;
+         
+         // Make sure the intake is out of the way
+         if (!deployStarted)
+         {
+            // Flag to not repeatedly call this
+            deployStarted = true;
+            protectIntake();
+            
+            // Start winch timer
+            
+         }
+
+         // Delay the winches running to allow the brakes to disengage
+         // Actively set the speed to 0 if the delay has not ended
+         if (deployStarted && startDelay < 12)
+         {
+            // Flag that we are disengaging the brakes
+            brakeEngaged = false;
+            winchSpeed = -0.25;
+            startDelay++;
          }
          
-         protectIntake();
-         resetIntakeToggle();
-         if(!Winched)
+         if (Timer.getFPGATimestamp() >= winchEndTime)
          {
-//         upperArm.setValue(true);
-//         lowerArm.setValue(true);
-         Arms.setValue(true);
-         if (!hook)
-         {
-            hooks.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
+            winchSpeed = 0.0;
+            armsDeployed = true;
          }
-         else
+         
+         // E-stop arms!
+         if (!winchInDeadband(joystickWinchSpeed))
          {
-            hooks.setValue(WsDoubleSolenoidState.FORWARD.ordinal());
-         }
-         }
-         if (!hook)
-         {
-            hooks.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
-         }
-         else
-         {
-            hooks.setValue(WsDoubleSolenoidState.FORWARD.ordinal());
+            winchSpeed = 0.0;
          }
       }
-
-      else
+      // Arms are now at full extension.  Allow joystick control of the winches
+      else if (armsDeployed)
       {
-         Winched = false;
-         winchValue = 0;
-         winchRunning = false;
-         brakeEngaged = true;
-//         brake.setValue(true);
-//         upperArm.setValue(false);
-//         lowerArm.setValue(false);
-         Arms.setValue(false);
-      }
-
-      if (!override)
-      {
-         if(!Winched && arm)
+         // Explicitly set speed to 0 if we're in the deadband
+         if (winchInDeadband(joystickWinchSpeed))
          {
-            brakeEngaged = false;
-//            brake.setValue(false);
-         }
-         else if ((winchValue < .1) && (winchValue > -.1))
-         {
-            winchValue = 0.0;
-            if (!brakeEngaged)
-            {
-               winchRunning = false;
-               stopDelay++;
-               if (stopDelay == 3)
-               {
-//                  brake.setValue(true);
-                  brakeEngaged = true;
-                  stopDelay = 0;
-               }
-            }
+            winchSpeed = 0.0;
          }
          else
          {
-            if (!winchRunning)
+            // Steve: Do we need this state check?  I was going somewhere with this, but can't remember now...
+
+
+            winchSpeed = joystickWinchSpeed;
+            if (!winchMoved && winchSpeed < 0)
             {
-               winchValue = 0.0;
-               brakeEngaged = false;
-//               brake.setValue(false);
-               startDelay++;
-               if (startDelay == 3)
-               {
-                  winchRunning = true;
-                  startDelay = 0;
-               }
+               winchMoved = true;
+               
+               // If we have started to move, remove air from the arm pistons
+               armsDeploying = false;
             }
          }
 
-         if(arm && Math.abs(winchValue) > 0)
+         if(previousWinch == 0 && winchSpeed != 0)
          {
-            Winched = true;
-//            upperArm.setValue(false);
-//            lowerArm.setValue(false);
-            Arms.setValue(false);
-            leftWinch.setValue(-winchValue);
-            rightWinch.setValue(-winchValue);
+            brakeTimer = Timer.getFPGATimestamp();
+            brakeDelay = true;
          }
-         else
+         if(brakeDelay)
          {
-            leftWinch.setValue(-winchValue);
-            rightWinch.setValue(-winchValue);
+            if(Timer.getFPGATimestamp() - brakeTimer > .3)
+            {
+               brakeDelay = false;
+            }
          }
-
-
+         // Safety - don't pull down too far
+         // TODO: Need switches/limit sensor
+//         if (upperArmLimit || lowerArmLimit)
+//         {
+//            winchSpeed = 0;
+//         }
       }
-      else
+
+      // Set if the brake should be engaged.  Note this is the reverse of what you expect, due to the wiring of the solenoid
+      if (winchSpeed != 0)
       {
-         winchValue = 0.0;
          brakeEngaged = true;
-         winchRunning = false;
-//         brake.setValue(true);
-         rightWinch.setValue(0.0);
-         leftWinch.setValue(0.0);
-      }
-      
-      if(brakeEngaged)
-      {
-//         if(!rightWinchFree)
-//         {
-            rightBrake.setValue(false);
-            rightWinch.setValue(0);
-//         }
-//         else
-//         {
-//            rightBrake.setValue(false);
-//            rightWinch.setValue(-.5);
-//         }
-//         if(!leftWinchFree)
-//         {
-            leftBrake.setValue(false);
-            leftWinch.setValue(0);
-//         }
-//         else
-//         {
-//            leftBrake.setValue(false);
-//            leftWinch.setValue(-.5);
-//         }
       }
       else
       {
-         leftBrake.setValue(true);
-         rightBrake.setValue(true);
+         brakeEngaged = false;
+      }
+
+      // Set the output values
+      if (!hooksDeployed)
+      {
+         hooks.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
+      }
+      else
+      {
+         hooks.setValue(WsDoubleSolenoidState.FORWARD.ordinal());
+      }
+
+      armSolenoid.setValue(armsDeploying);
+      if(!override)
+      {
+      if(!brakeDelay)
+      {
+         leftWinch.setValue(winchSpeed);
+         rightWinch.setValue(winchSpeed);  
+      }
+      else
+      {
+//         leftWinch.setValue(0);
+//         rightWinch.setValue(0);
+       leftWinch.setValue(.2);
+       rightWinch.setValue(.2);
+      }
+      }
+      if(!brakeOverride)
+      {
+      rightBrake.setValue(brakeEngaged);
+      leftBrake.setValue(brakeEngaged);
+      }
+      else
+      {
+      rightBrake.setValue(true);
+      leftBrake.setValue(true);
       }
       
-      SmartDashboard.putBoolean("Arm", arm);
-      SmartDashboard.putBoolean("hookState", hook);
-      SmartDashboard.putNumber("Winch Value", winchValue);
+      previousWinch = winchSpeed;
+      SmartDashboard.putBoolean("Arms deploying", armsDeploying);
+      SmartDashboard.putBoolean("Arms deployed", armsDeployed);
+      SmartDashboard.putBoolean("hooks deployed", hooksDeployed);
+      SmartDashboard.putNumber("Winch Speed", winchSpeed);
       SmartDashboard.putBoolean("Override", override);
-      SmartDashboard.putBoolean("Winch Running", winchRunning);
       SmartDashboard.putBoolean("brakeEngaged", brakeEngaged);
-      // SmartDashboard.putBoolean("Override", override);
-      SmartDashboard.putBoolean("Arms", Arms.getValue());
+      SmartDashboard.putBoolean("Arms", armSolenoid.getValue());
       SmartDashboard.putBoolean("Left Brake", leftBrake.getValue());
       SmartDashboard.putBoolean("Right Brake", rightBrake.getValue());
-      SmartDashboard.putBoolean("Winch check", Winched);
+      SmartDashboard.putBoolean("Brake Override", brakeOverride);
+      SmartDashboard.putNumber("Winch Speed", winchSpeed);
    }
 
+   private boolean winchInDeadband(double p_winchSpeed)
+   {
+      return (p_winchSpeed > -WINCH_SPEED_DEADBAND) && (p_winchSpeed < WINCH_SPEED_DEADBAND);
+   }
+   
    @Override
    public String getName()
    {
@@ -314,9 +355,9 @@ public class Climber implements Subsystem
    
    public void protectIntake()
    {
-      if(((Intake)Core.getSubsystemManager().getSubsystem(WSSubsystems.INTAKE.getName())).isDeployed() != true)
+      if (((Intake) Core.getSubsystemManager().getSubsystem(WSSubsystems.INTAKE.getName())).isDeployed() != true)
       {
-      ((DigitalInput)Core.getInputManager().getInput(WSInputs.MAN_BUTTON_8.getName())).setValue(true);
+         ((DigitalInput) Core.getInputManager().getInput(WSInputs.MAN_BUTTON_8.getName())).setValue(true);
       }
    }
    

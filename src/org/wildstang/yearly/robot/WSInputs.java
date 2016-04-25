@@ -13,7 +13,6 @@ import org.wildstang.hardware.crio.inputs.config.WsJSJoystickInputConfig;
 import org.wildstang.hardware.crio.inputs.config.WsMotionProfileConfig;
 
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.I2C.Port;
 
 public enum WSInputs implements Inputs
 {
@@ -78,6 +77,15 @@ public enum WSInputs implements Inputs
    MAN_LEFT_JOYSTICK_Y("Manip Intake in_out", WSInputType.JS_JOYSTICK,
          new WsJSJoystickInputConfig(1, JoystickConstants.LEFT_JOYSTICK_Y),
          getLogging()),
+   FLYWHEEL_LOW("Flywheel Low Speed", WSInputType.JS_DPAD_BUTTON,
+         new WsJSButtonInputConfig(1, JoystickConstants.DPAD_X_LEFT),
+         getLogging()),
+   FLYWHEEL_MEDIUM("Flywheel Medium Speed", WSInputType.JS_DPAD_BUTTON,
+         new WsJSButtonInputConfig(1, JoystickConstants.DPAD_Y_UP),
+         getLogging()),
+   FLYWHEEL_HIGH("Flywheel High Speed", WSInputType.JS_DPAD_BUTTON,
+         new WsJSButtonInputConfig(1, JoystickConstants.DPAD_X_RIGHT),
+         getLogging()),
    MAN_BUTTON_1("Manip Deploy Climber Arm", WSInputType.JS_BUTTON,
          new WsJSButtonInputConfig(1, 0), getLogging()),
    MAN_BUTTON_2("Manip Deploy Climber Hook", WSInputType.JS_BUTTON,
@@ -102,11 +110,8 @@ public enum WSInputs implements Inputs
    // WsJSButtonInputConfig(1, 10), getLogging()),
    // MAN_BUTTON_12("Manipulator button 12", WSInputType.JS_BUTTON, new
    // WsJSButtonInputConfig(1, 11), getLogging()),
-   HALL_EFFECT("Lift hall effect sensors", WSInputType.HALL_EFFECT,
-         new WsI2CInputConfig(Port.kMXP, 0x10), getLogging()),
    // LIMIT_SWITCH("Limit switch", WSInputType.SWITCH, 0, getLogging()),
-   // POT("Pot", WSInputType.POT, new WsAnalogInputConfig(0), getLogging()),
-   IMU("IMU", WSInputType.I2C, new WsI2CInputConfig(I2C.Port.kOnboard, 0x20),
+   IMU("IMU", WSInputType.I2C, new WsI2CInputConfig(I2C.Port.kMXP, 0x20),
          getLogging()),
 
    TARGET_BOTTOM("Target Bottom", WSInputType.REMOTE_ANALOG,

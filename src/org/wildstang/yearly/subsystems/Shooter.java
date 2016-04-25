@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Shooter implements Subsystem, ConfigListener
 {
-   private int flySpeedToggle = 2;
+   private int flySpeedToggle = FLYWHEEL_SPEED_LOW;
    private boolean flyWheelToggle = false;
    private boolean hoodPosition = false;
    private double flySpeed;
@@ -44,7 +44,7 @@ public class Shooter implements Subsystem, ConfigListener
  //Low and Medium are for driver control.  High is really for auto
    private static final double HIGH_RATE_DEFAULT = 2600;
    private static final double LOW_RATE_DEFAULT = 2300;
-   private static final double MEDIUM_RATE_DEFAULT = 2450;
+   private static final double MEDIUM_RATE_DEFAULT = 2430;
    private static final double HIGH_DEFAULT = 0.9;
    private static final double MEDIUM_DEFAULT = 0.8;
    private static final double LOW_DEFAULT = 0.77;
@@ -91,26 +91,20 @@ public class Shooter implements Subsystem, ConfigListener
             hoodPosition = false;
          }
       }
+      else if (source.getName().equals(WSInputs.FLYWHEEL_LOW.getName()))
+      {
+         flySpeedToggle = FLYWHEEL_SPEED_LOW;
+      }
+      else if (source.getName().equals(WSInputs.FLYWHEEL_MEDIUM.getName()))
+      {
+         flySpeedToggle = FLYWHEEL_SPEED_MEDIUM;
+      }
+      else if (source.getName().equals(WSInputs.FLYWHEEL_HIGH.getName()))
+      {
+         flySpeedToggle = FLYWHEEL_SPEED_HIGH;
+      }
       else if (source.getName().equals(WSInputs.MAN_BUTTON_4.getName()))
       {
-         if (((DigitalInput) source).getValue() == true)
-         {
-            /* Remove the extra high speed from driver control and ignore the 0 speed */
-            /* Speed = 3 and speed = 0 are not used for driver control  only auto control */
-            if (flySpeedToggle == 3)
-            {
-               flySpeedToggle = 2;
-            }
-            if (flySpeedToggle == 0)
-            {
-               flySpeedToggle = 1;
-            }
-            flySpeedToggle +=1;
-            if (flySpeedToggle > 2)
-            {
-               flySpeedToggle = 1;
-            }
-         }
       }
    }
 
@@ -121,6 +115,10 @@ public class Shooter implements Subsystem, ConfigListener
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_4.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_6.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_2.getName()).addInputListener(this);
+
+      Core.getInputManager().getInput(WSInputs.FLYWHEEL_LOW.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.FLYWHEEL_MEDIUM.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.FLYWHEEL_HIGH.getName()).addInputListener(this);
 
       RingLight = (WsRelay) Core.getOutputManager().getOutput(WSOutputs.RING_LIGHT.getName());
       RingLight.enable();
@@ -148,7 +146,7 @@ public class Shooter implements Subsystem, ConfigListener
       // flyWheelEncoder.setSamplesToAverage(7);
 
       flyWheelDiff = 0;
-      flySpeedToggle = 2;
+      flySpeedToggle = FLYWHEEL_SPEED_LOW;
    }
 
    @Override
@@ -240,8 +238,8 @@ public class Shooter implements Subsystem, ConfigListener
       shooterHood.setValue(hoodUpDown);
       SmartDashboard.putNumber("Expected Rate", expectedRate);
       SmartDashboard.putNumber("Raw Flywheel", -flySpeed);
-      SmartDashboard.putString("Flywheel Speed", flySpeedToggle == 0 ? "Low"
-            : flySpeedToggle == 1 ? "Medium" : "High");
+      SmartDashboard.putString("Flywheel Speed", flySpeedToggle == FLYWHEEL_SPEED_LOW ? "Low"
+            : flySpeedToggle == FLYWHEEL_SPEED_MEDIUM ? "Medium" : "High");
       SmartDashboard.putNumber("Flywheel Rate", flyWheelRate);
       SmartDashboard.putNumber("Flywheel Output Adjustment", outputAdjust);
       SmartDashboard.putString("Flywheel", flyWheelToggle ? "On" : "Off");
