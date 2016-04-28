@@ -6,6 +6,7 @@ import org.wildstang.framework.io.inputs.RemoteAnalogInput;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.yearly.robot.WSInputs;
 
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 //import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -66,6 +67,10 @@ public class Vision implements Subsystem
    @Override
    public void init()
    {
+      //NetworkTable.setIPAddress("10.1.11.2");
+      //NetworkTable.setClientMode();
+      //table = NetworkTable.getTable("remoteIO");
+      
       Core.getInputManager().getInput(WSInputs.TARGET_BOTTOM.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.TARGET_CENTER.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.VISION_ANGLE.getName()).addInputListener(this);

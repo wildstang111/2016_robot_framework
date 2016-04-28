@@ -30,6 +30,8 @@ import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.framework.io.outputs.AnalogOutput;
 import org.wildstang.framework.subsystems.Subsystem;
+import org.wildstang.hardware.crio.outputs.WsDoubleSolenoid;
+import org.wildstang.hardware.crio.outputs.WsDoubleSolenoidState;
 import org.wildstang.hardware.crio.outputs.WsSolenoid;
 import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
@@ -51,7 +53,7 @@ public class Intake implements Subsystem
    private boolean intakeLimboOld;
    private boolean limboOn = false;
    private boolean shoot;
-   private WsSolenoid intakeDeploy;
+   private WsDoubleSolenoid intakeDeploy;
    private WsSolenoid intakeFrontLower;
    private AnalogOutput frontRoller;
    private AnalogOutput frontRoller2;
@@ -143,7 +145,7 @@ public class Intake implements Subsystem
    public void init()
    {
       // TODO Auto-generated method stub
-      intakeDeploy = ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_DEPLOY.getName()));
+      intakeDeploy = ((WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_DEPLOY.getName()));
       intakeFrontLower = ((WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_FRONT_LOWER.getName()));
       frontRoller = ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.FRONT_ROLLER.getName()));
       frontRoller2 = ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.FRONT_ROLLER_2.getName()));
@@ -155,8 +157,8 @@ public class Intake implements Subsystem
       
       // Reset intake state
       deployPneumatic = false;
-//      manDeployPneumaticControl = false;
-//      limboOn = false;
+      manDeployPneumaticControl = false;
+      limboOn = false;
       
       // asking for below Inputs
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_5.getName()).addInputListener(this);
@@ -259,10 +261,9 @@ public class Intake implements Subsystem
       // ((DigitalOutput)Core.getOutputManager().getOutput(WSOutputs.FRONT_ROLLER_LED_2.getName())).setValue(rollerMovingIn);
       // ((DigitalOutput)Core.getOutputManager().getOutput(WSOutputs.Pneumatic_1.getName())).setValue(nosePneumatic);
       // ((DigitalOutput)Core.getOutputManager().getOutput(WSOutputs.Pneumatic_2.getName())).setValue(deployPneumatic);
-
-         intakeDeploy.setValue(true);
-
-      intakeDeploy.setValue(deployPneumatic);
+      
+      
+      intakeDeploy.setValue(deployPneumatic ? (WsDoubleSolenoidState.FORWARD).ordinal() : (WsDoubleSolenoidState.REVERSE).ordinal());
       intakeFrontLower.setValue(nosePneumatic);
       if(AutoIntakeOverride && !intakeSensorReading)
       {

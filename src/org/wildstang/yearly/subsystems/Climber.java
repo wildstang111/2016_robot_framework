@@ -97,6 +97,7 @@ public class Climber implements Subsystem
    @Override
    public void init()
    {
+      hooksDeployed = false;
       brakeTimer = 0;
       startDelay = 0;
       previousWinch = 0;
