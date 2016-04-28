@@ -39,7 +39,7 @@ public class Vision implements Subsystem
    private boolean goodLongHeight = false;
    private boolean goodShortHeight = false;
    
-   //NetworkTable table;
+   NetworkTable table;
 
    @Override
    public void inputUpdate(Input source)
@@ -69,7 +69,7 @@ public class Vision implements Subsystem
    {
       //NetworkTable.setIPAddress("10.1.11.2");
       //NetworkTable.setClientMode();
-      //table = NetworkTable.getTable("remoteIO");
+      table = NetworkTable.getTable("remoteIO");
       
       Core.getInputManager().getInput(WSInputs.TARGET_BOTTOM.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.TARGET_CENTER.getName()).addInputListener(this);
@@ -86,7 +86,7 @@ public class Vision implements Subsystem
    @Override
    public void update()
    {
-	   //targetCenter = (int) table.getNumber("Target Center", 2);
+	   targetCenter = (int) table.getNumber("Target Center", 2);
       m_centered_left = (int) SmartDashboard.getNumber("Left Centered Mark", CENTERED_LEFT);
       m_centered_right = (int) SmartDashboard.getNumber("Right Centered Mark", CENTERED_RIGHT);
       m_bottom_low_min = (int) SmartDashboard.getNumber("Target Bottom Low Min", BOTTOM_LOW_MIN);
