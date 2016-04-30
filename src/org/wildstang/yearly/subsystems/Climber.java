@@ -48,11 +48,12 @@ public class Climber implements Subsystem
    private static final String armsUpOutSpeed = ".arm_up_out_speed";
    private static final String armsUpRunTime = ".arm_up_run_time";
    private static final double ARMOUTSPEED_DEFAULT = -.75;
-   private static final double ARMOUTTIME_DEFAULT = 2.7;
+   private static final double ARMOUTTIME_DEFAULT = 3.2;
    private static final double WINCH_SPEED_DEADBAND = 0.1;
 
    private double winchEndTime;
    private boolean winchLimit;
+   private boolean canEngageBrakes;
 
    private WsSolenoid leftBrake;
    private WsSolenoid rightBrake;
@@ -69,6 +70,7 @@ public class Climber implements Subsystem
          if (((DigitalInput) source).getValue() && ((Intake)Core.getSubsystemManager().getSubsystem(WSSubsystems.INTAKE.getName())).isDeployed())
          {
             armsDeploying = true;
+            canEngageBrakes = false;
             winchEndTime = Timer.getFPGATimestamp() + armHelpRunTime;
          }
       }
@@ -90,7 +92,7 @@ public class Climber implements Subsystem
       }
       else if (source.getName().equals(WSInputs.MAN_BUTTON_10.getName()))
       {
-         override = !override;
+         override = ((DigitalInput) source).getValue();
       }
    }
 
@@ -105,6 +107,7 @@ public class Climber implements Subsystem
       armsDeployed = false;
       armsDeploying = false;
       joystickWinchSpeed = 0;
+      canEngageBrakes = true;
       winchSpeed = 0;
       Core.getInputManager().getInput(WSInputs.MAN_RIGHT_JOYSTICK_Y.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_1.getName()).addInputListener(this);
@@ -198,7 +201,7 @@ public class Climber implements Subsystem
          {
             // Flag to not repeatedly call this
             deployStarted = true;
-            protectIntake();
+            //protectIntake();
             
             // Start winch timer
             
@@ -307,11 +310,13 @@ public class Climber implements Subsystem
       }
       if(!brakeOverride)
       {
-      rightBrake.setValue(brakeEngaged);
-      leftBrake.setValue(brakeEngaged);
+         //if (canEngageBrakes) {
+            rightBrake.setValue(brakeEngaged);
+            leftBrake.setValue(brakeEngaged);
+         //}
       }
       else
-      {
+      {  
       rightBrake.setValue(true);
       leftBrake.setValue(true);
       }

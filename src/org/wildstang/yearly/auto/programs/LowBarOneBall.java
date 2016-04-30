@@ -31,7 +31,7 @@ public class LowBarOneBall extends AutoProgram
       addStep(new StepSetShifter(false));
       addStep(new StepSetShooterPosition(false));
       addStep(new StepSetIntakeState(true));
-      addStep(new StepStartDriveUsingMotionProfile(-160, 0.0));
+      addStep(new StepStartDriveUsingMotionProfile(160, 0.0));
       addStep(new StepWaitForDriveMotionProfile());
       addStep(new StepStopDriveUsingMotionProfile());
       addStep(new StepResetShooterPositionToggle());
@@ -43,7 +43,7 @@ public class LowBarOneBall extends AutoProgram
       addStep(new AutoStepDelay(1500));
       addStep(new StepQuickTurn(55));
       addStep(new StepResetEncoders());
-      addStep(new StepStartDriveUsingMotionProfile(-40, 0.0));
+      addStep(new StepStartDriveUsingMotionProfile(40, 0.0));
       addStep(new StepWaitForDriveMotionProfile());
       addStep(new StepStopDriveUsingMotionProfile());
 //      addStep(new StepTurnForTime(-.6, 1500));

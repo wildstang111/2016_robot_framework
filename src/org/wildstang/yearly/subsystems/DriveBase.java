@@ -119,7 +119,6 @@ public class DriveBase implements Subsystem
 
    private double overriddenThrottle, overriddenHeading, overriddenStrafe;
    private boolean driveOverrideEnabled = false;
-   private boolean isDriveFlipped = false;
    
    private boolean firstRun = true;
    
@@ -557,14 +556,17 @@ public class DriveBase implements Subsystem
       {
          // Absolute value on driveBaseThrottleValue, creates a S curve, none
          // is banana
-         angularPower = Math.abs(driveBaseThrottleValue)
-               * driveBaseHeadingValue * HEADING_SENSITIVITY;
          
+         angularPower = (driveBaseThrottleValue)
+               * driveBaseHeadingValue * HEADING_SENSITIVITY;
+         if (driveBaseThrottleValue > 0) {
+            angularPower *= -1;
+         }
       }
 
       SmartDashboard.putNumber("Angular power", angularPower);
       
-      if(!isDriveFlipped) angularPower *= -1;
+      
 
       rightMotorSpeed = driveBaseThrottleValue + angularPower;
       leftMotorSpeed = driveBaseThrottleValue - angularPower;
@@ -576,16 +578,10 @@ public class DriveBase implements Subsystem
          driveBaseThrottleValue = 0.0f;
 
          // Quick turn does not take throttle into account
-         if(isDriveFlipped)
-         {
-         leftMotorSpeed -= driveBaseHeadingValue;
-         rightMotorSpeed += driveBaseHeadingValue;
-         }
-         else
-         {
+        
             leftMotorSpeed = -(leftMotorSpeed -= driveBaseHeadingValue);
             rightMotorSpeed = -(rightMotorSpeed += driveBaseHeadingValue);
-         }
+         
 
          if (superAntiTurboFlag)
          {
@@ -688,27 +684,23 @@ public class DriveBase implements Subsystem
 
       SmartDashboard.putNumber("LeftDriveSpeed", leftMotorSpeed);
       SmartDashboard.putNumber("RightDriveSpeed", rightMotorSpeed);
-      SmartDashboard.putBoolean("DriveFlip", isDriveFlipped);
 
       Config config = Core.getConfigManager().getConfig();
       double right_drive_bias = config.getDouble(this.getClass().getName()
             + ".right_drive_bias", 1.0);
       double left_drive_bias = config.getDouble(this.getClass().getName()
             + ".left_drive_bias", 1.0);
-
-      double leftFlipped = leftMotorSpeed * (isDriveFlipped ? -1:1);
-      double rightFlipped = rightMotorSpeed * (isDriveFlipped ? -1:1);
       
       // Update Outputs
       if(rightIndividual == 0 && leftIndividual == 0)
       {
-      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.LEFT_2.getName())).setValue(leftFlipped
+      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.LEFT_2.getName())).setValue(leftMotorSpeed
             * left_drive_bias);
-      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.LEFT_1.getName())).setValue(leftFlipped
+      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.LEFT_1.getName())).setValue(leftMotorSpeed
             * left_drive_bias);
-      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.RIGHT_1.getName())).setValue(rightFlipped
+      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.RIGHT_1.getName())).setValue(rightMotorSpeed
             * right_drive_bias);
-      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.RIGHT_2.getName())).setValue(rightFlipped
+      ((AnalogOutput) Core.getOutputManager().getOutput(WSOutputs.RIGHT_2.getName())).setValue(rightMotorSpeed
             * right_drive_bias);
       }
       else
@@ -961,13 +953,6 @@ public class DriveBase implements Subsystem
       if (source.getName().equals(WSInputs.DRV_BUTTON_5.getName()))
       {
          superAntiTurboFlag = ((DigitalInput) source).getValue();
-      }
-
-      else if (source.getName().equals(WSInputs.DRV_BUTTON_4.getName())){
-         if (((DigitalInput) source).getValue() == true)
-         {
-            isDriveFlipped = !isDriveFlipped;
-         }
       }
       else if (source.getName().equals(WSInputs.MOTION_PROFILE_CONTROL.getName()))
       {

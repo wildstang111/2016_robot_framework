@@ -44,7 +44,7 @@ public class Shooter implements Subsystem, ConfigListener
  //Low and Medium are for driver control.  High is really for auto
    private static final double HIGH_RATE_DEFAULT = 2600;
    private static final double LOW_RATE_DEFAULT = 2310;
-   private static final double MEDIUM_RATE_DEFAULT = 2446;
+   private static final double MEDIUM_RATE_DEFAULT = 2446; // very specific
    private static final double HIGH_DEFAULT = 0.9;
    private static final double MEDIUM_DEFAULT = 0.8;
    private static final double LOW_DEFAULT = 0.77;

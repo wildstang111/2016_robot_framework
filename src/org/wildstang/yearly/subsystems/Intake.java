@@ -51,7 +51,7 @@ public class Intake implements Subsystem
    private boolean manDeployPneumaticControl = false;
    private boolean intakeLimboNew;
    private boolean intakeLimboOld;
-   private boolean limboOn = false;
+   //private boolean limboOn = false;
    private boolean shoot;
    private WsDoubleSolenoid intakeDeploy;
    private WsSolenoid intakeFrontLower;
@@ -132,13 +132,13 @@ public class Intake implements Subsystem
          }
       }
 
-      if (source.getName().equals(WSInputs.DRV_BUTTON_2.getName()))
-      {
-         if (((DigitalInput) source).getValue() == true)
-         {
-            limboOn = !limboOn;
-         }
-      }
+//      if (source.getName().equals(WSInputs.DRV_BUTTON_2.getName()))
+//      {
+//         if (((DigitalInput) source).getValue() == true)
+//         {
+//            limboOn = !limboOn;
+//         }
+//      }
    }
 
    @Override
@@ -158,7 +158,7 @@ public class Intake implements Subsystem
       // Reset intake state
       deployPneumatic = false;
       manDeployPneumaticControl = false;
-      limboOn = false;
+      //limboOn = false;
       
       // asking for below Inputs
       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_5.getName()).addInputListener(this);
@@ -242,17 +242,17 @@ public class Intake implements Subsystem
       }
 
       // Allows for toggling of limbo
-      if (limboOn)
-      {
-         if (deployPneumatic == false)
-         {
-            deployPneumatic = true;
-         }
-         if(nosePneumatic == false)
-         {
-            nosePneumatic = true;
-         }
-      }
+//      if (limboOn)
+//      {
+//         if (deployPneumatic == false)
+//         {
+//            deployPneumatic = true;
+//         }
+//         if(nosePneumatic == false)
+//         {
+//            nosePneumatic = true;
+//         }
+//      }
 
       // buttonPress controls DIO_LED_0 etc.
       // ((DigitalOutput)Core.getOutputManager().getOutput(WSOutputs.DIO_LED_0.getName())).setValue(manLeftJoyRollerIn
